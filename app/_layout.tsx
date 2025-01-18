@@ -1,17 +1,27 @@
 import "../global.css";
 
+import { useEffect } from "react";
 import { Slot } from "expo-router";
-import { View } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from "nativewind";
+import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from 'expo-navigation-bar';
 import Text from "@/components/Text";
 
+
 export default function Root() {
-    const { toggleColorScheme } = useColorScheme();
+    const { colorScheme, toggleColorScheme } = useColorScheme();
+
+    useEffect(() => {
+        NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#171717" : "#ffffff");
+        NavigationBar.setButtonStyleAsync(colorScheme === "dark" ? "light" : "dark");
+    }, [colorScheme]);
 
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
+        <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
             <Text onPress={toggleColorScheme}>Toogle theme</Text>
             <Slot />
-        </View>
+        </SafeAreaView>
     )
 };
