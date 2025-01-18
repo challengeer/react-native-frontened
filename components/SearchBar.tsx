@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { useColorScheme } from "nativewind";
 import { TextInput, View, Keyboard } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { XCircleIcon } from "react-native-heroicons/solid";
@@ -14,6 +15,9 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
     const [focused, setFocused] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
 
+    const { colorScheme } = useColorScheme();
+    const placeholderColor = colorScheme === "dark" ? "#a3a3a3" : "#737373";
+
     return (
         <View className="w-full flex-row items-center gap-4">
             <View className="relative flex-1 flex-row items-center">
@@ -21,7 +25,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
 
                 <TextInput
                     className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-base text-neutral-900 dark:text-neutral-100"
-                    placeholderClassName="text-neutral-500 dark:text-neutral-400"
+                    placeholderTextColor={placeholderColor}
                     placeholder="Search"
                     value={value}
                     onChangeText={(text) => {
