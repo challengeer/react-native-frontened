@@ -1,0 +1,34 @@
+import { useColorScheme } from "nativewind";
+import { Pressable, PressableProps } from "react-native";
+
+interface IconProps {
+  size?: number;
+  color?: string;
+  strokeWidth: number;
+  [key: string]: any;
+}
+
+interface ThemedIconProps extends PressableProps {
+  className?: string;
+  lightColor?: string;
+  darkColor?: string;
+  strokeWidth?: number;
+  icon: React.ComponentType<IconProps>;
+}
+
+export default function Icon({
+  className = "",
+  lightColor = "#737373", // text-neutral-500
+  darkColor = "#a3a3a3",  // dark:text-neutral-400
+  strokeWidth = 2,
+  ...props
+}: ThemedIconProps) {
+  const { colorScheme } = useColorScheme();
+  const color = colorScheme === "dark" ? darkColor : lightColor;
+
+  return (
+    <Pressable className={className} {...props}>
+      <props.icon color={color} strokeWidth={strokeWidth} />
+    </Pressable>
+  );
+} 

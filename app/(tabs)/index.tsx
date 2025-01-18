@@ -1,32 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-
-interface User {
-  user_id: string
-  display_name: string
-  username: string
-}
+import { useState } from 'react';
+import { FlatList, View } from 'react-native';
+import SearchBar from '@/components/SearchBar';
+import CountryItem from '@/components/CountryItem';
+import CountryInterface from '@/types/CountryInterface';
 
 export default function HomeScreen() {
-  const [users, setUsers] = useState<User[] | []>([]);
+  const countries = require("@/assets/data/countries.json")
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    fetch("http://localhost:8000/users/3/friends")
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-  }, [])
+  const filteredCountries = countries.filter((country: CountryInterface) =>
+    country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    country.dial_code.includes(searchQuery)
+  );
 
   return (
-    <View className="bg-white flex-1 p-4">
-      {users.map((user: User) => (
-        <View key={user.user_id} className="flex-row gap-2 items-center py-3 border-b border-neutral-100">
-          <View className="w-11 h-11 bg-neutral-100 rounded-full"></View>
-          <View className="gap-1">
-            <Text className="leading-none text-lg font-semibold">a{user.display_name}</Text>
-            <Text className="leading-none text-neutral-500">@{user.username}</Text>
-          </View>
-        </View>
-      ))}
+    <View className="flex-1 px-4 gap-3">
+      <SearchBar 
+        onSearch={setSearchQuery}
+      />
+
+      <FlatList<CountryInterface>
+        data={filteredCountries}
+        keyExtractor={(item: CountryInterface) => item.code}
+        renderItem={({ item }: { item: CountryInterface }) => (
+          <CountryItem
+            flag={item.flag}
+            name={item.name}
+            dial_code={item.dial_code}
+          />
+        )}
+      />
     </View>
   );
 }
