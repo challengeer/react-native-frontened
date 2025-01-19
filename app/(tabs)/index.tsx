@@ -3,6 +3,9 @@ import { FlatList, View } from 'react-native';
 import SearchBar from '@/components/SearchBar';
 import CountryItem from '@/components/CountryItem';
 import CountryInterface from '@/types/CountryInterface';
+import Header from '@/components/Header';
+import IconCircle from '@/components/IconCircle';
+import { XMarkIcon } from 'react-native-heroicons/outline';
 
 export default function HomeScreen() {
   const countries = require("@/assets/data/countries.json")
@@ -14,22 +17,33 @@ export default function HomeScreen() {
   );
 
   return (
-    <View className="flex-1 px-4 gap-3">
-      <SearchBar 
-        onSearch={setSearchQuery}
+    <>
+      <Header
+        title="Country prefix"
+        rightSection={
+          <IconCircle
+            icon={XMarkIcon}
+          />
+        }
       />
 
-      <FlatList<CountryInterface>
-        data={filteredCountries}
-        keyExtractor={(item: CountryInterface) => item.code}
-        renderItem={({ item }: { item: CountryInterface }) => (
-          <CountryItem
-            flag={item.flag}
-            name={item.name}
-            dial_code={item.dial_code}
-          />
-        )}
-      />
-    </View>
+      <View className="px-4 gap-3">
+        <SearchBar
+          onSearch={setSearchQuery}
+        />
+
+        <FlatList<CountryInterface>
+          data={filteredCountries}
+          keyExtractor={(item: CountryInterface) => item.code}
+          renderItem={({ item }: { item: CountryInterface }) => (
+            <CountryItem
+              flag={item.flag}
+              name={item.name}
+              dial_code={item.dial_code}
+            />
+          )}
+        />
+      </View>
+    </>
   );
 }
