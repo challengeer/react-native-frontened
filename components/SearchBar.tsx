@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useColorScheme } from "nativewind";
-import { TextInput, View, Keyboard } from "react-native";
+import { TextInput, View } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { XCircleIcon } from "react-native-heroicons/solid";
 import Text from "@/components/Text";
@@ -12,6 +12,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
+    const inputRef = useRef<TextInput>(null);
     const [focused, setFocused] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
 
@@ -23,13 +24,15 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
             <View className="relative flex-1 flex-row items-center">
                 <Icon
                     icon={MagnifyingGlassIcon}
-                    className="absolute top-2.5 left-4 z-10"
+                    className="absolute top-3 left-4 z-10"
                     lightColor="#737373"
                     darkColor="#a3a3a3"
+                    onPress={() => inputRef.current?.focus()}
                 />
 
                 <TextInput
-                    className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-base text-neutral-900 dark:text-neutral-100"
+                    ref={inputRef}
+                    className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                     placeholderTextColor={placeholderColor}
                     placeholder="Search"
                     value={value}
@@ -43,13 +46,13 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                 {value && (
                     <Icon
                         icon={XCircleIcon}
-                        className="absolute top-2.5 right-4 z-10"
+                        className="absolute top-3 right-4 z-10"
                         lightColor="#737373"
                         darkColor="#a3a3a3"
                         onPress={() => {
                             setValue("");
                             onSearch?.("");
-                            Keyboard.dismiss();
+                            inputRef.current?.blur();
                         }}
                     />
                 )}
@@ -59,7 +62,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                     onPress={() => {
                         setFocused(false);
                         onCancel?.();
-                        Keyboard.dismiss();
+                        inputRef.current?.blur();
                     }}
                 >
                     Cancel
