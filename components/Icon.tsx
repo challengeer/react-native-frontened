@@ -8,7 +8,7 @@ interface IconProps {
   [key: string]: any;
 }
 
-interface ThemedIconProps extends PressableProps {
+export interface ThemedIconProps extends PressableProps {
   className?: string;
   lightColor?: string;
   darkColor?: string;
@@ -18,8 +18,8 @@ interface ThemedIconProps extends PressableProps {
 
 export default function Icon({
   className = "",
-  lightColor = "#737373", // text-neutral-500
-  darkColor = "#a3a3a3",  // dark:text-neutral-400
+  lightColor = "#171717", // text-neutral-500
+  darkColor = "#f5f5f5",  // dark:text-neutral-400
   strokeWidth = 2,
   ...props
 }: ThemedIconProps) {

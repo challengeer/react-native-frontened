@@ -21,7 +21,12 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
     return (
         <View className="w-full flex-row items-center gap-4">
             <View className="relative flex-1 flex-row items-center">
-                <Icon icon={MagnifyingGlassIcon} className="absolute top-2.5 left-4 z-10" />
+                <Icon
+                    icon={MagnifyingGlassIcon}
+                    className="absolute top-2.5 left-4 z-10"
+                    lightColor="#737373"
+                    darkColor="#a3a3a3"
+                />
 
                 <TextInput
                     className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-base text-neutral-900 dark:text-neutral-100"
@@ -39,6 +44,8 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                     <Icon
                         icon={XCircleIcon}
                         className="absolute top-2.5 right-4 z-10"
+                        lightColor="#737373"
+                        darkColor="#a3a3a3"
                         onPress={() => {
                             setValue("");
                             onSearch?.("");
