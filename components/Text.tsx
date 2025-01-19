@@ -2,7 +2,7 @@ import { Text as RNText, TextProps as RNTextProps } from "react-native";
 import { ReactNode } from "react";
 
 interface TextElementProps extends RNTextProps {
-    children: ReactNode
+    children?: ReactNode
     type?: "primary" | "secondary"
     className?: string
 }
