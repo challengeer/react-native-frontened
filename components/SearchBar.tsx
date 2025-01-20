@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { useRef, useState } from "react";
 import { useColorScheme } from "nativewind";
 import { TextInput, View } from "react-native";
@@ -34,7 +35,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                     ref={inputRef}
                     className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                     placeholderTextColor={placeholderColor}
-                    placeholder="Search"
+                    placeholder={i18n.t("searchBar.placeholder")}
                     value={value}
                     onChangeText={(text) => {
                         setValue(text);

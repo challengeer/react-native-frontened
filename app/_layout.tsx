@@ -1,5 +1,8 @@
 import "../global.css";
 
+import "@/i18n";
+import LanguageProvider from "@/components/LanguageProvider";
+
 import { useEffect } from "react";
 import { Slot } from "expo-router";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,10 +21,12 @@ export default function Root() {
     }, [colorScheme]);
 
     return (
-        <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
-            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-            <Text onPress={toggleColorScheme}>Toogle theme</Text>
-            <Slot />
-        </SafeAreaView>
+        <LanguageProvider>
+            <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+                <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+                <Text onPress={toggleColorScheme}>Toogle theme</Text>
+                <Slot />
+            </SafeAreaView>
+        </LanguageProvider>
     )
 };
