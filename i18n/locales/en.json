@@ -1,4 +1,25 @@
 {
+    "register": {
+        "header": "Create account",
+        "nameLabel": "What's your name?",
+        "legalText": "By continuing you agree to our Privacy Policy and Terms of Service",
+        "birthdayLabel": "Birthday",
+        "birthdayDescription": "Only to make sure you are old enough to use Challengeer",
+        "phoneNumberLabel": "Phone number",
+        "phoneNumberDescription": "We will send SMS code for verification",
+        "verificationCodeLabel": "Enter code",
+        "verificationCodeDescription": "Verification code sent to",
+        "usernameLabel": "Username",
+        "usernameAvailable": "Username is available",
+        "usernameTaken": "This username is already taken",
+        "usernameChecking": "Checking username...",
+        "passwordLabel": "Password",
+        "passwordDescription": "Password should be at least 8 characters long",
+        "passwordValid": "Password looks good"
+    },
+    "countryPrefix": {
+        "header": "Country prefix"
+    },
     "searchBar": {
         "placeholder": "Search"
     }

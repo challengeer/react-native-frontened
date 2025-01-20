@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import SearchBar from '@/components/SearchBar';
@@ -19,7 +20,7 @@ export default function HomeScreen() {
   return (
     <>
       <Header
-        title="Country prefix"
+        title={i18n.t("countryPrefix.header")}
         rightSection={
           <IconCircle
             icon={XMarkIcon}

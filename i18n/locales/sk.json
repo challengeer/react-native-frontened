@@ -1,4 +1,25 @@
 {
+    "register": {
+        "header": "Vytvoriť účet",
+        "nameLabel": "Ako sa voláš?",
+        "legalText": "Pokračovaním súhlasíte s našimi Zásadami ochrany osobných údajov a Podmienkami používania",
+        "birthdayLabel": "Dátum narodenia",
+        "birthdayDescription": "Len pre overenie, či máš dostatočný vek na používanie Challengeer",
+        "phoneNumberLabel": "Telefónne číslo",
+        "phoneNumberDescription": "Pošleme vám SMS kód na overenie",
+        "verificationCodeLabel": "Zadajte kód",
+        "verificationCodeDescription": "Overovací kód bol odoslaný na",
+        "usernameLabel": "Používateľské meno",
+        "usernameAvailable": "Používateľské meno je dostupné",
+        "usernameTaken": "Toto používateľské meno je už obsadené",
+        "usernameChecking": "Kontrola používateľského mena...",
+        "passwordLabel": "Heslo",
+        "passwordDescription": "Heslo musí mať aspoň 8 znakov",
+        "passwordValid": "Platné heslo"
+    },
+    "countryPrefix": {
+        "header": "Predvoľba krajiny"
+    },
     "searchBar": {
         "placeholder": "Hľadať"
     }
