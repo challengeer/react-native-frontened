@@ -34,6 +34,8 @@ export default function HomeScreen() {
         />
 
         <FlatList<CountryInterface>
+          overScrollMode="never"
+          showsVerticalScrollIndicator={false}
           data={filteredCountries}
           keyExtractor={(item: CountryInterface) => item.code}
           renderItem={({ item }: { item: CountryInterface }) => (
