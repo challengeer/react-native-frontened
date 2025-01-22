@@ -1,8 +1,8 @@
 import IconCircle from "@/components/IconCircle";
 import { View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import Text from "@/components/Text";
 import StepIndicatorBar from "@/components/StepIndicatorBar";
+import Header from "@/components/Header";
 
 interface RegisterHeaderProps {
     stepCount: number;
@@ -12,16 +12,11 @@ interface RegisterHeaderProps {
 export default function RegisterHeader({ stepCount, currentPosition }: RegisterHeaderProps) {
     return (
         <View>
-            <View className="flex-row items-center gap-2 px-4 py-4">
-                <IconCircle icon={ArrowLeftIcon} />
-                <Text className="text-xl font-bold flex-1 text-center absolute left-1/2 -translate-x-1/2">Create account</Text>
-            </View>
+            <Header title="Create account" leftSection={<IconCircle icon={ArrowLeftIcon} />} />
             <StepIndicatorBar
                 stepCount={stepCount}
                 currentPosition={currentPosition}
             />
-
-
         </View>
     )
 }
