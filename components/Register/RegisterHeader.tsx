@@ -16,6 +16,7 @@ export default function RegisterHeader({ stepCount, currentPosition }: RegisterH
             <StepIndicatorBar
                 stepCount={stepCount}
                 currentPosition={currentPosition}
+                className="px-4"
             />
         </View>
     )
