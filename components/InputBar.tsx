@@ -1,79 +1,27 @@
-import { useRef, useState } from "react";
-import { KeyboardTypeOptions, TextInput, View } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
 import Text from "@/components/Text";
-import Icon from "@/components/Icon";
-import { XCircleIcon } from "react-native-heroicons/solid";
 
 
-interface InputBarProps {
-    onCancel?: () => void;
+interface InputBarProps extends TextInputProps {
     label?: string;
     description?: string;
     className?: string;
-    onChangeText?: (text: string) => void;
-    value?: string;
-    keyboardType?: KeyboardTypeOptions;
 }
 
 export default function InputBar({
-    onCancel,
     label,
     description,
     className,
-    onChangeText,
-    value: initialValue = "",
-    keyboardType = "default"
+    ...props
 }: InputBarProps) {
-    const inputRef = useRef<TextInput>(null);
-    const [focused, setFocused] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(initialValue);
-
-    const handleChangeText = (text: string) => {
-        setValue(text);
-        onChangeText?.(text);
-    };
-
     return (
-        <View className={`px-4 ${className}`}>
-            <View className="flex-row items-center">
-                <View className="relative flex-1 flex-row items-center">
-                    <Text className="absolute text-base text-neutral-800 dark:text-neutral-100 -top-7">{label}</Text>
-                    <TextInput
-                        ref={inputRef}
-                        className="px-4 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
-                        value={value}
-                        onChangeText={handleChangeText}
-                        onFocus={() => setFocused(true)}
-                        onBlur={() => setFocused(false)}
-                        keyboardType={keyboardType}
-                    />
-                    {value && (
-                        <Icon
-                            icon={XCircleIcon}
-                            className="absolute right-4 z-10"
-                            lightColor="#737373"
-                            darkColor="#a3a3a3"
-                            onPress={() => {
-                                setValue("");
-                                inputRef.current?.blur();
-                            }}
-                        />
-                    )}
-                </View>
-                {focused && (
-                    <Text
-                        onPress={() => {
-                            setFocused(false);
-                            onCancel?.();
-                            inputRef.current?.blur();
-                        }}
-                        className="text-base text-neutral-900 dark:text-neutral-100 p-4 pr-0"
-                    >
-                        Cancel
-                    </Text>
-                )}
-            </View>
-            <Text className="text-sm text-neutral-500 dark:text-neutral-400">{description}</Text>
+        <View className={`gap-2 ${className}`}>
+            <Text className="font-medium">{label}</Text>
+            <TextInput
+                className="px-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
+                {...props}
+            />
+            <Text type="secondary" className="text-sm">{description}</Text>
         </View>
     )
 }
