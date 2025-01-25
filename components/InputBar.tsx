@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { TextInput, View } from "react-native";
+import { KeyboardTypeOptions, TextInput, View } from "react-native";
 import Text from "@/components/Text";
 import Icon from "@/components/Icon";
 import { XCircleIcon } from "react-native-heroicons/solid";
@@ -10,12 +10,28 @@ interface InputBarProps {
     label?: string;
     description?: string;
     className?: string;
+    onChangeText?: (text: string) => void;
+    value?: string;
+    keyboardType?: KeyboardTypeOptions;
 }
 
-export default function InputBar({ onCancel, label, description, className }: InputBarProps) {
+export default function InputBar({
+    onCancel,
+    label,
+    description,
+    className,
+    onChangeText,
+    value: initialValue = "",
+    keyboardType = "default"
+}: InputBarProps) {
     const inputRef = useRef<TextInput>(null);
     const [focused, setFocused] = useState<boolean>(false);
-    const [value, setValue] = useState<string>("");
+    const [value, setValue] = useState<string>(initialValue);
+
+    const handleChangeText = (text: string) => {
+        setValue(text);
+        onChangeText?.(text);
+    };
 
     return (
         <View className={`px-4 ${className}`}>
@@ -26,11 +42,10 @@ export default function InputBar({ onCancel, label, description, className }: In
                         ref={inputRef}
                         className="px-4 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                         value={value}
-                        onChangeText={(text) => {
-                            setValue(text);
-                        }}
+                        onChangeText={handleChangeText}
                         onFocus={() => setFocused(true)}
                         onBlur={() => setFocused(false)}
+                        keyboardType={keyboardType}
                     />
                     {value && (
                         <Icon
