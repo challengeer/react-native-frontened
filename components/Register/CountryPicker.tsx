@@ -12,9 +12,10 @@ import { XMarkIcon } from 'react-native-heroicons/outline';
 interface CountryPickerProps {
     selectedPrefix: string;
     onSelect: (prefix: string) => void;
+    className?: string;
 }
 
-export default function CountryPicker({ selectedPrefix, onSelect }: CountryPickerProps) {
+export default function CountryPicker({ selectedPrefix, onSelect, className }: CountryPickerProps) {
     const countries = require("@/assets/data/countries.json");
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -34,7 +35,7 @@ export default function CountryPicker({ selectedPrefix, onSelect }: CountryPicke
             {/* Prefix Selector Button */}
             <TouchableOpacity
                 onPress={() => setIsModalVisible(true)}
-                className="bg-neutral-100 dark:bg-neutral-800 rounded-lg py-3 px-4"
+                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg py-3 px-4 flex-2`}
             >
                 <Text className="text-lg text-center ">{selectedPrefix}</Text>
             </TouchableOpacity>
