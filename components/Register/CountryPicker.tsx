@@ -35,7 +35,7 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
             {/* Prefix Selector Button */}
             <TouchableOpacity
                 onPress={() => setIsModalVisible(true)}
-                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg py-3 px-4 flex-2`}
+                className={"bg-neutral-100 dark:bg-neutral-800 rounded-lg py-3 px-4 flex-3"}
             >
                 <Text className="text-lg text-center ">{selectedPrefix}</Text>
             </TouchableOpacity>
