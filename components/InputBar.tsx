@@ -9,15 +9,16 @@ interface InputBarProps {
     onCancel?: () => void;
     label?: string;
     description?: string;
+    className?: string;
 }
 
-export default function InputBar({ onCancel, label, description }: InputBarProps) {
+export default function InputBar({ onCancel, label, description, className }: InputBarProps) {
     const inputRef = useRef<TextInput>(null);
     const [focused, setFocused] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
 
     return (
-        <View className="px-4 mt-10">
+        <View className={`px-4 ${className}`}>
             <View className="flex-row items-center">
                 <View className="relative flex-1 flex-row items-center">
                     <Text className="absolute text-base text-neutral-800 dark:text-neutral-100 -top-7">{label}</Text>
@@ -57,7 +58,7 @@ export default function InputBar({ onCancel, label, description }: InputBarProps
                     </Text>
                 )}
             </View>
-            <Text className="text-base text-neutral-500 dark:text-neutral-400 mt-3">{description}</Text>
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400">{description}</Text>
         </View>
     )
 }

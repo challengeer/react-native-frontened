@@ -13,6 +13,7 @@ export default function RegisterStep1({ onNext }: RegisterStep1Props) {
             <InputBar
                 label={i18n.t("register.nameLabel")}
                 description={i18n.t("register.legalText")}
+                className="mt-10"
             />
             <View className="mt-auto mb-6">
                 <CustomButton title="Continue" onPress={onNext} large />
