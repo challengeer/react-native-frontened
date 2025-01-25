@@ -9,6 +9,7 @@ interface CustomButtonProps {
     rightSection?: React.ReactNode;
     large?: boolean;
     disabled?: boolean;
+    onPress?: () => void;
 }
 
 export default function CustomButton({ title, leftSection, rightSection, large = false, disabled = false, ...props }: CustomButtonProps) {
@@ -27,9 +28,7 @@ export default function CustomButton({ title, leftSection, rightSection, large =
                     disabled ? "bg-gray-300" : "bg-primary-500 dark:bg-primary-400",
                     "flex-row items-center justify-center rounded-full relative",
                 ].join(" ")}
-                onPress={() => {
-                    console.log("Button pressed");
-                }}
+                onPress={onPress}
                 {...props}
             >
                 {leftSection && <View className="absolute left-4">{leftSection}</View>}
