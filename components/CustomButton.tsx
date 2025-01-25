@@ -24,7 +24,7 @@ export default function CustomButton({ title, leftSection, rightSection, large =
             <TouchableOpacity
                 disabled={disabled}
                 className={[
-                    large ? "py-6 px-8" : "py-4 px-2",
+                    large ? "py-4 px-6" : "py-2 px-1",
                     disabled ? "bg-gray-300" : "bg-primary-500 dark:bg-primary-400",
                     "flex-row items-center justify-center rounded-full relative",
                 ].join(" ")}
