@@ -15,7 +15,7 @@ export default function RegisterStep2({ onNext }: RegisterStep2Props) {
       <DatePicker
         value={dateOfBirth}
         onChange={setDateOfBirth}
-      />
+      /> {/* NOT SHOWING BUT MAYBE BECAUSE IM ON PC */}
       <View className="mt-auto mb-6">
         <CustomButton title="Continue" onPress={onNext} large />
       </View>
