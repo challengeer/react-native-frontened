@@ -61,9 +61,8 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                     <View className="px-4 flex-1">
                         {/* Search Bar */}
                         <SearchBar
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                            placeholder="Search country or code"
+                            onSearch={setSearchQuery}
+                            onCancel={() => setSearchQuery("")}
                         />
 
                         {/* Country List */}
