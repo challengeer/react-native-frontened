@@ -11,6 +11,7 @@ export default function UsernameInput() {
             <InputBar
                 label={i18n.t("register.usernameLabel")}
                 keyboardType="default"
+                autoFocus
             />
             <View> {/* Just to have these thing ready as well, couldn't figure out how to color them yet*/}
                 <View className="flex-row items-center gap-2">

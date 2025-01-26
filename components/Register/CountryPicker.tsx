@@ -7,7 +7,8 @@ import CountryItem from '@/components/CountryItem';
 import CountryInterface from '@/types/CountryInterface';
 import Header from '@/components/Header';
 import IconCircle from '@/components/IconCircle';
-import { XMarkIcon } from 'react-native-heroicons/outline';
+import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
+import Icon from '@/components/Icon';
 
 interface CountryPickerProps {
     selectedPrefix: string;
@@ -35,9 +36,10 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
             {/* Prefix Selector Button */}
             <TouchableOpacity
                 onPress={() => setIsModalVisible(true)}
-                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg items-center justify-center py-3 px-4 ${className}`}
+                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-row items-center justify-center gap-2 py-3 px-4 ${className}`}
             >
                 <Text className="text-lg text-center">{selectedPrefix}</Text>
+                <Icon icon={ChevronDownIcon} size={16} />
             </TouchableOpacity>
 
             {/* Modal to select country prefix */}
@@ -45,8 +47,9 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                 visible={isModalVisible}
                 animationType="slide"
                 presentationStyle="pageSheet"
+                onShow={() => setSearchQuery("")}
             >
-                <View className="flex-1 bg-white">
+                <View className="flex-1 bg-white dark:bg-neutral-900">
                     {/* Header */}
                     <Header
                         title={i18n.t("countryPrefix.header")}
@@ -58,7 +61,7 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                         }
                     />
 
-                    <View className="px-4 flex-1">
+                    <View className="px-4 gap-3 flex-1">
                         {/* Search Bar */}
                         <SearchBar
                             onSearch={setSearchQuery}
@@ -67,20 +70,17 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
 
                         {/* Country List */}
                         <FlatList
-                            className="mt-4"
+                            overScrollMode="never"
+                            showsVerticalScrollIndicator={false}
                             data={filteredCountries}
                             keyExtractor={(item: CountryInterface) => item.code}
                             renderItem={({ item }) => (
-                                <TouchableOpacity
+                                <CountryItem
+                                    flag={item.flag}
+                                    name={item.name}
+                                    dial_code={item.dial_code}
                                     onPress={() => handleSelectPrefix(item.dial_code)}
-                                    className="py-3"
-                                >
-                                    <CountryItem
-                                        flag={item.flag}
-                                        name={item.name}
-                                        dial_code={item.dial_code}
-                                    />
-                                </TouchableOpacity>
+                                />
                             )}
                         />
                     </View>

@@ -8,7 +8,7 @@ interface StepIndicatorBarProps {
 
 export default function StepIndicatorBar({ stepCount, currentPosition, className = "" }: StepIndicatorBarProps) {
     return (
-        <View className={`flex-row items-center justify-between gap-2 ${className}`}>
+        <View className={`flex-row items-center justify-between gap-1.5 ${className}`}>
             {Array.from({ length: stepCount }).map((_, index) => (
                 <View
                     key={index}

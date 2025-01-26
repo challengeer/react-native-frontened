@@ -1,8 +1,9 @@
-import { View, Text } from "react-native";
-import InputBar from "@/components/InputBar";
-import { CheckCircleIcon, ExclamationCircleIcon } from "react-native-heroicons/outline";
-import { useState, useEffect } from "react";
 import i18n from "@/i18n";
+import { useState, useEffect } from "react";
+import { View } from "react-native";
+import { CheckCircleIcon, ExclamationCircleIcon } from "react-native-heroicons/outline";
+import InputBar from "@/components/InputBar";
+import Text from "@/components/Text";
 
 interface PasswordValidation {
     isValid: boolean;
@@ -39,6 +40,7 @@ export default function PasswordInput({ value, onChange, onValidationChange }: P
                 value={value}
                 onChangeText={onChange}
                 secureTextEntry
+                autoFocus
             />
             <View className="flex-row items-center mt-2 gap-1">
                 {validation.isValid ? (
