@@ -20,10 +20,11 @@ export default function RegisterStep3() {
       <View className="flex-1 px-4">
         <Text className="text-base">Enter your phone number</Text>
 
-        <View className="flex-row w-full">
+        <View className="flex-row w-full gap-2">
           <CountryPicker
             selectedPrefix={selectedPrefix}
             onSelect={setSelectedPrefix}
+            className="flex-2"
           />
           <InputBar value={phoneNumber} onChangeText={setPhoneNumber} keyboardType="phone-pad" className="flex-1" />
         </View>

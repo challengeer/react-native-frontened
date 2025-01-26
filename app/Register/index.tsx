@@ -25,7 +25,7 @@ export default function RegisterStep1() {
                     <CustomButton
                         large
                         title="Continue"
-                        onPress={() => router.push("/Register/step2")}
+                        onPress={() => router.push("/register/step2")}
                         disabled={name.length < 3}
                     />
                 </View>
