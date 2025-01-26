@@ -54,7 +54,7 @@ export default function VerificationInput({ value, onChange }: VerificationInput
                     onKeyPress={(e) => handleKeyPress(e, index)}
                     keyboardType="number-pad"
                     maxLength={1}
-                    className="w-12 h-16 bg-gray-100 rounded-lg text-xl font-medium text-center"
+                    className="w-12 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-xl font-medium text-center"
                     selectTextOnFocus
                 />
             ))}
