@@ -1,11 +1,6 @@
-import i18n from "@/i18n";
 import { View } from "react-native";
-import InputBar from "@/components/InputBar";
 import CustomButton from "@/components/CustomButton";
-import Text from "@/components/Text";
 import { router } from "expo-router";
-import Icon from "@/components/Icon";
-import { CheckCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "react-native-heroicons/outline";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import UsernameInput from "@/components/register/UsernameInput";
 
