@@ -11,7 +11,7 @@ export default function RegisterStep1() {
 
     return (
         <View className="flex-1 gap-6">
-            <RegisterHeader stepCount={5} currentPosition={1} />
+            <RegisterHeader stepCount={6} currentPosition={1} />
             <View className="flex-1 px-4">
                 <InputBar
                     value={name}

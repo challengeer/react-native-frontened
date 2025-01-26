@@ -10,7 +10,7 @@ export default function RegisterStep2() {
 
   return (
     <View className="flex-1 gap-6">
-      <RegisterHeader stepCount={5} currentPosition={2} />
+      <RegisterHeader stepCount={6} currentPosition={2} />
       <View className="flex-1 px-4">
         <DatePicker
           value={dateOfBirth}

@@ -16,9 +16,9 @@ export default function RegisterStep4({ phoneNumber }: RegisterStep4Props) {
 
   return (
     <View className="flex-1 gap-6">
-      <RegisterHeader stepCount={5} currentPosition={4} />
+      <RegisterHeader stepCount={6} currentPosition={4} />
       <View className="flex-1 px-4">
-        <Text className="text-base">{i18n.t("register.verificationCodeLabel")}</Text>
+        <Text className="text-base font-medium">{i18n.t("register.verificationCodeLabel")}</Text>
         <VerificationInput
           value={code}
           onChange={setCode}

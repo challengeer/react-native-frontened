@@ -17,9 +17,9 @@ export default function RegisterStep3() {
 
   return (
     <View className="flex-1 gap-6">
-      <RegisterHeader stepCount={5} currentPosition={3} />
+      <RegisterHeader stepCount={6} currentPosition={3} />
       <View className="flex-1 px-4">
-        <Text className="text-base">{i18n.t("register.phoneNumberLabel")}</Text>
+        <Text className="text-base font-medium">{i18n.t("register.phoneNumberLabel")}</Text>
 
         <View className="flex-row w-full gap-2 items-center">
           <CountryPicker
