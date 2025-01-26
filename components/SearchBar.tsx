@@ -33,7 +33,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
 
                 <TextInput
                     ref={inputRef}
-                    className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
+                    className="px-14 py-3 pr-2 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                     placeholderTextColor={placeholderColor}
                     placeholder={i18n.t("searchBar.placeholder")}
                     value={value}
