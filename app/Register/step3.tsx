@@ -5,6 +5,7 @@ import InputBar from "@/components/InputBar";
 import { useState } from "react";
 import { router } from "expo-router";
 import RegisterHeader from "@/components/register/RegisterHeader";
+import i18n from "@/i18n";
 
 export default function RegisterStep3() {
   const [selectedPrefix, setSelectedPrefix] = useState('+1');
@@ -18,7 +19,7 @@ export default function RegisterStep3() {
     <View className="flex-1 gap-6">
       <RegisterHeader stepCount={5} currentPosition={3} />
       <View className="flex-1 px-4">
-        <Text className="text-base">Enter your phone number</Text>
+        <Text className="text-base">{i18n.t("register.phoneNumberLabel")}</Text>
 
         <View className="flex-row w-full gap-2 items-center">
           <CountryPicker
@@ -29,8 +30,8 @@ export default function RegisterStep3() {
           <InputBar value={phoneNumber} onChangeText={setPhoneNumber} keyboardType="phone-pad" className="flex-1" />
         </View>
 
-        <Text className="text-gray-500 text-sm mt-2">
-          We'll send you a code to verify your phone number
+        <Text className="text-gray-500 text-sm">
+          {i18n.t("register.phoneNumberDescription")}
         </Text>
 
         <View className="mt-auto mb-4">
