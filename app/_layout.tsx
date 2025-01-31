@@ -24,7 +24,7 @@ export default function Root() {
         };
 
         checkAuth();
-    })
+    }, [])
 
     useEffect(() => {
         NavigationBar.setBackgroundColorAsync(colorScheme === "dark" ? "#171717" : "#ffffff");
