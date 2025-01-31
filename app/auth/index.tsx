@@ -6,7 +6,7 @@ export default function AuthPage() {
     return (
         <View className="flex-1 justify-center px-4 gap-3">
             <CustomButton large title="Register" onPress={() => router.push("/auth/register")} />
-            <CustomButton large title="Log in" onPress={() => router.push("/auth/login")} />
+            <CustomButton large secondary title="Log in" onPress={() => router.push("/auth/login")} />
         </View>
     )
 }

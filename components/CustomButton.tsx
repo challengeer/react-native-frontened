@@ -6,18 +6,19 @@ interface CustomButtonProps extends TouchableOpacityProps {
     leftSection?: React.ReactNode;
     rightSection?: React.ReactNode;
     large?: boolean;
+    secondary?: boolean;
     disabled?: boolean;
 }
 
-export default function CustomButton({ title, leftSection, rightSection, large = false, disabled = false, ...props }: CustomButtonProps) {
+export default function CustomButton({ title, leftSection, rightSection, large = false, secondary = false, disabled = false, ...props }: CustomButtonProps) {
     return (
         <TouchableOpacity
             disabled={disabled}
-            className={`${large ? "py-5 px-8" : "py-2 px-4"} ${disabled && "opacity-20"} bg-primary-500 flex-row items-center justify-center rounded-full`}
+            className={`${large ? "py-5 px-8" : "py-2 px-4"} ${disabled && "opacity-20"} ${secondary ? "bg-neutral-100 dark:bg-neutral-800" : "bg-primary-500"} flex-row items-center justify-center rounded-full`}
             {...props}
         >
             {leftSection}
-            <Text className={`text-white ${large && "font-bold text-xl"}`}>
+            <Text className={`${secondary ? "text-neutral-900" : "text-white"} ${large && "font-bold text-xl"}`}>
                 {title}
             </Text>
             {rightSection}
