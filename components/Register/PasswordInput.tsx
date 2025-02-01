@@ -46,9 +46,9 @@ export default function PasswordInput({ value, onChange, onValidationChange }: P
             <View className="flex-row items-center gap-1">
                 <Icon
                     icon={CheckCircleIcon}
-                    size={16}
-                    lightColor={validation.isValid ? "#16a34a" : "#737373"}
-                    darkColor={validation.isValid ? "#16a34a" : "#a3a3a3"}
+                    size={20}
+                    lightColor={validation.isValid ? "#22c55e" : "#737373"}
+                    darkColor={validation.isValid ? "#22c55e" : "#a3a3a3"}
                 />
                 <Text type="secondary" className="text-sm">
                     {validation.message}
