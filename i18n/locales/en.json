@@ -21,6 +21,7 @@
         "header": "Country prefix"
     },
     "searchBar": {
-        "placeholder": "Search"
+        "placeholder": "Search",
+        "cancel": "Cancel"
     }
 }

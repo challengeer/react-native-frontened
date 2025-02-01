@@ -21,6 +21,7 @@
         "header": "Predvoľba krajiny"
     },
     "searchBar": {
-        "placeholder": "Hľadať"
+        "placeholder": "Hľadať",
+        "cancel": "Zrušiť"
     }
 }

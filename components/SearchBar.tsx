@@ -67,7 +67,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                         inputRef.current?.blur();
                     }}
                 >
-                    Cancel
+                    {i18n.t("searchBar.cancel")}
                 </Text>
             )}
         </View>
