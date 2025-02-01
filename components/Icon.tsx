@@ -19,9 +19,9 @@ export interface ThemedIconProps extends PressableProps {
 
 export default function Icon({
   className = "",
-  lightColor = "#171717", // text-neutral-500
-  darkColor = "#f5f5f5",  // dark:text-neutral-400
-  strokeWidth = 2,
+  lightColor = "#171717",
+  darkColor = "#f5f5f5", 
+  strokeWidth = 1.75,
   size = 24,
   ...props
 }: ThemedIconProps) {

@@ -1,9 +1,10 @@
 import i18n from "@/i18n";
 import { useState, useEffect } from "react";
 import { View } from "react-native";
-import { CheckCircleIcon, ExclamationCircleIcon } from "react-native-heroicons/outline";
+import { CheckCircleIcon } from "react-native-heroicons/solid";
 import InputBar from "@/components/InputBar";
 import Text from "@/components/Text";
+import Icon from "@/components/Icon";
 
 interface PasswordValidation {
     isValid: boolean;
@@ -34,7 +35,7 @@ export default function PasswordInput({ value, onChange, onValidationChange }: P
     }, [value]);
 
     return (
-        <View>
+        <View className="gap-2">
             <InputBar
                 label="Password"
                 value={value}
@@ -42,16 +43,14 @@ export default function PasswordInput({ value, onChange, onValidationChange }: P
                 secureTextEntry
                 autoFocus
             />
-            <View className="flex-row items-center mt-2 gap-1">
-                {validation.isValid ? (
-                    <CheckCircleIcon size={16} color="#16a34a" />
-                ) : (
-                    <ExclamationCircleIcon size={16} color="#dc2626" />
-                )}
-                <Text
-                    className={`text-sm ${validation.isValid ? "text-green-600" : "text-red-600"
-                        }`}
-                >
+            <View className="flex-row items-center gap-1">
+                <Icon
+                    icon={CheckCircleIcon}
+                    size={16}
+                    lightColor={validation.isValid ? "#16a34a" : "#737373"}
+                    darkColor={validation.isValid ? "#16a34a" : "#a3a3a3"}
+                />
+                <Text type="secondary" className="text-sm">
                     {validation.message}
                 </Text>
             </View>
