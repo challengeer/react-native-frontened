@@ -29,7 +29,7 @@ export default function RegisterStep4({ phoneNumber }: RegisterStep4Props) {
         <View className="mt-auto mb-4">
           <CustomButton
             title="Continue"
-            onPress={() => router.push("/register/step5")}
+            onPress={() => router.push("/auth/register/step5")}
             large
             disabled={code.length !== 6}
           />

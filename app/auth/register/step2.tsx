@@ -17,7 +17,7 @@ export default function RegisterStep2() {
           onChange={setDateOfBirth}
         /> {/*NOT SHOWING BUT MAYBE BECAUSE IM ON PC */}
         <View className="mt-auto mb-4">
-          <CustomButton title="Continue" onPress={() => router.push("/register/step3")} large />
+          <CustomButton title="Continue" onPress={() => router.push("/auth/register/step3")} large />
         </View>
       </View>
     </View>

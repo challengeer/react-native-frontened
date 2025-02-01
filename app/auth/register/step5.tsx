@@ -12,7 +12,7 @@ export default function RegisterStep5() {
       <View className="flex-1 px-4">
         <UsernameInput />
         <View className="mt-auto mb-4">
-          <CustomButton large title="Continue" onPress={() => router.push("/register/step6")} />
+          <CustomButton large title="Continue" onPress={() => router.push("/auth/register/step6")} />
         </View>
       </View>
     </View>

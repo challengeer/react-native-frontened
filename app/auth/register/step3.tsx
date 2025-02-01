@@ -14,7 +14,7 @@ export default function RegisterStep3() {
         <View className="mt-auto mb-4">
           <CustomButton
             title="Continue"
-            onPress={() => router.push("/register/step4")}
+            onPress={() => router.push("/auth/register/step4")}
             large
             // disabled={!isValidPhoneNumber(phoneNumber)}
           />
