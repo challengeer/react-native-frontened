@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, TouchableOpacity } from 'react-native'
+import { Modal, Pressable, View } from 'react-native'
 import Header from '@/components/Header';
 import IconCircle from '@/components/IconCircle';
 import { XMarkIcon } from 'react-native-heroicons/outline';
@@ -8,39 +8,20 @@ import FriendDisplay from '@/components/friends/FriendDisplay';
 import CustomButton from '@/components/CustomButton';
 import Icon from '@/components/Icon';
 import CustomAvatar from '@/components/CustomAvatar';
+import Text from '@/components/Text';
 
-
-interface FriendInviteProps {
-    className?: string;
-}
-
-export default function FriendInvite({ className }: FriendInviteProps) {
+export default function FriendInvite() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     return (
         <>
             {/* Friend request button for opening modal */}
-            <TouchableOpacity
-                onPress={() => setIsModalVisible(true)}
-            >
-                <View className="relative">
-                    <View className="absolute 
-                        items-center 
-                        justify-center 
-                        left-5 
-                        bottom-6 
-                        bg-red-500 
-                        text-white 
-                        text-xs 
-                        aspect-square 
-                        rounded-full 
-                        w-5 
-                        h-5">
-                        9
-                    </View> {/* I have no idea how to make a circle responsible but if there is a lot of friend requests we'll just put 9+ there */}
-                    <IconCircle icon={UserPlusIcon} size={36} />
-                </View>
-            </TouchableOpacity>
+            <View className="relative">
+                <IconCircle icon={UserPlusIcon} onPress={() => setIsModalVisible(true)} />
+                <Pressable onPress={() => setIsModalVisible(true)} className="z-50 absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
+                    <Text className="text-neutral-100 text-xs font-medium">9</Text>
+                </Pressable>
+            </View>
 
             {/* MODAL FOR FRIEND REQUESTS */}
             <Modal
@@ -56,7 +37,6 @@ export default function FriendInvite({ className }: FriendInviteProps) {
                             <IconCircle
                                 icon={XMarkIcon}
                                 onPress={() => setIsModalVisible(false)}
-                                size={36}
                             />
                         }
                     />

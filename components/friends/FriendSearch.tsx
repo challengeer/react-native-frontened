@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, TouchableOpacity } from 'react-native'
+import { Modal, View } from 'react-native'
 import i18n from '@/i18n';
 import SearchBar from '@/components/SearchBar';
 import Text from '@/components/Text';
@@ -23,11 +23,7 @@ export default function FriendSearch({ className }: FriendSearchProps) {
     return (
         <>
             {/* Prefix Selector Button */}
-            <TouchableOpacity
-                onPress={() => setIsModalVisible(true)}
-            >
-                <IconCircle icon={MagnifyingGlassIcon} size={36} />
-            </TouchableOpacity>
+            <IconCircle icon={MagnifyingGlassIcon} onPress={() => setIsModalVisible(true)} />
 
             {/* Modal to select country prefix */}
             <Modal
