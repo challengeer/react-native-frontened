@@ -10,7 +10,11 @@ interface TextElementProps extends RNTextProps {
 export default function Text({ children, type = "primary", className = "", ...props }: TextElementProps) {
     return (
         <RNText 
-            className={`text-lg ${
+            className={`${
+                !className.match(/\btext-\w+\b/)
+                  ? "text-lg"
+                  : ""
+              } ${
                 type === "primary" 
                     ? "text-neutral-900 dark:text-neutral-100" 
                     : "text-neutral-500 dark:text-neutral-400"

@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
-import { Modal, Pressable, View } from 'react-native'
-import Header from '@/components/Header';
-import IconCircle from '@/components/IconCircle';
+import { useEffect, useState } from 'react';
+import { Modal, Pressable, View, ScrollView } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
-import FriendDisplay from '@/components/friends/FriendDisplay';
+import IconCircle from '@/components/IconCircle';
+import Header from '@/components/Header';
 import CustomButton from '@/components/CustomButton';
 import Icon from '@/components/Icon';
-import CustomAvatar from '@/components/CustomAvatar';
 import Text from '@/components/Text';
+import UserItem from '../UserItem';
+
+interface Friend {
+    user_id: number;
+    display_name: string;
+    username: string;
+}
 
 export default function FriendInvite() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [requests, setRequests] = useState<Friend[]>([]);
+
+    useEffect(() => {
+        fetch("https://challengeer.srodo.sk/users/1/requests")
+            .then(res => res.json())
+            .then(data => setRequests(data))
+    }, [])
 
     return (
         <>
             {/* Friend request button for opening modal */}
             <View className="relative">
                 <IconCircle icon={UserPlusIcon} onPress={() => setIsModalVisible(true)} />
-                <Pressable onPress={() => setIsModalVisible(true)} className="z-50 absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
-                    <Text className="text-neutral-100 text-xs font-medium">9</Text>
+                <Pressable onPress={() => setIsModalVisible(true)} className="absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
+                    <Text className="text-white text-xs font-medium">9</Text>
                 </Pressable>
             </View>
 
@@ -33,7 +45,7 @@ export default function FriendInvite() {
                     {/* Header */}
                     <Header
                         title="Friend Requests"
-                        rightSection={
+                        leftSection={
                             <IconCircle
                                 icon={XMarkIcon}
                                 onPress={() => setIsModalVisible(false)}
@@ -41,19 +53,32 @@ export default function FriendInvite() {
                         }
                     />
 
-                    <View className="px-4 gap-3 flex-1">
-                        <FriendDisplay rightSection={
-                            <View className="flex-row gap-2 items-center">
-                                <CustomButton title="Accept" leftSection={
-                                    <Icon icon={UserPlusIcon} lightColor="white" darkColor="white" size={16} />
-                                } />
-                                <Icon icon={XMarkIcon} />
-                            </View>
-                        }
-                            leftSection={
-                                <CustomAvatar />
-                            } />
-                    </View>
+                    <ScrollView
+                        overScrollMode="never"
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {requests.map(user => (
+                            <UserItem
+                                key={user.user_id}
+                                displayName={user.display_name}
+                                username={user.username}
+                                rightSection={
+                                    <View className="flex-row gap-2 items-center">
+                                        <CustomButton
+                                            title="Accept"
+                                            leftSection={
+                                                <Icon
+                                                    icon={UserPlusIcon}
+                                                    lightColor="white"
+                                                    darkColor="white"
+                                                />
+                                            } />
+                                        <Icon icon={XMarkIcon} />
+                                    </View>
+                                }
+                            />
+                        ))}
+                    </ScrollView>
                 </View>
             </Modal>
         </>
