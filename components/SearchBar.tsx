@@ -10,9 +10,10 @@ import Icon from "@/components/Icon";
 interface SearchBarProps {
     onCancel?: () => void;
     onSearch?: (query: string) => void;
+    withCancel?: boolean;
 }
 
-export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
+export default function SearchBar({ onCancel, onSearch, withCancel = false }: SearchBarProps) {
     const inputRef = useRef<TextInput>(null);
     const [focused, setFocused] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
@@ -59,7 +60,7 @@ export default function SearchBar({ onCancel, onSearch }: SearchBarProps) {
                     />
                 )}
             </View>
-            {focused && (
+            {focused && withCancel && (
                 <Text
                     onPress={() => {
                         setFocused(false);
