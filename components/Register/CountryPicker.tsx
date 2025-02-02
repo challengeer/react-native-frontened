@@ -66,6 +66,7 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                         <SearchBar
                             onSearch={setSearchQuery}
                             onCancel={() => setSearchQuery("")}
+                            withCancel
                         />
 
                         {/* Country List */}
