@@ -36,11 +36,12 @@ export default function FriendsPage() {
                 overScrollMode="never"
                 showsVerticalScrollIndicator={false}
             >
-                {friends.map((friend) => (
+                {friends.map((user) => (
                     <UserItem
-                        key={friend.user_id}
-                        displayName={friend.display_name}
-                        username={friend.username}
+                        key={user.user_id}
+                        userId={user.user_id}
+                        displayName={user.display_name}
+                        username={user.username}
                         rightSection={
                             <View className="flex-row gap-2 items-center">
                                 <CustomButton
@@ -62,6 +63,7 @@ export default function FriendsPage() {
                 {contacts.map((user) => (
                     <UserItem
                         key={user.user_id}
+                        userId={user.user_id}
                         displayName={user.display_name}
                         username={user.username}
                         rightSection={
