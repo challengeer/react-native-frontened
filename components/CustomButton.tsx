@@ -14,11 +14,11 @@ export default function CustomButton({ title, leftSection, rightSection, large =
     return (
         <TouchableOpacity
             disabled={disabled}
-            className={`${large ? "py-5 px-8" : "py-2 px-4"} ${disabled && "opacity-20"} ${secondary ? "bg-neutral-100 dark:bg-neutral-800" : "bg-primary-500"} flex-row items-center justify-center rounded-full`}
+            className={`${large ? "py-5 px-8" : "py-2 px-4"} ${disabled && "opacity-20"} ${secondary ? "bg-neutral-100 dark:bg-neutral-800" : "bg-primary-500"} flex-row items-center gap-2 justify-center rounded-full`}
             {...props}
         >
             {leftSection}
-            <Text className={`${secondary ? "text-neutral-900" : "text-white"} ${large && "font-bold text-xl"}`}>
+            <Text className={`${secondary ? "text-neutral-900" : "text-white"} ${large ? "font-bold text-xl" : "text-sm"}`}>
                 {title}
             </Text>
             {rightSection}
