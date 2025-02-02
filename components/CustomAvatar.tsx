@@ -1,7 +1,7 @@
 import UserAvatar from "react-native-user-avatar"; //No idea wgy is there an error, it seems to work fine
 
 interface CustomAvatarProps {
-    name: string; // Used for initials, maybe change it later but I think it's good for default setting
+    name?: string; // Used for initials, maybe change it later but I think it's good for default setting
     large?: boolean; 
     src?: string; // Used for image/backround
 }

@@ -5,11 +5,12 @@ import CustomButton from "@/components/CustomButton";
 import Icon from "@/components/Icon";
 import { UserPlusIcon, XMarkIcon } from "react-native-heroicons/solid";
 import CustomAvatar from "@/components/CustomAvatar";
+import FriendsHeader from "@/components/friends/FriendsHeader";
 
 export default function FriendsPage() {
     return (
         <View>
-            <Text>Friends</Text>
+            <FriendsHeader />
             <FriendDisplay rightSection={
                 <View className="flex-row gap-2 items-center">
                     <CustomButton title="Add" leftSection={
