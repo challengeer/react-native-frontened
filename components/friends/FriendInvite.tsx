@@ -10,15 +10,12 @@ import Icon from '@/components/Icon';
 import CustomAvatar from '@/components/CustomAvatar';
 
 
-interface CountryPickerProps {
+interface FriendInviteProps {
     className?: string;
 }
 
-export default function FriendInvite({ className }: CountryPickerProps) {
-    const countries = require("@/assets/data/countries.json");
-    const [searchQuery, setSearchQuery] = useState<string>("");
+export default function FriendInvite({ className }: FriendInviteProps) {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
 
     return (
         <>
@@ -50,7 +47,6 @@ export default function FriendInvite({ className }: CountryPickerProps) {
                 visible={isModalVisible}
                 animationType="slide"
                 presentationStyle="pageSheet"
-                onShow={() => setSearchQuery("")}
             >
                 <View className="flex-1 bg-white dark:bg-neutral-900">
                     {/* Header */}
