@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
@@ -56,7 +57,7 @@ export default function FriendsPage() {
                     />
                 ))}
 
-                <Text className="text-2xl font-bold px-4 pt-4 pb-2">Contacts</Text>
+                <Text className="text-2xl font-bold px-4 pt-4 pb-2">{i18n.t("friends.contacts")}</Text>
                 {contacts.map((user) => (
                     <UserItem
                         key={user.user_id}

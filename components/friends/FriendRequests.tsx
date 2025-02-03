@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, View, ScrollView } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
@@ -42,7 +43,7 @@ export default function FriendRequests() {
                 <View className="flex-1 bg-white dark:bg-neutral-900">
                     {/* Header */}
                     <Header
-                        title="Friend Requests"
+                        title={i18n.t("friends.friendRequests")}
                         leftSection={
                             <IconCircle
                                 icon={XMarkIcon}

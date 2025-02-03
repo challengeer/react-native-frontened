@@ -1,4 +1,9 @@
 {
+    "tabs": {
+        "map": "Mapa",
+        "challenges": "Výzvy",
+        "friends": "Priatelia"
+    },
     "register": {
         "header": "Vytvoriť účet",
         "nameLabel": "Ako sa voláš?",
@@ -23,5 +28,10 @@
     "searchBar": {
         "placeholder": "Hľadať",
         "cancel": "Zrušiť"
+    },
+    "friends": {
+        "header": "Priatelia",
+        "contacts": "Kontakty",
+        "friendRequests": "Žiadosti o priateľstvo"
     }
 }

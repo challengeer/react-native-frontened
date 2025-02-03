@@ -1,4 +1,9 @@
 {
+    "tabs": {
+        "map": "Map",
+        "challenges": "Challenges",
+        "friends": "Friends"
+    },
     "register": {
         "header": "Create account",
         "nameLabel": "What's your name?",
@@ -23,5 +28,10 @@
     "searchBar": {
         "placeholder": "Search",
         "cancel": "Cancel"
+    },
+    "friends": {
+        "header": "Friends",
+        "contacts": "Contacts",
+        "friendRequests": "Friend requests"
     }
 }

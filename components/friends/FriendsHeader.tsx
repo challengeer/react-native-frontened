@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { View } from "react-native";
 import Header from "@/components/Header";
 import FriendRequests from "@/components/friends/FriendRequests";
@@ -7,7 +8,7 @@ import Avatar from "@/components/Avatar";
 export default function FriendsHeader() {
     return (
         <Header
-            title="Friends"
+            title={i18n.t("friends.header")}
             leftSection={
                 <Avatar size="sm" name="Mark Takac" />
             }
