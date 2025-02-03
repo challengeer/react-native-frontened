@@ -63,6 +63,7 @@ export default function FriendRequests() {
                                 rightSection={
                                     <View className="flex-row gap-2 items-center">
                                         <Button
+                                            size="sm"
                                             title="Accept"
                                             leftSection={
                                                 <Icon
