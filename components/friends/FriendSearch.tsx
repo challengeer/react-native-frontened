@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
-import { Modal, View } from 'react-native'
 import i18n from '@/i18n';
+import { useEffect, useState, useRef } from 'react';
+import { Modal, ScrollView, View, TextInput } from 'react-native'
+import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
+import { UserPlusIcon } from 'react-native-heroicons/solid';
+import IconCircle from '@/components/IconCircle';
+import Icon from '@/components/Icon';
+import Button from '@/components/Button';
+import UserInterface from '@/types/UserInterface';
+import UserItem from '@/components/UserItem';
 import SearchBar from '@/components/SearchBar';
 import Text from '@/components/Text';
-import IconCircle from '@/components/IconCircle';
-import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
-import FriendDisplay from '@/components/friends/FriendDisplay';
-import Button from '@/components/Button';
-import Icon from '@/components/Icon';
-import { UserPlusIcon } from 'react-native-heroicons/solid';
-import CustomAvatar from '@/components/CustomAvatar';
 
-interface FriendSearchProps {
-    className?: string;
-}
-
-export default function FriendSearch({ className }: FriendSearchProps) {
-    const [searchQuery, setSearchQuery] = useState<string>("");
+export default function FriendSearch() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [users, setUsers] = useState<UserInterface[]>([]);
+    const searchInputRef = useRef<TextInput>(null);
 
+    useEffect(() => {
+        fetch("https://challengeer.srodo.sk/users/")
+            .then(res => res.json())
+            .then(data => setUsers(data))
+    }, [])
 
     return (
         <>
@@ -30,40 +33,50 @@ export default function FriendSearch({ className }: FriendSearchProps) {
                 visible={isModalVisible}
                 animationType="slide"
                 presentationStyle="pageSheet"
-                onShow={() => setSearchQuery("")}
+                onRequestClose={() => setIsModalVisible(false)}
+                onShow={() => {
+                    setSearchQuery("");
+                    searchInputRef.current?.focus();
+                }}
             >
-                <View className="bg-white dark:bg-neutral-900">
-                    <View className="px-4 py-4 gap-3">
-                        {/* Search Bar */}
-                        <View className="flex-row items-center gap-2 justify-between">
-                            <View className="flex-1">
-                                <SearchBar
-                                    onSearch={setSearchQuery}
-                                    onCancel={() => setSearchQuery("")}
-                                />
-                            </View>
-                            <Text
-                                onPress={() => {
-                                    setIsModalVisible(false);
-                                }}
-                            >
-                                {i18n.t("searchBar.cancel")}
-                            </Text>
-                        </View>
-                        <View className="gap-3 flex-1">
-                            <FriendDisplay rightSection={
-                                <View className="flex-row gap-2 items-center">
-                                    <Button size="sm" title="Invite" leftSection={
-                                        <Icon icon={UserPlusIcon} lightColor="white" darkColor="white" size={16} />
-                                    } />
-                                    <Icon icon={XMarkIcon} />
-                                </View>
-                            }
-                                leftSection={
-                                    <CustomAvatar />
-                                } />
-                        </View>
+                <View className="flex-1 bg-white dark:bg-neutral-900">
+                    <View className="p-4 w-full flex-row items-center gap-4">
+                        <SearchBar
+                            onSearch={setSearchQuery}
+                            inputRef={searchInputRef}
+                        />
+                        <Text onPress={() => setIsModalVisible(false)} >
+                            {i18n.t("searchBar.cancel")}
+                        </Text>
                     </View>
+
+                    <ScrollView
+                        overScrollMode="never"
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {users.map((user) => (
+                            <UserItem
+                                key={user.user_id}
+                                displayName={user.display_name}
+                                username={user.username}
+                                rightSection={
+                                    <View className="flex-row gap-2 items-center">
+                                        <Button
+                                            size="sm"
+                                            title="Add"
+                                            leftSection={
+                                                <Icon
+                                                    icon={UserPlusIcon}
+                                                    lightColor="white"
+                                                    darkColor="white"
+                                                />
+                                            } />
+                                        <Icon icon={XMarkIcon} />
+                                    </View>
+                                }
+                            />
+                        ))}
+                    </ScrollView>
                 </View>
             </Modal >
         </>
