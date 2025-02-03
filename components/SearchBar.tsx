@@ -24,13 +24,14 @@ export default function SearchBar({ onCancel, onSearch, withCancel = false }: Se
     return (
         <View className="w-full flex-row items-center gap-4">
             <View className="relative flex-1 flex-row items-center">
-                <Icon
-                    icon={MagnifyingGlassIcon}
-                    className="absolute top-3 left-4 z-10"
-                    lightColor="#737373"
-                    darkColor="#a3a3a3"
-                    onPress={() => inputRef.current?.focus()}
-                />
+                <View className="absolute top-3 left-4 z-10">
+                    <Icon
+                        icon={MagnifyingGlassIcon}
+                        lightColor="#737373"
+                        darkColor="#a3a3a3"
+                        onPress={() => inputRef.current?.focus()}
+                    />
+                </View>
 
                 <TextInput
                     ref={inputRef}
@@ -47,17 +48,18 @@ export default function SearchBar({ onCancel, onSearch, withCancel = false }: Se
                     numberOfLines={1}
                 />
                 {value && (
-                    <Icon
-                        icon={XCircleIcon}
-                        className="absolute top-3 right-4 z-10"
-                        lightColor="#737373"
-                        darkColor="#a3a3a3"
-                        onPress={() => {
-                            setValue("");
-                            onSearch?.("");
-                            inputRef.current?.blur();
-                        }}
-                    />
+                    <View className="absolute top-3 right-4 z-10">
+                        <Icon
+                            icon={XCircleIcon}
+                            lightColor="#737373"
+                            darkColor="#a3a3a3"
+                            onPress={() => {
+                                setValue("");
+                                onSearch?.("");
+                                inputRef.current?.blur();
+                            }}
+                        />
+                    </View>
                 )}
             </View>
             {focused && withCancel && (
