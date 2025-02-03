@@ -2,22 +2,17 @@ import { useEffect, useState } from 'react';
 import { Modal, Pressable, View, ScrollView } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
+import UserInterface from '@/types/UserInterface';
 import IconCircle from '@/components/IconCircle';
 import Header from '@/components/Header';
-import CustomButton from '@/components/Button';
+import Button from '@/components/Button';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import UserItem from '@/components/UserItem';
 
-interface Friend {
-    user_id: number;
-    display_name: string;
-    username: string;
-}
-
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [requests, setRequests] = useState<Friend[]>([]);
+    const [requests, setRequests] = useState<UserInterface[]>([]);
 
     useEffect(() => {
         fetch("https://challengeer.srodo.sk/users/3/requests")
@@ -42,6 +37,7 @@ export default function FriendRequests() {
                 visible={isModalVisible}
                 animationType="slide"
                 presentationStyle="pageSheet"
+                onRequestClose={() => setIsModalVisible(false)}
             >
                 <View className="flex-1 bg-white dark:bg-neutral-900">
                     {/* Header */}
@@ -66,7 +62,7 @@ export default function FriendRequests() {
                                 username={user.username}
                                 rightSection={
                                     <View className="flex-row gap-2 items-center">
-                                        <CustomButton
+                                        <Button
                                             title="Accept"
                                             leftSection={
                                                 <Icon
