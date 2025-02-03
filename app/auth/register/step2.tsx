@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import CustomButton from "@/components/CustomButton";
+import Button from "@/components/Button";
 import DatePicker from "@/components/register/DatePicker";
 import { useState } from "react";
 import { router } from "expo-router";
@@ -17,7 +17,7 @@ export default function RegisterStep2() {
           onChange={setDateOfBirth}
         /> {/*NOT SHOWING BUT MAYBE BECAUSE IM ON PC */}
         <View className="mt-auto mb-4">
-          <CustomButton title="Continue" onPress={() => router.push("/auth/register/step3")} large />
+          <Button size="lg" title="Continue" onPress={() => router.push("/auth/register/step3")} large />
         </View>
       </View>
     </View>

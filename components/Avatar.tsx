@@ -4,14 +4,14 @@ import Text from "@/components/Text";
 interface AvatarProps {
     src?: string;
     name?: string;
-    size?: "small" | "medium" | "large";
+    size?: "sm" | "md" | "lg";
 }
 
-export default function Avatar({ src, name, size = "medium" }: AvatarProps) {
+export default function Avatar({ src, name, size = "md" }: AvatarProps) {
     const sizeClasses = {
-        small: "w-12 h-12",
-        medium: "w-14 h-14",
-        large: "w-16 h-16"
+        sm: "w-12 h-12",
+        md: "w-14 h-14",
+        lg: "w-16 h-16"
     }[size];
     
     const getInitials = (name: string) => {

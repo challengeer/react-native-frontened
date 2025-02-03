@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import CustomButton from "@/components/CustomButton";
+import Button from "@/components/Button";
 import { router } from "expo-router";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import UsernameInput from "@/components/register/UsernameInput";
@@ -12,7 +12,7 @@ export default function RegisterStep5() {
       <View className="flex-1 px-4">
         <UsernameInput />
         <View className="mt-auto mb-4">
-          <CustomButton large title="Continue" onPress={() => router.push("/auth/register/step6")} />
+          <Button size="lg" title="Continue" onPress={() => router.push("/auth/register/step6")} />
         </View>
       </View>
     </View>

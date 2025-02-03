@@ -3,7 +3,7 @@ import { ScrollView, View } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import Icon from "@/components/Icon";
-import CustomButton from "@/components/CustomButton";
+import Button from "@/components/Button";
 import FriendsHeader from "@/components/friends/FriendsHeader";
 import UserItem from "@/components/UserItem";
 import Text from "@/components/Text";
@@ -44,7 +44,8 @@ export default function FriendsPage() {
                         username={user.username}
                         rightSection={
                             <View className="flex-row gap-2 items-center">
-                                <CustomButton
+                                <Button
+                                    size="sm"
                                     title="Add"
                                     leftSection={
                                         <Icon
@@ -52,7 +53,8 @@ export default function FriendsPage() {
                                             lightColor="white"
                                             darkColor="white"
                                         />
-                                    } />
+                                    }
+                                />
                                 <Icon icon={XMarkIcon} />
                             </View>
                         }
@@ -68,12 +70,14 @@ export default function FriendsPage() {
                         username={user.username}
                         rightSection={
                             <View className="flex-row gap-2 items-center">
-                                <CustomButton
-                                    secondary
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
                                     title="Invite"
                                     leftSection={
                                         <Icon icon={UserPlusIcon} />
-                                    } />
+                                    }
+                                />
                                 <Icon icon={XMarkIcon} />
                             </View>
                         }

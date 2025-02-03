@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { View } from "react-native";
 import InputBar from "@/components/InputBar";
-import CustomButton from "@/components/CustomButton";
+import Button from "@/components/Button";
 import { router } from "expo-router";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import { useState } from "react";
@@ -22,8 +22,8 @@ export default function RegisterStep1() {
                     autoFocus
                 />
                 <View className="mt-auto mb-4">
-                    <CustomButton
-                        large
+                    <Button
+                        size="lg"
                         title="Continue"
                         onPress={() => router.push("/auth/register/step2")}
                         disabled={name.length < 3}

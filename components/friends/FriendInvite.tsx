@@ -4,7 +4,7 @@ import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import IconCircle from '@/components/IconCircle';
 import Header from '@/components/Header';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/Button';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import UserItem from '../UserItem';

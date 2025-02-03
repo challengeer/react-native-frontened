@@ -6,7 +6,7 @@ import Text from '@/components/Text';
 import IconCircle from '@/components/IconCircle';
 import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import FriendDisplay from '@/components/friends/FriendDisplay';
-import CustomButton from '@/components/CustomButton';
+import Button from '@/components/Button';
 import Icon from '@/components/Icon';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import CustomAvatar from '@/components/CustomAvatar';
@@ -53,7 +53,7 @@ export default function FriendSearch({ className }: FriendSearchProps) {
                         <View className="gap-3 flex-1">
                             <FriendDisplay rightSection={
                                 <View className="flex-row gap-2 items-center">
-                                    <CustomButton title="Invite" leftSection={
+                                    <Button size="sm" title="Invite" leftSection={
                                         <Icon icon={UserPlusIcon} lightColor="white" darkColor="white" size={16} />
                                     } />
                                     <Icon icon={XMarkIcon} />

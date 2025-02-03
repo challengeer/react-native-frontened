@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import CustomButton from "@/components/CustomButton";
+import Button from "@/components/Button";
 import VerificationInput from "@/components/register/VerificationInput";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import { router } from "expo-router";
@@ -21,10 +21,10 @@ export default function RegisterStep4({ phoneNumber }: RegisterStep4Props) {
           onChange={setCode}
         />
         <View className="mt-auto mb-4">
-          <CustomButton
+          <Button
+            size="lg"
             title="Continue"
             onPress={() => router.push("/auth/register/step5")}
-            large
             disabled={code.length !== 6}
           />
         </View>

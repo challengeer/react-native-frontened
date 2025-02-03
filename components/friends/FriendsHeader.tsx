@@ -9,7 +9,7 @@ export default function FriendsHeader() {
         <Header
             title="Friends"
             leftSection={
-                <Avatar size="small" name="Mark Takac" />
+                <Avatar size="sm" name="Mark Takac" />
             }
             rightSection={
                 <View className="flex-row gap-2 items-center">
