@@ -15,7 +15,7 @@ interface Friend {
     username: string;
 }
 
-export default function FriendInvite() {
+export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [requests, setRequests] = useState<Friend[]>([]);
 

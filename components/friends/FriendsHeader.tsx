@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import Header from "@/components/Header";
-import FriendInvite from "@/components/friends/FriendInvite";
+import FriendRequests from "@/components/friends/FriendRequests";
 import FriendSearch from "@/components/friends/FriendSearch";
 import Avatar from "@/components/Avatar";
 
@@ -13,7 +13,7 @@ export default function FriendsHeader() {
             }
             rightSection={
                 <View className="flex-row gap-2 items-center">
-                    <FriendInvite />
+                    <FriendRequests />
                     <FriendSearch />
                 </View>
             } />
