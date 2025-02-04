@@ -1,5 +1,6 @@
 import i18n from "@/i18n";
 import { useRef, useState } from "react";
+import { debounce } from "lodash";
 import { useColorScheme } from "nativewind";
 import { TextInput, View } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
@@ -18,6 +19,9 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
 
     const { colorScheme } = useColorScheme();
     const placeholderColor = colorScheme === "dark" ? "#a3a3a3" : "#737373";
+
+    // Only create debounced function if onSearch is provided
+    const debouncedSearch = onSearch ? debounce(onSearch, 500) : undefined;
 
     return (
         <View className="relative flex-1 flex-row items-center">
@@ -38,7 +42,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
                 value={value}
                 onChangeText={(text) => {
                     setValue(text);
-                    onSearch?.(text);
+                    debouncedSearch?.(text);
                 }}
                 numberOfLines={1}
             />
