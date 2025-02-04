@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { useColorScheme } from "nativewind";
 import { TextInput, View } from "react-native";
@@ -20,7 +20,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const { colorScheme } = useColorScheme();
     const placeholderColor = colorScheme === "dark" ? "#a3a3a3" : "#737373";
 
-    const debouncedSearch = onSearch ? debounce(onSearch, 500) : undefined;
+    const debouncedSearch = onSearch ? useCallback(debounce(onSearch, 500), []) : undefined;
 
     return (
         <View className="relative flex-1 flex-row items-center">
