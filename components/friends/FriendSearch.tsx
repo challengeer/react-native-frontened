@@ -1,6 +1,7 @@
 import i18n from '@/i18n';
 import { useState, useRef } from 'react';
-import { Modal, ScrollView, View, TextInput } from 'react-native'
+import { useQuery } from '@tanstack/react-query';
+import { Modal, ScrollView, View, TextInput, ActivityIndicator } from 'react-native'
 import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import IconCircle from '@/components/IconCircle';
@@ -10,15 +11,14 @@ import UserInterface from '@/types/UserInterface';
 import UserItem from '@/components/UserItem';
 import SearchBar from '@/components/SearchBar';
 import Text from '@/components/Text';
-import { useQuery } from '@tanstack/react-query';
 
 export default function FriendSearch() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const searchInputRef = useRef<TextInput>(null);
 
-    const { data: users = [], isLoading, error } = useQuery({
-        queryKey: ['users', searchQuery],
+    const { data, isPending, error } = useQuery<UserInterface[]>({
+        queryKey: ["user-search", searchQuery],
         queryFn: async () => {
             const response = await fetch(`https://challengeer.srodo.sk/users/search?q=${encodeURIComponent(searchQuery)}`);
             return response.json();
@@ -31,10 +31,8 @@ export default function FriendSearch() {
 
     return (
         <>
-            {/* Prefix Selector Button */}
             <IconCircle icon={MagnifyingGlassIcon} onPress={() => setIsModalVisible(true)} />
 
-            {/* Modal to select country prefix */}
             <Modal
                 visible={isModalVisible}
                 animationType="slide"
@@ -53,37 +51,39 @@ export default function FriendSearch() {
                         </Text>
                     </View>
 
-                    <ScrollView
-                        overScrollMode="never"
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {isLoading ? (
-                            <Text className="p-4">Loading</Text>
-                        ) : error ? (
-                            <Text className="p-4">Error</Text>
-                        ) : users.map((user) => (
-                            <UserItem
-                                key={user.user_id}
-                                displayName={user.display_name}
-                                username={user.username}
-                                rightSection={
-                                    <View className="flex-row gap-2 items-center">
-                                        <Button
-                                            size="sm"
-                                            title="Add"
-                                            leftSection={
-                                                <Icon
-                                                    icon={UserPlusIcon}
-                                                    lightColor="white"
-                                                    darkColor="white"
-                                                />
-                                            } />
-                                        <Icon icon={XMarkIcon} />
-                                    </View>
-                                }
-                            />
-                        ))}
-                    </ScrollView>
+                    {isPending ? (
+                        <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
+                    ) : error ? (
+                        <Text className="p-4">Error</Text>
+                    ) : (
+                        <ScrollView
+                            overScrollMode="never"
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {data.map((user) => (
+                                <UserItem
+                                    key={user.user_id}
+                                    displayName={user.display_name}
+                                    username={user.username}
+                                    rightSection={
+                                        <View className="flex-row gap-2 items-center">
+                                            <Button
+                                                size="sm"
+                                                title="Add"
+                                                leftSection={
+                                                    <Icon
+                                                        icon={UserPlusIcon}
+                                                        lightColor="white"
+                                                        darkColor="white"
+                                                    />
+                                                } />
+                                            <Icon icon={XMarkIcon} />
+                                        </View>
+                                    }
+                                />
+                            ))}
+                        </ScrollView>
+                    )}
                 </View>
             </Modal >
         </>
