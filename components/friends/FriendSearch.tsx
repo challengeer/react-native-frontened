@@ -1,5 +1,5 @@
 import i18n from '@/i18n';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Modal, ScrollView, View, TextInput } from 'react-native'
 import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
@@ -10,18 +10,24 @@ import UserInterface from '@/types/UserInterface';
 import UserItem from '@/components/UserItem';
 import SearchBar from '@/components/SearchBar';
 import Text from '@/components/Text';
+import { useQuery } from '@tanstack/react-query';
 
 export default function FriendSearch() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [users, setUsers] = useState<UserInterface[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const searchInputRef = useRef<TextInput>(null);
 
-    useEffect(() => {
-        fetch("https://challengeer.srodo.sk/users/")
-            .then(res => res.json())
-            .then(data => setUsers(data))
-    }, [])
+    const { data: users = [], isLoading, error } = useQuery({
+        queryKey: ['users', searchQuery],
+        queryFn: async () => {
+            const response = await fetch(`https://challengeer.srodo.sk/users/search?q=${encodeURIComponent(searchQuery)}`);
+            return response.json();
+        },
+    });
+
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
+    };
 
     return (
         <>
@@ -34,15 +40,12 @@ export default function FriendSearch() {
                 animationType="slide"
                 presentationStyle="pageSheet"
                 onRequestClose={() => setIsModalVisible(false)}
-                onShow={() => {
-                    setSearchQuery("");
-                    searchInputRef.current?.focus();
-                }}
+                onShow={() => searchInputRef.current?.focus()}
             >
                 <View className="flex-1 bg-white dark:bg-neutral-900">
                     <View className="p-4 w-full flex-row items-center gap-4">
                         <SearchBar
-                            onSearch={setSearchQuery}
+                            onSearch={handleSearch}
                             inputRef={searchInputRef}
                         />
                         <Text onPress={() => setIsModalVisible(false)} >
@@ -54,7 +57,11 @@ export default function FriendSearch() {
                         overScrollMode="never"
                         showsVerticalScrollIndicator={false}
                     >
-                        {users.map((user) => (
+                        {isLoading ? (
+                            <Text className="p-4">Loading</Text>
+                        ) : error ? (
+                            <Text className="p-4">Error</Text>
+                        ) : users.map((user) => (
                             <UserItem
                                 key={user.user_id}
                                 displayName={user.display_name}

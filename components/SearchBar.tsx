@@ -20,7 +20,6 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const { colorScheme } = useColorScheme();
     const placeholderColor = colorScheme === "dark" ? "#a3a3a3" : "#737373";
 
-    // Only create debounced function if onSearch is provided
     const debouncedSearch = onSearch ? debounce(onSearch, 500) : undefined;
 
     return (
