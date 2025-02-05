@@ -63,6 +63,7 @@ export default function FriendSearch() {
                             {data.map((user) => (
                                 <UserItem
                                     key={user.user_id}
+                                    userId={user.user_id}
                                     displayName={user.display_name}
                                     username={user.username}
                                     profilePicture={user.profile_picture}

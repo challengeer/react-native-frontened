@@ -35,6 +35,7 @@ export default function FriendsPage() {
                 {friends.map((user) => (
                     <UserItem
                         key={user.user_id}
+                        userId={user.user_id}
                         displayName={user.display_name}
                         username={user.username}
                         profilePicture={user.profile_picture}
@@ -61,6 +62,7 @@ export default function FriendsPage() {
                 {contacts.map((user) => (
                     <UserItem
                         key={user.user_id}
+                        userId={user.user_id}
                         displayName={user.display_name}
                         username={user.username}
                         profilePicture={user.profile_picture}

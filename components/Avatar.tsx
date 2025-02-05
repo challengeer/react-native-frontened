@@ -1,9 +1,9 @@
-import { Image, View, ImageSourcePropType } from "react-native";
+import { Image, View } from "react-native";
 import Text from "@/components/Text";
 
 interface AvatarProps {
     source?: string;
-    name?: string;
+    name: string;
     size?: "sm" | "md" | "lg";
 }
 
@@ -11,9 +11,18 @@ const colors = ["bg-red-400", "bg-orange-400", "bg-amber-400", "bg-yellow-400", 
 
 export default function Avatar({ source, name, size = "md" }: AvatarProps) {
     const sizeClasses = {
-        sm: "w-12 h-12",
-        md: "w-14 h-14",
-        lg: "w-16 h-16"
+        sm: {
+            container: "w-12 h-12",
+            text: "text-base",
+        },
+        md: {
+            container: "w-14 h-14",
+            text: "text-lg",
+        },
+        lg: {
+            container: "w-32 h-32",
+            text: "text-5xl",
+        }
     }[size];
 
     const getInitials = (name: string) => {
@@ -36,10 +45,10 @@ export default function Avatar({ source, name, size = "md" }: AvatarProps) {
     return (
         <>
             {source ? (
-                <Image className={`${sizeClasses} rounded-full`} source={{ uri: source }} />
-            ) : name && (
-                <View className={`${sizeClasses} ${colorFromText(name)} rounded-full items-center justify-center`}>
-                    <Text className="text-lg text-white font-medium">{getInitials(name)}</Text>
+                <Image className={`${sizeClasses.container} rounded-full`} source={{ uri: source }} />
+            ) : (
+                <View className={`${sizeClasses.container} ${colorFromText(name)} rounded-full items-center justify-center`}>
+                    <Text className={`${sizeClasses.text} text-white font-medium`}>{getInitials(name)}</Text>
                 </View>
             )}
         </>
