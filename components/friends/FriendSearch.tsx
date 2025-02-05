@@ -65,6 +65,7 @@ export default function FriendSearch() {
                                     key={user.user_id}
                                     displayName={user.display_name}
                                     username={user.username}
+                                    profilePicture={user.profile_picture}
                                     rightSection={
                                         <View className="flex-row gap-2 items-center">
                                             <Button

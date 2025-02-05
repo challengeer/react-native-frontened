@@ -15,7 +15,7 @@ export default function FriendsPage() {
     const [contacts, setContacts] = useState<UserInterface[]>([]);
 
     useEffect(() => {
-        fetch("https://challengeer.srodo.sk/users/2/friends")
+        fetch("https://challengeer.srodo.sk/users/1/friends")
             .then(res => res.json())
             .then(data => setFriends(data))
 
@@ -35,9 +35,9 @@ export default function FriendsPage() {
                 {friends.map((user) => (
                     <UserItem
                         key={user.user_id}
-                        userId={user.user_id}
                         displayName={user.display_name}
                         username={user.username}
+                        profilePicture={user.profile_picture}
                         rightSection={
                             <View className="flex-row gap-2 items-center">
                                 <Button
@@ -61,21 +61,18 @@ export default function FriendsPage() {
                 {contacts.map((user) => (
                     <UserItem
                         key={user.user_id}
-                        userId={user.user_id}
                         displayName={user.display_name}
                         username={user.username}
+                        profilePicture={user.profile_picture}
                         rightSection={
-                            <View className="flex-row gap-2 items-center">
-                                <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    title="Invite"
-                                    leftSection={
-                                        <Icon icon={UserPlusIcon} />
-                                    }
-                                />
-                                <Icon icon={XMarkIcon} />
-                            </View>
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                title="Invite"
+                                leftSection={
+                                    <Icon icon={UserPlusIcon} />
+                                }
+                            />
                         }
                     />
                 ))}
