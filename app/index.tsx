@@ -6,7 +6,7 @@ export default function FirstPage() {
   useEffect(() => {
     const checkAuth = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
-      if (userToken) router.replace("/challenges");
+      if (!userToken) router.replace("/challenges");
       else router.replace("/auth");
     };
 
