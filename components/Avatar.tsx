@@ -2,7 +2,7 @@ import { Image, View, ImageSourcePropType } from "react-native";
 import Text from "@/components/Text";
 
 interface AvatarProps {
-    source?: ImageSourcePropType;
+    source?: string;
     name?: string;
     size?: "sm" | "md" | "lg";
 }
@@ -36,7 +36,7 @@ export default function Avatar({ source, name, size = "md" }: AvatarProps) {
     return (
         <>
             {source ? (
-                <Image className={`${sizeClasses} rounded-full`} source={source} />
+                <Image className={`${sizeClasses} rounded-full`} source={{ uri: source }} />
             ) : name && (
                 <View className={`${sizeClasses} ${colorFromText(name)} rounded-full items-center justify-center`}>
                     <Text className="text-lg text-white font-medium">{getInitials(name)}</Text>

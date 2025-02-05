@@ -13,7 +13,7 @@ export default function UserItem({ displayName, username, profilePicture, rightS
     return (
         <Pressable className="px-4">
             <View className="py-3 flex-row items-center gap-2 border-b border-neutral-100 dark:border-neutral-800">
-                <Avatar source={{ uri: profilePicture }} name={displayName} />
+                <Avatar source={profilePicture} name={displayName} />
                 <View className="flex-1">
                     <Text className="leading-tight font-medium">{displayName}</Text>
                     <Text type="secondary" className="text-base">@{username}</Text>
