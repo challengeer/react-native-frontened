@@ -59,7 +59,7 @@ export default function SettingsPage() {
 
                 {/* ACCOUNT SETTINGS */}
                 <View>
-                    <Text className="mb-2 text-lg">
+                    <Text className="mb-2 text-2xl font-bold">
                         Account
                     </Text>
                     <OptionButton
@@ -68,7 +68,12 @@ export default function SettingsPage() {
                         onPress={() => router.push("/settings/profilePicture")}
                         className="rounded-t-lg"
                         borderBottom
-                        rightSection={<Avatar name="John Doe" size="sm" />}
+                        rightSection={
+                            <View className="flex-row items-center justify-between gap-2">
+                                <Avatar name="John Doe" size="sm" />
+                                <Icon icon={ChevronRightIcon} size={20} />
+                            </View>
+                        }
                     />
                     {Object.entries(data).map(([key, value], index, array) => (
                         <OptionButton
@@ -89,7 +94,7 @@ export default function SettingsPage() {
 
                 {/* PRIVACY POLICY & LOG OUT */}
                 <View>
-                    <Text className="mb-2 text-lg">
+                    <Text className="mb-2 text-2xl font-bold">
                         Privacy
                     </Text>
                     <OptionButton
