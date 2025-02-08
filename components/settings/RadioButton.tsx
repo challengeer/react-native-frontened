@@ -6,14 +6,14 @@ interface RadioButtonProps {
 
 export function RadioButton({ selected }: RadioButtonProps) {
     return (
-        <View className={`w-5 h-5 rounded-full border-2 items-center justify-center
+        <View className={`w-7 h-7 rounded-full border-2 items-center justify-center
             ${selected 
                 ? 'border-primary-500' 
                 : 'border-neutral-300 dark:border-neutral-600'
             }`}
         >
             {selected && (
-                <View className="w-3 h-3 rounded-full bg-primary-500" />
+                <View className="w-4 h-4 rounded-full bg-primary-500" />
             )}
         </View>
     );
