@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 import OptionButton from "@/components/settings/OptionButton";
 import { useColorScheme } from "nativewind";
-import { RadioButton } from "@/components/settings/RadioButton";
+import RadioButton from "@/components/settings/RadioButton";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Appearance } from 'react-native';
@@ -41,7 +41,7 @@ export default function AppAppearance() {
     const handleThemeChange = async (theme: 'light' | 'dark' | 'system') => {
         setSelectedTheme(theme);
         await AsyncStorage.setItem('themePreference', theme);
-        
+
         if (theme === 'system') {
             // Use React Native's Appearance API instead of window.matchMedia
             const systemColorScheme = Appearance.getColorScheme() || 'light';
@@ -53,14 +53,14 @@ export default function AppAppearance() {
 
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
-            <Header 
-                title="App appearance" 
+            <Header
+                title="App appearance"
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
                         onPress={() => router.back()}
                     />
-                } 
+                }
             />
             <View className="px-4 py-2">
                 <OptionButton
