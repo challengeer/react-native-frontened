@@ -19,6 +19,10 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
         secondary: {
             button: "bg-neutral-100 dark:bg-neutral-800",
             text: "text-neutral-900"
+        },
+        logout: {
+            button: "bg-red-500",
+            text: "text-white"
         }
     }
 
