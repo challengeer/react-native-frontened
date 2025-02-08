@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Text from "@/components/Text";
 
 interface OptionButtonProps {
@@ -13,7 +13,9 @@ interface OptionButtonProps {
 
 export default function OptionButton({ title, value, onPress, rightSection, className, borderBottom = false, rounded = false }: OptionButtonProps) {
     return (
-        <View className={`
+        <TouchableOpacity
+            onPress={onPress}
+            className={`
             ${className} 
             ${borderBottom && "border-b"} 
             ${rounded && "rounded-lg"}
@@ -24,6 +26,6 @@ export default function OptionButton({ title, value, onPress, rightSection, clas
                 <Text>{value}</Text>
                 {rightSection}
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
