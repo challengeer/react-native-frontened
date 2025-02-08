@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import IconCircle from "@/components/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
-import InputBar from "@/components/InputBar";
 import UsernameInput from "@/components/register/UsernameInput";
 
 export default function Username() {
