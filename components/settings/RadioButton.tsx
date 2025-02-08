@@ -2,9 +2,10 @@ import { View } from "react-native";
 
 interface RadioButtonProps {
     selected: boolean;
+    onPress: () => void;
 }
 
-export default function RadioButton({ selected }: RadioButtonProps) {
+export default function RadioButton({ selected, onPress }: RadioButtonProps) {
     return (
         <View className={`w-7 h-7 rounded-full border-2 items-center justify-center
             ${selected
