@@ -2,7 +2,7 @@ import { View } from "react-native";
 
 interface RadioButtonProps {
     selected: boolean;
-    onPress: () => void;
+    onPress?: () => void;
 }
 
 export default function RadioButton({ selected, onPress }: RadioButtonProps) {
