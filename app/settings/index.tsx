@@ -1,6 +1,6 @@
 import Text from "@/components/Text";
 import { ScrollView, View } from "react-native";
-import OptionButton from "@/components/settings/OptionButton";
+import OptionButton from "@/components/settings/OptionButton"; // No idea what the problem is
 import Icon from "@/components/Icon";
 import { ArrowLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
 import Header from "@/components/Header";
