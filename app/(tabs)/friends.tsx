@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
-import { ActivityIndicator, ScrollView, View } from "react-native";
-import { XMarkIcon } from "react-native-heroicons/outline";
+import { useCallback } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { useQuery } from "@tanstack/react-query";
 import Icon from "@/components/Icon";
@@ -11,15 +11,19 @@ import Text from "@/components/Text";
 import axios from "axios";
 
 export default function FriendsPage() {
-    const { data, isPending, error } = useQuery({
+    const { data, isPending, error, refetch } = useQuery({
         queryKey: ["friends"],
         queryFn: async () => {
-            const friends = await axios.get("https://challengeer.srodo.sk/users/1/friends");
+            const friends = await axios.get("https://challengeer.srodo.sk/users/4/friends");
             const contacts = await axios.get("https://challengeer.srodo.sk/users")
 
             return { friends: friends.data, contacts: contacts.data }
         },
     });
+
+    const handleRefresh = useCallback(() => {
+        refetch();
+      }, [refetch]);
 
     return (
         <>
@@ -33,6 +37,12 @@ export default function FriendsPage() {
                 <ScrollView
                     overScrollMode="never"
                     showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isPending}
+                            onRefresh={handleRefresh}
+                        />
+                    }
                 >
                     {data.friends.map((user) => (
                         <UserItem
@@ -42,20 +52,7 @@ export default function FriendsPage() {
                             username={user.username}
                             profilePicture={user.profile_picture}
                             rightSection={
-                                <View className="flex-row gap-2 items-center">
-                                    <Button
-                                        size="sm"
-                                        title="Add"
-                                        leftSection={
-                                            <Icon
-                                                icon={UserPlusIcon}
-                                                lightColor="white"
-                                                darkColor="white"
-                                            />
-                                        }
-                                    />
-                                    <Icon icon={XMarkIcon} />
-                                </View>
+                                <Text>{Math.floor(Math.random() * 10)}🔥</Text>
                             }
                         />
                     ))}
