@@ -30,7 +30,7 @@ export default function LanguageSettings() {
         try {
             i18n.locale = languageCode;
             setCurrentLanguage(languageCode);
-            await AsyncStorage.setItem('userLanguage', languageCode);
+            await AsyncStorage.setItem('appLanguage', languageCode);
         } catch (error) {
             console.error('Failed to change language:', error);
         }
@@ -40,7 +40,7 @@ export default function LanguageSettings() {
         // Load saved language
         const loadLanguage = async () => {
             try {
-                const savedLanguage = await AsyncStorage.getItem('userLanguage');
+                const savedLanguage = await AsyncStorage.getItem('appLanguage');
                 if (savedLanguage) {
                     i18n.locale = savedLanguage;
                     setCurrentLanguage(savedLanguage);
