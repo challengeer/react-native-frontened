@@ -1,30 +1,37 @@
 import { View, TouchableOpacity } from "react-native";
+import { ChevronRightIcon } from "react-native-heroicons/outline";
 import Text from "@/components/Text";
+import Icon from "@/components/Icon";
 
 interface OptionButtonProps {
-    title: string;
-    value: string;
-    onPress: () => void;
+    title?: string;
+    value?: string;
+    onPress?: () => void;
     rightSection?: React.ReactNode;
     className?: string;
     borderBottom?: boolean;
     rounded?: boolean;
+    withArrow?: boolean;
 }
 
-export default function OptionButton({ title, value, onPress, rightSection, className, borderBottom = false, rounded = false }: OptionButtonProps) {
+export default function OptionButton({ title, value, onPress, rightSection, className, borderBottom = false, rounded = false, withArrow = false }: OptionButtonProps) {
     return (
         <TouchableOpacity
             onPress={onPress}
             className={`
-            ${className} 
-            ${borderBottom && "border-b"} 
-            ${rounded && "rounded-lg"}
-        bg-neutral-100 dark:bg-neutral-800 items-center flex-row justify-between p-5 border-neutral-200 dark:border-neutral-700 
-        `}>
-            <Text>{title}</Text>
+                ${className} 
+                ${borderBottom && "border-b"} 
+                ${rounded && "rounded-lg"}
+                bg-neutral-100 dark:bg-neutral-800 items-center flex-row justify-between p-4 border-neutral-200 dark:border-neutral-700 
+            `}
+        >
+            <Text className="font-medium">{title}</Text>
             <View className="flex-row items-center justify-between gap-2">
-                <Text>{value}</Text>
+                <Text type="secondary">{value}</Text>
                 {rightSection}
+                {withArrow &&
+                    <Icon icon={ChevronRightIcon} lightColor="#737373" darkColor="#a3a3a3" />
+                }
             </View>
         </TouchableOpacity>
     )

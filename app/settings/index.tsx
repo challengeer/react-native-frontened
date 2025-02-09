@@ -1,11 +1,10 @@
 import Text from "@/components/Text";
+import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import OptionButton from "@/components/settings/OptionButton"; // No idea what the problem is
-import Icon from "@/components/Icon";
-import { ArrowLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
 import Header from "@/components/Header";
 import IconCircle from "@/components/IconCircle";
-import { router } from "expo-router";
 import Button from "@/components/Button";
 import Avatar from "@/components/Avatar";
 
@@ -40,7 +39,7 @@ export default function SettingsPage() {
 
     const data = {
         "Name": "Display name",
-        "Username": "Username",
+        "Username": "@username",
         "Mobile number": "0905 123 456",
         "Email": "email@example.com",
         "Password": "",
@@ -49,31 +48,34 @@ export default function SettingsPage() {
     }
 
     return (
-        <ScrollView>
-            <Header title="Settings" leftSection={
-                <IconCircle
-                    icon={ArrowLeftIcon}
-                    onPress={() => router.back()}
-                />} />
-            <View className="px-4 py-2 gap-4">
+        <>
+            <Header
+                title="Settings"
+                leftSection={
+                    <IconCircle
+                        icon={ArrowLeftIcon}
+                        onPress={() => router.back()}
+                    />
+                }
+            />
 
+            <ScrollView
+                overScrollMode="never"
+                showsVerticalScrollIndicator={false}
+                className="px-4"
+            >
                 {/* ACCOUNT SETTINGS */}
-                <View>
+                <View className="mb-4">
                     <Text className="mb-2 text-2xl font-bold">
                         Account
                     </Text>
                     <OptionButton
                         title="Profile picture"
-                        value=""
                         onPress={() => router.push("/settings/profilePicture")}
                         className="rounded-t-lg"
                         borderBottom
-                        rightSection={
-                            <View className="flex-row items-center justify-between gap-2">
-                                <Avatar name="John Doe" size="sm" />
-                                <Icon icon={ChevronRightIcon} size={20} />
-                            </View>
-                        }
+                        rightSection={<Avatar name="John Doe" size="sm" />}
+                        withArrow
                     />
                     {Object.entries(data).map(([key, value], index, array) => (
                         <OptionButton
@@ -85,15 +87,13 @@ export default function SettingsPage() {
                             className={`                        
                                 ${index === array.length - 1 ? 'rounded-b-lg border-b-0' : ''}
                             `}
-                            rightSection={
-                                <Icon icon={ChevronRightIcon} size={20} />
-                            }
+                            withArrow
                         />
                     ))}
                 </View>
 
                 {/* PRIVACY POLICY & LOG OUT */}
-                <View>
+                <View className="mb-4">
                     <Text className="mb-2 text-2xl font-bold">
                         Privacy
                     </Text>
@@ -101,22 +101,22 @@ export default function SettingsPage() {
                         title="Privacy policy"
                         rounded
                         onPress={() => router.push("/settings/privacyPolicy")}
-                        value=""
-                        rightSection={<Icon icon={ChevronRightIcon} size={20} />}
+                        withArrow
                     />
                 </View>
+
                 <Button
                     title="Log out"
+                    size="lg"
+                    variant="logout"
                     onPress={() => {
                         // Add logout logic here
                         router.replace("/auth");
                     }}
-                    size="lg"
-                    variant="logout"
                 />
 
                 {/* VERSION */}
-                <View className="items-center justify-center">
+                <View className="my-4 items-center justify-center">
                     <Text type="secondary" className="text-sm">
                         Challengeer v 1.0.0
                     </Text>
@@ -124,8 +124,7 @@ export default function SettingsPage() {
                         Košice, Slovakia
                     </Text>
                 </View>
-            </View>
-        </ScrollView>
-
+            </ScrollView>
+        </>
     )
 }
