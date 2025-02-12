@@ -7,7 +7,7 @@ import InputBar from "@/components/InputBar";
 
 export default function Mobile() {
     return (
-        <View>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header title="Mobile number" leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}

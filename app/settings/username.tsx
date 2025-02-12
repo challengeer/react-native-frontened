@@ -7,7 +7,7 @@ import UsernameInput from "@/components/register/UsernameInput";
 
 export default function Username() {
     return (
-        <View>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header title="Username" leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}

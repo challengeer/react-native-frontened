@@ -9,7 +9,7 @@ import PasswordInput from "@/components/register/PasswordInput";
 export default function Password() {
     const [password, setPassword] = useState("");
     return (
-        <View>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header title="Password" leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}

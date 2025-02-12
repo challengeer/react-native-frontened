@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
 import { useCallback } from "react";
-import { ActivityIndicator, RefreshControl, ScrollView } from "react-native";
+import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { useQuery } from "@tanstack/react-query";
 import Icon from "@/components/Icon";
@@ -26,7 +26,7 @@ export default function FriendsPage() {
       }, [refetch]);
 
     return (
-        <>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <FriendsHeader />
 
             {isPending ? (
@@ -79,6 +79,6 @@ export default function FriendsPage() {
                     ))}
                 </ScrollView>
             )}
-        </>
+        </View>
     )
 }

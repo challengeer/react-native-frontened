@@ -54,7 +54,7 @@ export default function LanguageSettings() {
     }, []);
 
     return (
-        <ScrollView>
+        <ScrollView className="flex-1 bg-white dark:bg-neutral-900">
             <Header
                 title="Language"
                 leftSection={

@@ -48,7 +48,7 @@ export default function SettingsPage() {
     }
 
     return (
-        <>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header
                 title="Settings"
                 leftSection={
@@ -125,6 +125,6 @@ export default function SettingsPage() {
                     </Text>
                 </View>
             </ScrollView>
-        </>
+        </View>
     )
 }

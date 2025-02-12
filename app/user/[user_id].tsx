@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon } from "react-native-heroicons/outline";
@@ -20,7 +20,7 @@ export default function UserPage() {
     });
 
     return (
-        <>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header
                 title="Profile"
                 leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />}
@@ -47,6 +47,6 @@ export default function UserPage() {
                     </View>
                 </ScrollView>
             )}
-        </>
+        </View>
     )
 }

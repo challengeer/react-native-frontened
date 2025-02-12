@@ -13,7 +13,7 @@ export default function Layout() {
     return (
         <Tabs>
             <TabSlot />
-            <TabList className="border-t border-neutral-100 dark:border-neutral-800">
+            <TabList className="border-t bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800">
                 <TabTrigger name="map" href="/map" style={styles.tabTrigger} className="py-2 w-1/3 items-center gap-0.5">
                     <Icon icon={segments[1] === "map" ? MapPinIconSolid : MapPinIconOutline} size={28} strokeWidth={1.5} />
                     <Text className="text-sm font-medium">{i18n.t("tabs.map")}</Text>

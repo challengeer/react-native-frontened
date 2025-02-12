@@ -7,7 +7,7 @@ import InputBar from "@/components/InputBar";
 
 export default function Name() {
     return (
-        <View>
+        <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header title="Display name" leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}
