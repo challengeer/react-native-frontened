@@ -1,6 +1,6 @@
 import i18n from '@/i18n';
 import api from '@/lib/api';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, Pressable, View, ScrollView, ActivityIndicator } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
@@ -16,7 +16,7 @@ import UserItem from '@/components/UserItem';
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    const { data, isPending, error } = useQuery<UserInterface[]>({
+    const { data, isPending, error } = useQuery({
         queryKey: ["friend-requests"],
         queryFn: async () => {
             const response = await api.get("/users/3/requests");
@@ -44,7 +44,6 @@ export default function FriendRequests() {
                 onRequestClose={() => setIsModalVisible(false)}
             >
                 <View className="flex-1 bg-white dark:bg-neutral-900">
-                    {/* Header */}
                     <Header
                         title={i18n.t("friends.friendRequests")}
                         leftSection={
@@ -64,7 +63,7 @@ export default function FriendRequests() {
                             overScrollMode="never"
                             showsVerticalScrollIndicator={false}
                         >
-                            {data.map((user) => (
+                            {data.map((user: UserInterface) => (
                                 <UserItem
                                     key={user.user_id}
                                     userId={user.user_id}

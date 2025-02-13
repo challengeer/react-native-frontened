@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { useQuery } from "@tanstack/react-query";
+import UserInterface from "@/types/UserInterface";
 import Icon from "@/components/Icon";
 import Button from "@/components/Button";
 import FriendsHeader from "@/components/friends/FriendsHeader";
@@ -23,7 +24,7 @@ export default function FriendsPage() {
 
     const handleRefresh = useCallback(() => {
         refetch();
-      }, [refetch]);
+    }, [refetch]);
 
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
@@ -44,7 +45,7 @@ export default function FriendsPage() {
                         />
                     }
                 >
-                    {data.friends.map((user) => (
+                    {data.friends.map((user: UserInterface) => (
                         <UserItem
                             key={user.user_id}
                             userId={user.user_id}
@@ -58,7 +59,7 @@ export default function FriendsPage() {
                     ))}
 
                     <Text className="text-2xl font-bold px-4 pt-4 pb-2">{i18n.t("friends.contacts")}</Text>
-                    {data.contacts.map((user) => (
+                    {data.contacts.map((user: UserInterface) => (
                         <UserItem
                             key={user.user_id}
                             userId={user.user_id}
