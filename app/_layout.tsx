@@ -23,7 +23,7 @@ export default function Root() {
                             statusBarStyle: colorScheme === "dark" ? "light" : "dark",
                             navigationBarColor: backgroundColor,
                             headerShown: false,
-                            animation: "slide_from_right",
+                            animation: "ios_from_right",
                         }}
                     />
                 </SafeAreaView>
