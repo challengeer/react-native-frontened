@@ -1,4 +1,5 @@
 import i18n from '@/i18n';
+import api from '@/lib/api';
 import { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Modal, ScrollView, View, TextInput, ActivityIndicator } from 'react-native'
@@ -20,8 +21,8 @@ export default function FriendSearch() {
     const { data, isPending, error } = useQuery<UserInterface[]>({
         queryKey: ["user-search", searchQuery],
         queryFn: async () => {
-            const response = await fetch(`https://challengeer.srodo.sk/users/search?q=${encodeURIComponent(searchQuery)}`);
-            return response.json();
+            const response = await api.get(`/users/search?q=${encodeURIComponent(searchQuery)}`);
+            return response.data;
         },
     });
 

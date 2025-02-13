@@ -1,4 +1,5 @@
 import i18n from '@/i18n';
+import api from '@/lib/api';
 import { useState } from 'react';
 import { Modal, Pressable, View, ScrollView, ActivityIndicator } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
@@ -11,7 +12,6 @@ import Button from '@/components/Button';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import UserItem from '@/components/UserItem';
-import axios from 'axios';
 
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -19,7 +19,7 @@ export default function FriendRequests() {
     const { data, isPending, error } = useQuery<UserInterface[]>({
         queryKey: ["friend-requests"],
         queryFn: async () => {
-            const response = await axios.get("https://challengeer.srodo.sk/users/3/requests");
+            const response = await api.get("/users/3/requests");
             return response.data;
         },
     });

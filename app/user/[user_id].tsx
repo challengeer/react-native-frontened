@@ -1,4 +1,5 @@
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import api from "@/lib/api";
+import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon } from "react-native-heroicons/outline";
@@ -14,8 +15,8 @@ export default function UserPage() {
     const { data, isPending, error } = useQuery<UserInterface>({
         queryKey: ["user", user_id],
         queryFn: async () => {
-            const response = await fetch(`https://challengeer.srodo.sk/users/${encodeURIComponent(user_id)}`);
-            return response.json();
+            const response = await api.get(`/users/${encodeURIComponent(user_id)}`);
+            return response.data;
         },
     });
 

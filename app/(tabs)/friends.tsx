@@ -8,14 +8,14 @@ import Button from "@/components/Button";
 import FriendsHeader from "@/components/friends/FriendsHeader";
 import UserItem from "@/components/UserItem";
 import Text from "@/components/Text";
-import axios from "axios";
+import api from "@/lib/api";
 
 export default function FriendsPage() {
     const { data, isPending, error, refetch } = useQuery({
         queryKey: ["friends"],
         queryFn: async () => {
-            const friends = await axios.get("https://challengeer.srodo.sk/users/4/friends");
-            const contacts = await axios.get("https://challengeer.srodo.sk/users")
+            const friends = await api.get("/users/4/friends");
+            const contacts = await api.get("/users");
 
             return { friends: friends.data, contacts: contacts.data }
         },
