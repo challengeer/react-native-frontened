@@ -49,6 +49,23 @@ export default function SettingsPage() {
         [i18n.t("settings.language.header")]: "",
     }
 
+    const settingsData = [
+        {
+            title: "Profile picture",
+            value: "",
+            route: "/settings/profilePicture",
+            rightSection: <Avatar name="John Doe" size="sm" />,
+            key: "profile-picture"
+        },
+        ...Object.entries(data).map(([key, value]) => ({
+            title: key,
+            value,
+            key,
+            route: null, // Will use handleOptionPress instead
+            rightSection: undefined
+        }))
+    ];
+
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header
@@ -71,27 +88,19 @@ export default function SettingsPage() {
                     <Text className="mb-2 text-2xl font-bold">
                         {i18n.t("settings.account")}
                     </Text>
-                    <OptionButton
-                        title="Profile picture" // I don't know Slovak translation
-                        onPress={() => router.push("/settings/profilePicture")}
-                        className="rounded-t-lg"
-                        borderBottom
-                        rightSection={<Avatar name="John Doe" size="sm" />}
-                        withArrow
-                    />
-                    {Object.entries(data).map(([key, value], index, array) => (
-                        <OptionButton
-                            key={key}
-                            title={key}
-                            value={value}
-                            onPress={() => handleOptionPress(key)}
-                            borderBottom
-                            className={`                        
-                                ${index === array.length - 1 ? 'rounded-b-lg border-b-0' : ''}
-                            `}
-                            withArrow
-                        />
-                    ))}
+                    <View className="overflow-hidden rounded-lg">
+                        {settingsData.map((item, index) => (
+                            <OptionButton
+                                key={item.key}
+                                title={item.title}
+                                value={item.value}
+                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.title)}
+                                rightSection={item.rightSection}
+                                borderBottom={index !== settingsData.length - 1}
+                                withArrow
+                            />
+                        ))}
+                    </View>
                 </View>
 
                 {/* PRIVACY POLICY & LOG OUT */}
