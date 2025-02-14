@@ -5,12 +5,13 @@ import IconCircle from "@/components/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 import PasswordInput from "@/components/register/PasswordInput";
+import i18n from "@/i18n";  
 
 export default function Password() {
     const [password, setPassword] = useState("");
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
-            <Header title="Password" leftSection={
+            <Header title={i18n.t("settings.profile.password")} leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}
                     onPress={() => router.back()}

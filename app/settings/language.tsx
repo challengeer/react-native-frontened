@@ -56,7 +56,7 @@ export default function LanguageSettings() {
     return (
         <ScrollView className="flex-1 bg-white dark:bg-neutral-900">
             <Header
-                title="Language"
+                title={i18n.t("settings.language.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -67,7 +67,7 @@ export default function LanguageSettings() {
             <View className="px-4 py-2 gap-4">
                 <View>
                     <Text className="mb-2 text-lg">
-                        Select language
+                        {i18n.t("settings.language.selectLanguage")}
                     </Text>
                     {languages.map((lang, index) => (
                         <OptionButton
