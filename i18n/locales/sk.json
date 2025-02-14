@@ -57,7 +57,8 @@
             "username": "Používateľské meno",
             "email": "Email",
             "mobileNumber": "Telefónne číslo",
-            "password": "Heslo"
+            "password": "Heslo",
+            "save": "Uložiť"
         },
         "privacyPolicy": "Zásady ochrany osobných údajov",
         "logout": "Odhlásiť sa",
