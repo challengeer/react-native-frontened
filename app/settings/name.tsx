@@ -4,7 +4,9 @@ import IconCircle from "@/components/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 import InputBar from "@/components/InputBar";
+import Button from "@/components/Button";
 import i18n from "@/i18n";
+
 export default function Name() {
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
@@ -15,6 +17,9 @@ export default function Name() {
                 />} />
             <View className="px-4 py-2">
                 <InputBar label={i18n.t("settings.profile.displayName")} />
+            </View>
+            <View className="px-4 py-2 absolute bottom-4 left-0 right-0"> 
+                <Button title={i18n.t("settings.profile.save")} size="lg" />
             </View>
         </View>
     );

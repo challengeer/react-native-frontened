@@ -5,6 +5,7 @@ import IconCircle from "@/components/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 import PasswordInput from "@/components/register/PasswordInput";
+import Button from "@/components/Button";
 import i18n from "@/i18n";  
 
 export default function Password() {
@@ -18,6 +19,9 @@ export default function Password() {
                 />} />
             <View className="px-4 py-2">
                 <PasswordInput value={password} onChange={setPassword} />
+            </View>
+            <View className="px-4 py-2 absolute bottom-4 left-0 right-0"> 
+                <Button title={i18n.t("settings.profile.save")} size="lg" />
             </View>
         </View>
     );
