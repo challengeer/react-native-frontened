@@ -33,5 +33,35 @@
         "header": "Friends",
         "contacts": "Contacts",
         "friendRequests": "Friend requests"
+    },
+    "settings": {
+        "header": "Settings",
+        "account": "Account",
+        "privacy": "Privacy",
+        "language": {
+            "header": "Language",
+            "selectLanguage": "Select language",
+            "english": "English",
+            "englishDescription": "English language",
+            "slovak": "Slovenčina",
+            "slovakDescription": "Slovak language"
+        },
+        "appearance": {
+            "header": "App appearance",
+            "light": "Light",
+            "dark": "Dark",
+            "matchSystem": "Match system"
+        },
+        "profile": {
+            "displayName": "Display name",
+            "username": "Username",
+            "email": "Email",
+            "mobileNumber": "Mobile number",
+            "password": "Password"
+        },
+        "privacyPolicy": "Privacy policy",
+        "logout": "Log out",
+        "version": "Challengeer v 1.0.0",
+        "location": "Košice, Slovakia"
     }
 }
