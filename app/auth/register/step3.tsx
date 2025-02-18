@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Button from "@/components/Button";
+import Button from "@/components/common/Button";
 import { router } from "expo-router";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import PhoneInput from "@/components/register/PhoneInput";

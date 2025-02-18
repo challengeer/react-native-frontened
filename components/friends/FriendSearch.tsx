@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { Modal, ScrollView, View, TextInput, ActivityIndicator } from 'react-native'
 import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
-import IconCircle from '@/components/IconCircle';
-import Icon from '@/components/Icon';
-import Button from '@/components/Button';
+import IconCircle from '@/components/common/IconCircle';
+import Icon from '@/components/common/Icon';
+import Button from '@/components/common/Button';
 import UserInterface from '@/types/UserInterface';
-import UserItem from '@/components/UserItem';
-import SearchBar from '@/components/SearchBar';
-import Text from '@/components/Text';
+import UserItem from '@/components/common/UserItem';
+import SearchBar from '@/components/common/SearchBar';
+import Text from '@/components/common/Text';
 
 export default function FriendSearch() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);

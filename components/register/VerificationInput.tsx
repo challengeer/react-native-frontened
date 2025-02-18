@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { View, TextInput } from "react-native";
 import { useRef, useEffect } from "react";
-import Text from "@/components/Text";
+import Text from "@/components/common/Text";
 
 interface VerificationInputProps {
     value: string;

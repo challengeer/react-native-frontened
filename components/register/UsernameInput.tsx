@@ -3,9 +3,9 @@ import { useCallback, useState } from "react";
 import { CheckCircleIcon, XCircleIcon, QuestionMarkCircleIcon } from "react-native-heroicons/solid";
 import { View } from "react-native";
 import { debounce } from "lodash";
-import InputBar from "@/components/InputBar";
-import Text from "@/components/Text";
-import Icon from "@/components/Icon";
+import InputBar from "@/components/common/InputBar";
+import Text from "@/components/common/Text";
+import Icon from "@/components/common/Icon";
 import axios from "axios";
 
 export default function UsernameInput() {

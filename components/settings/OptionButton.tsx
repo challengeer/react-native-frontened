@@ -1,7 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
-import Text from "@/components/Text";
-import Icon from "@/components/Icon";
+import Text from "@/components/common/Text";
+import Icon from "@/components/common/Icon";
 
 interface OptionButtonProps {
     title: React.ReactNode;

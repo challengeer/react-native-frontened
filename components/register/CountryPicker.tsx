@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, FlatList } from 'react-native'
-import Text from '@/components/Text';
+import Text from '@/components/common/Text';
 import i18n from '@/i18n';
-import SearchBar from '@/components/SearchBar';
-import CountryItem from '@/components/CountryItem';
+import SearchBar from '@/components/common/SearchBar';
+import CountryItem from '@/components/common/CountryItem';
 import CountryInterface from '@/types/CountryInterface';
-import Header from '@/components/Header';
-import IconCircle from '@/components/IconCircle';
+import Header from '@/components/common/Header';
+import IconCircle from '@/components/common/IconCircle';
 import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
-import Icon from '@/components/Icon';
+import Icon from '@/components/common/Icon';
 
 interface CountryPickerProps {
     selectedPrefix: string;

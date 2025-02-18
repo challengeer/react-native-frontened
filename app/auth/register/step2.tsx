@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Button from "@/components/Button";
+import Button from "@/components/common/Button";
 import DatePicker from "@/components/register/DatePicker";
 import { useState } from "react";
 import { router } from "expo-router";

@@ -1,7 +1,7 @@
 import RegisterHeader from "@/components/register/RegisterHeader";
 import { View } from "react-native";
 import PasswordInput from "@/components/register/PasswordInput";
-import Button from "@/components/Button";
+import Button from "@/components/common/Button";
 import { useState } from "react";
 
 export default function RegisterStep6() {

@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { View } from "react-native";
-import InputBar from "@/components/InputBar";
-import Button from "@/components/Button";
+import InputBar from "@/components/common/InputBar";
+import Button from "@/components/common/Button";
 import { router } from "expo-router";
 import RegisterHeader from "@/components/register/RegisterHeader";
 import { useState } from "react";

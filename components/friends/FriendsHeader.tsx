@@ -1,9 +1,9 @@
 import i18n from "@/i18n";
 import { View } from "react-native";
-import Header from "@/components/Header";
+import Header from "@/components/common/Header";
 import FriendRequests from "@/components/friends/FriendRequests";
 import FriendSearch from "@/components/friends/FriendSearch";
-import Avatar from "@/components/Avatar";
+import Avatar from "@/components/common/Avatar";
 import { Link } from "expo-router";
 
 export default function FriendsHeader() {

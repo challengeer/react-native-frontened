@@ -1,8 +1,8 @@
 import i18n from "@/i18n";
 import { useState } from "react";
 import { View } from "react-native";
-import Text from "@/components/Text";
-import InputBar from "@/components/InputBar";
+import Text from "@/components/common/Text";
+import InputBar from "@/components/common/InputBar";
 import CountryPicker from "@/components/register/CountryPicker";
 
 export default function PhoneInput() {

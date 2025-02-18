@@ -6,12 +6,12 @@ import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import { useQuery } from '@tanstack/react-query';
 import UserInterface from '@/types/UserInterface';
-import IconCircle from '@/components/IconCircle';
-import Header from '@/components/Header';
-import Button from '@/components/Button';
-import Icon from '@/components/Icon';
-import Text from '@/components/Text';
-import UserItem from '@/components/UserItem';
+import IconCircle from '@/components/common/IconCircle';
+import Header from '@/components/common/Header';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
+import Text from '@/components/common/Text';
+import UserItem from '@/components/common/UserItem';
 
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
