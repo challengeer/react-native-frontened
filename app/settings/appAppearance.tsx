@@ -10,6 +10,7 @@ import RadioButton from "@/components/settings/RadioButton";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Appearance } from 'react-native';
+import i18n from "@/i18n";
 
 export default function AppAppearance() {
     const { colorScheme, setColorScheme } = useColorScheme();
@@ -54,7 +55,7 @@ export default function AppAppearance() {
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header
-                title="App appearance"
+                title={i18n.t("settings.appearance.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -64,7 +65,7 @@ export default function AppAppearance() {
             />
             <View className="px-4 py-2">
                 <OptionButton
-                    title="Light"
+                    title={i18n.t("settings.appearance.light")}
                     value=""
                     onPress={() => handleThemeChange('light')}
                     className="rounded-t-lg"
@@ -74,7 +75,7 @@ export default function AppAppearance() {
                     }
                 />
                 <OptionButton
-                    title="Dark"
+                    title={i18n.t("settings.appearance.dark")}
                     value=""
                     onPress={() => handleThemeChange('dark')}
                     borderBottom
@@ -83,7 +84,7 @@ export default function AppAppearance() {
                     }
                 />
                 <OptionButton
-                    title="Match system"
+                    title={i18n.t("settings.appearance.matchSystem")}
                     value=""
                     onPress={() => handleThemeChange('system')}
                     className="rounded-b-lg"

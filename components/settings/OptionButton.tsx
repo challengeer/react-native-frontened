@@ -4,8 +4,8 @@ import Text from "@/components/Text";
 import Icon from "@/components/Icon";
 
 interface OptionButtonProps {
-    title?: string;
-    value?: string;
+    title: React.ReactNode;
+    value?: React.ReactNode;
     onPress?: () => void;
     rightSection?: React.ReactNode;
     className?: string;
@@ -14,24 +14,35 @@ interface OptionButtonProps {
     withArrow?: boolean;
 }
 
-export default function OptionButton({ title, value, onPress, rightSection, className, borderBottom = false, rounded = false, withArrow = false }: OptionButtonProps) {
+export default function OptionButton({ 
+    title, 
+    value, 
+    onPress, 
+    rightSection, 
+    className = "", 
+    borderBottom = false, 
+    rounded = false, 
+    withArrow = false 
+}: OptionButtonProps) {
     return (
         <TouchableOpacity
             onPress={onPress}
             className={`
-                ${className} 
-                ${borderBottom && "border-b"} 
-                ${rounded && "rounded-lg"}
-                bg-neutral-100 dark:bg-neutral-800 items-center flex-row justify-between p-4 border-neutral-200 dark:border-neutral-700 
-            `}
+                ${className}
+                ${borderBottom ? "border-b" : ""} 
+                ${rounded ? "rounded-lg" : ""}
+                bg-neutral-100 dark:bg-neutral-800 
+                items-center flex-row justify-between p-4 
+                border-neutral-200 dark:border-neutral-700
+            `.trim()}
         >
-            <Text className="font-medium">{title}</Text>
+            {typeof title === 'string' ? <Text className="font-medium">{title}</Text> : title}
             <View className="flex-row items-center justify-between gap-2">
-                <Text type="secondary">{value}</Text>
+                {typeof value === 'string' ? <Text type="secondary">{value}</Text> : value}
                 {rightSection}
-                {withArrow &&
+                {withArrow && (
                     <Icon icon={ChevronRightIcon} lightColor="#737373" darkColor="#a3a3a3" />
-                }
+                )}
             </View>
         </TouchableOpacity>
     )

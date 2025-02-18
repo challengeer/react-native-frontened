@@ -4,6 +4,8 @@ import IconCircle from "@/components/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
 import InputBar from "@/components/InputBar";
+import Button from "@/components/Button";
+import i18n from "@/i18n";
 
 export default function Email() {
     return (
@@ -15,6 +17,9 @@ export default function Email() {
                 />} />
             <View className="px-4 py-2">
                 <InputBar label="Email" />
+            </View>
+            <View className="px-4 py-2 absolute bottom-4 left-0 right-0"> 
+                <Button title={i18n.t("settings.profile.save")} size="lg" />
             </View>
         </View>
     );

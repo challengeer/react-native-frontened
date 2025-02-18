@@ -33,5 +33,36 @@
         "header": "Priatelia",
         "contacts": "Kontakty",
         "friendRequests": "Žiadosti o priateľstvo"
+    },
+    "settings": {
+        "header": "Nastavenia",
+        "account": "Účet",
+        "privacy": "Súkromie",
+        "language": {
+            "header": "Jazyk",
+            "selectLanguage": "Vyberte jazyk",
+            "english": "English",
+            "englishDescription": "Anglický jazyk",
+            "slovak": "Slovenčina",
+            "slovakDescription": "Slovenský jazyk"
+        },
+        "appearance": {
+            "header": "Vzhľad aplikácie",
+            "light": "Svetlý",
+            "dark": "Tmavý",
+            "matchSystem": "Podľa systému"
+        },
+        "profile": {
+            "displayName": "Zobrazované meno",
+            "username": "Používateľské meno",
+            "email": "Email",
+            "mobileNumber": "Telefónne číslo",
+            "password": "Heslo",
+            "save": "Uložiť"
+        },
+        "privacyPolicy": "Zásady ochrany osobných údajov",
+        "logout": "Odhlásiť sa",
+        "version": "Challengeer v 1.0.0",
+        "location": "Košice, Slovensko"
     }
 }

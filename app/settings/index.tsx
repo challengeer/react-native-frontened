@@ -7,29 +7,31 @@ import Header from "@/components/Header";
 import IconCircle from "@/components/IconCircle";
 import Button from "@/components/Button";
 import Avatar from "@/components/Avatar";
+import i18n from "@/i18n";
+
 
 export default function SettingsPage() {
     const handleOptionPress = (key: string) => {
         switch (key) {
-            case "App appearance":
+            case i18n.t("settings.appearance.header"):
                 router.push("/settings/appAppearance");
                 break;
-            case "Language":
+            case i18n.t("settings.language.header"):
                 router.push("/settings/language");
                 break;
-            case "Name":
+            case i18n.t("settings.profile.displayName"):
                 router.push("/settings/name");
                 break;
-            case "Username":
+            case i18n.t("settings.profile.username"):
                 router.push("/settings/username");
                 break;
-            case "Mobile number":
+            case i18n.t("settings.profile.mobileNumber"):
                 router.push("/settings/mobile");
                 break;
-            case "Email":
+            case i18n.t("settings.profile.email"):
                 router.push("/settings/email");
                 break;
-            case "Password":
+            case i18n.t("settings.profile.password"):
                 router.push("/settings/password");
                 break;
             default:
@@ -38,19 +40,36 @@ export default function SettingsPage() {
     };
 
     const data = {
-        "Name": "Display name",
-        "Username": "@username",
-        "Mobile number": "0905 123 456",
-        "Email": "email@example.com",
-        "Password": "",
-        "App appearance": "",
-        "Language": "",
+        [i18n.t("settings.profile.displayName")]: "Display name",
+        [i18n.t("settings.profile.username")]: "@username",
+        [i18n.t("settings.profile.mobileNumber")]: "0905 123 456",
+        [i18n.t("settings.profile.email")]: "email@example.com",
+        [i18n.t("settings.profile.password")]: "",
+        [i18n.t("settings.appearance.header")]: "",
+        [i18n.t("settings.language.header")]: "",
     }
+
+    const settingsData = [
+        {
+            title: "Profile picture",
+            value: "",
+            route: "/settings/profilePicture",
+            rightSection: <Avatar name="John Doe" size="sm" />,
+            key: "profile-picture"
+        },
+        ...Object.entries(data).map(([key, value]) => ({
+            title: key,
+            value,
+            key,
+            route: null, // Will use handleOptionPress instead
+            rightSection: undefined
+        }))
+    ];
 
     return (
         <View className="flex-1 bg-white dark:bg-neutral-900">
             <Header
-                title="Settings"
+                title={i18n.t("settings.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -67,38 +86,30 @@ export default function SettingsPage() {
                 {/* ACCOUNT SETTINGS */}
                 <View className="mb-4">
                     <Text className="mb-2 text-2xl font-bold">
-                        Account
+                        {i18n.t("settings.account")}
                     </Text>
-                    <OptionButton
-                        title="Profile picture"
-                        onPress={() => router.push("/settings/profilePicture")}
-                        className="rounded-t-lg"
-                        borderBottom
-                        rightSection={<Avatar name="John Doe" size="sm" />}
-                        withArrow
-                    />
-                    {Object.entries(data).map(([key, value], index, array) => (
-                        <OptionButton
-                            key={key}
-                            title={key}
-                            value={value}
-                            onPress={() => handleOptionPress(key)}
-                            borderBottom
-                            className={`                        
-                                ${index === array.length - 1 ? 'rounded-b-lg border-b-0' : ''}
-                            `}
-                            withArrow
-                        />
-                    ))}
+                    <View className="overflow-hidden rounded-lg">
+                        {settingsData.map((item, index) => (
+                            <OptionButton
+                                key={item.key}
+                                title={item.title}
+                                value={item.value}
+                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.title)}
+                                rightSection={item.rightSection}
+                                borderBottom={index !== settingsData.length - 1}
+                                withArrow
+                            />
+                        ))}
+                    </View>
                 </View>
 
                 {/* PRIVACY POLICY & LOG OUT */}
                 <View className="mb-4">
                     <Text className="mb-2 text-2xl font-bold">
-                        Privacy
+                        {i18n.t("settings.privacy")}
                     </Text>
                     <OptionButton
-                        title="Privacy policy"
+                        title={i18n.t("settings.privacyPolicy")}
                         rounded
                         onPress={() => router.push("/settings/privacyPolicy")}
                         withArrow
@@ -106,7 +117,7 @@ export default function SettingsPage() {
                 </View>
 
                 <Button
-                    title="Log out"
+                    title={i18n.t("settings.logout")}
                     size="lg"
                     variant="logout"
                     onPress={() => {
@@ -118,10 +129,10 @@ export default function SettingsPage() {
                 {/* VERSION */}
                 <View className="my-4 items-center justify-center">
                     <Text type="secondary" className="text-sm">
-                        Challengeer v 1.0.0
+                        {i18n.t("settings.version")}
                     </Text>
                     <Text type="secondary" className="text-sm">
-                        Košice, Slovakia
+                        {i18n.t("settings.location")}
                     </Text>
                 </View>
             </ScrollView>
