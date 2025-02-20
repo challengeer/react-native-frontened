@@ -12,12 +12,12 @@ export default function AppLayout() {
     if (isLoading) {
         // Hide the splash screen once we're done loading
         SplashScreen.hideAsync();
+        return null;
     }
 
-    // Add later when auth is implemented
-    // if (!isAuthenticated) {
-    //     return <Redirect href="/auth" />
-    // }
+    if (!isAuthenticated) {
+        return <Redirect href="/auth" />
+    }
 
     const queryClient = new QueryClient()
 

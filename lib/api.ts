@@ -15,7 +15,7 @@ const api = axios.create({
 // Add a request interceptor to add the bearer token
 api.interceptors.request.use(
   async (config) => {
-    const token = await SecureStore.getItemAsync("auth_token");
+    const token = await SecureStore.getItemAsync("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -47,7 +47,7 @@ api.interceptors.response.use(
 
         // Store the new tokens
         const { access_token, refresh_token } = response.data;
-        await SecureStore.setItemAsync("auth_token", access_token);
+        await SecureStore.setItemAsync("access_token", access_token);
         await SecureStore.setItemAsync("refresh_token", refresh_token);
 
         // Retry the original request with the new token

@@ -8,7 +8,8 @@ import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
 import i18n from "@/i18n";
-
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import * as SecureStore from "expo-secure-store";
 
 export default function SettingsPage() {
     const handleOptionPress = (key: string) => {
@@ -120,8 +121,10 @@ export default function SettingsPage() {
                     title={i18n.t("settings.logout")}
                     size="lg"
                     variant="logout"
-                    onPress={() => {
-                        // Add logout logic here
+                    onPress={async () => {
+                        await GoogleSignin.signOut();
+                        await SecureStore.deleteItemAsync("access_token");
+                        await SecureStore.deleteItemAsync("refresh_token");
                         router.replace("/auth");
                     }}
                 />

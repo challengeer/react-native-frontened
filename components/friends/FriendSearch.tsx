@@ -21,7 +21,7 @@ export default function FriendSearch() {
     const { data, isPending, error } = useQuery<UserInterface[]>({
         queryKey: ["user-search", searchQuery],
         queryFn: async () => {
-            const response = await api.get(`/users/search?q=${encodeURIComponent(searchQuery)}`);
+            const response = await api.get(`/user/search?q=${encodeURIComponent(searchQuery)}`);
             return response.data;
         },
     });

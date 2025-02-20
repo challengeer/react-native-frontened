@@ -15,7 +15,7 @@ export default function UserPage() {
     const { data, isPending, error } = useQuery<UserInterface>({
         queryKey: ["user", user_id],
         queryFn: async () => {
-            const response = await api.get(`/users/${encodeURIComponent(user_id)}`);
+            const response = await api.get(`/user/${encodeURIComponent(user_id)}`);
             return response.data;
         },
     });
