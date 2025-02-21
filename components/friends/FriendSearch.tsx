@@ -1,9 +1,10 @@
 import i18n from '@/i18n';
 import api from '@/lib/api';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Modal, ScrollView, View, TextInput, ActivityIndicator } from 'react-native'
-import { XMarkIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
+import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import IconCircle from '@/components/common/IconCircle';
 import Icon from '@/components/common/Icon';
@@ -17,8 +18,9 @@ export default function FriendSearch() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const searchInputRef = useRef<TextInput>(null);
+    const queryClient = useQueryClient();
 
-    const { data, isPending, error } = useQuery<UserInterface[]>({
+    const { data: users, isPending, error } = useQuery<UserInterface[]>({
         queryKey: ["user-search", searchQuery],
         queryFn: async () => {
             const response = await api.get(`/user/search?q=${encodeURIComponent(searchQuery)}`);
@@ -29,6 +31,15 @@ export default function FriendSearch() {
     const handleSearch = (query: string) => {
         setSearchQuery(query);
     };
+
+    const addFriendMutation = useMutation({
+        mutationFn: async (userId: string) => {
+            await api.post("/friends/add", { receiver_id: userId });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user-search'] });
+        },
+    });
 
     return (
         <>
@@ -61,7 +72,7 @@ export default function FriendSearch() {
                             overScrollMode="never"
                             showsVerticalScrollIndicator={false}
                         >
-                            {data.map((user) => (
+                            {users.map((user: UserInterface) => (
                                 <UserItem
                                     key={user.user_id}
                                     userId={user.user_id}
@@ -73,6 +84,8 @@ export default function FriendSearch() {
                                             <Button
                                                 size="sm"
                                                 title="Add"
+                                                loading={addFriendMutation.isPending && addFriendMutation.variables === user.user_id}
+                                                onPress={() => addFriendMutation.mutate(user.user_id)}
                                                 leftSection={
                                                     <Icon
                                                         icon={UserPlusIcon}
@@ -80,7 +93,6 @@ export default function FriendSearch() {
                                                         darkColor="white"
                                                     />
                                                 } />
-                                            <Icon icon={XMarkIcon} />
                                         </View>
                                     }
                                 />
