@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Modal, Pressable, View, ScrollView, ActivityIndicator } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import UserInterface from '@/types/UserInterface';
 import IconCircle from '@/components/common/IconCircle';
 import Header from '@/components/common/Header';
@@ -15,13 +15,33 @@ import UserItem from '@/components/common/UserItem';
 
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const queryClient = useQueryClient();
 
-    const { data, isPending, error } = useQuery({
+    const { data: friendRequests, isPending, error } = useQuery({
         queryKey: ["friend-requests"],
         queryFn: async () => {
-            const response = await api.get("/users/3/requests");
+            const response = await api.get("/friends/requests");
             return response.data;
         },
+    });
+
+    const invalidateQueries = () => {
+        queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
+        queryClient.invalidateQueries({ queryKey: ['friends'] });
+    }
+
+    const acceptMutation = useMutation({
+        mutationFn: async (requestId: string) => {
+            await api.put("/friends/accept", { request_id: requestId });
+        },
+        onSuccess: invalidateQueries,
+    });
+
+    const rejectMutation = useMutation({
+        mutationFn: async (requestId: string) => {
+            await api.put("/friends/reject", { request_id: requestId });
+        },
+        onSuccess: invalidateQueries,
     });
 
     return (
@@ -29,9 +49,9 @@ export default function FriendRequests() {
             {/* Friend request button for opening modal */}
             <View className="relative">
                 <IconCircle icon={UserPlusIcon} onPress={() => setIsModalVisible(true)} />
-                {data && data.length > 0 &&
+                {friendRequests && friendRequests.length > 0 &&
                     <Pressable onPress={() => setIsModalVisible(true)} className="absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
-                        <Text className="text-white text-xs font-medium">{data.length}</Text>
+                        <Text className="text-white text-xs font-medium">{friendRequests.length}</Text>
                     </Pressable>
                 }
             </View>
@@ -63,9 +83,9 @@ export default function FriendRequests() {
                             overScrollMode="never"
                             showsVerticalScrollIndicator={false}
                         >
-                            {data.map((user: UserInterface) => (
+                            {friendRequests.map((user: UserInterface) => (
                                 <UserItem
-                                    key={user.user_id}
+                                    key={user.request_id}
                                     userId={user.user_id}
                                     displayName={user.display_name}
                                     username={user.username}
@@ -75,6 +95,8 @@ export default function FriendRequests() {
                                             <Button
                                                 size="sm"
                                                 title="Accept"
+                                                loading={acceptMutation.isPending && acceptMutation.variables === user.request_id}
+                                                onPress={() => acceptMutation.mutate(user.request_id)}
                                                 leftSection={
                                                     <Icon
                                                         icon={UserPlusIcon}
@@ -82,7 +104,10 @@ export default function FriendRequests() {
                                                         darkColor="white"
                                                     />
                                                 } />
-                                            <Icon icon={XMarkIcon} />
+                                            <Icon
+                                                icon={XMarkIcon}
+                                                onPress={() => rejectMutation.mutate(user.request_id)}
+                                            />
                                         </View>
                                     }
                                 />
