@@ -4,3 +4,8 @@ export default interface UserInterface {
     username: string;
     profile_picture?: string;
 }
+
+export interface UserPrivateInterface extends UserInterface {
+    email?: string;
+    phone_number?: string;
+}

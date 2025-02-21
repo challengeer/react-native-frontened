@@ -2,6 +2,7 @@ import "../global.css";
 
 import "@/i18n";
 import LanguageProvider from "@/components/context/LanguageProvider";
+import { AuthProvider } from "@/components/context/AuthProvider";
 
 import { useEffect } from "react";
 import { useColorScheme } from "nativewind";
@@ -22,14 +23,16 @@ export default function Root() {
 
     return (
         <LanguageProvider>
-            <StatusBar
-                barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                backgroundColor={backgroundColor}
-            />
-            
-            <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
-                <Slot />
-            </SafeAreaView>
+            <AuthProvider>
+                <StatusBar
+                    barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+                    backgroundColor={backgroundColor}
+                />
+                
+                <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+                    <Slot />
+                </SafeAreaView>
+            </AuthProvider>
         </LanguageProvider>
     )
 };

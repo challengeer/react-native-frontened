@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon } from "react-native-heroicons/outline";
+import { useAuth } from "@/components/context/AuthProvider";
 import UserInterface from "@/types/UserInterface";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
@@ -11,6 +12,7 @@ import Avatar from "@/components/common/Avatar";
 
 export default function UserPage() {
     const { user_id } = useLocalSearchParams<{ user_id: string }>();
+    const { user } = useAuth();
 
     const { data, isPending, error } = useQuery<UserInterface>({
         queryKey: ["user", user_id],
@@ -28,7 +30,7 @@ export default function UserPage() {
                 rightSection={
                     <View className="flex-row items-center gap-2">
                         <IconCircle icon={ShareIcon} />
-                        {user_id == "1" &&
+                        {user_id == user?.user_id &&
                             <IconCircle icon={Cog8ToothIcon} onPress={() => router.push("/settings")} />
                         }
                     </View>

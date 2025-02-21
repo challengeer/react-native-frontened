@@ -8,10 +8,11 @@ import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
 import i18n from "@/i18n";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import * as SecureStore from "expo-secure-store";
+import { useAuth } from "@/components/context/AuthProvider";
 
 export default function SettingsPage() {
+    const { user, logout } = useAuth();
+
     const handleOptionPress = (key: string) => {
         switch (key) {
             case i18n.t("settings.appearance.header"):
@@ -41,10 +42,10 @@ export default function SettingsPage() {
     };
 
     const data = {
-        [i18n.t("settings.profile.displayName")]: "Display name",
-        [i18n.t("settings.profile.username")]: "@username",
-        [i18n.t("settings.profile.mobileNumber")]: "0905 123 456",
-        [i18n.t("settings.profile.email")]: "email@example.com",
+        [i18n.t("settings.profile.displayName")]: user?.display_name || "",
+        [i18n.t("settings.profile.username")]: user?.username || "",
+        [i18n.t("settings.profile.mobileNumber")]: user?.phone_number || "",
+        [i18n.t("settings.profile.email")]: user?.email || "",
         [i18n.t("settings.profile.password")]: "",
         [i18n.t("settings.appearance.header")]: "",
         [i18n.t("settings.language.header")]: "",
@@ -121,12 +122,7 @@ export default function SettingsPage() {
                     title={i18n.t("settings.logout")}
                     size="lg"
                     variant="logout"
-                    onPress={async () => {
-                        await GoogleSignin.signOut();
-                        await SecureStore.deleteItemAsync("access_token");
-                        await SecureStore.deleteItemAsync("refresh_token");
-                        router.replace("/auth");
-                    }}
+                    onPress={logout}
                 />
 
                 {/* VERSION */}
