@@ -1,5 +1,6 @@
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import Text from "@/components/common/Text";
+import { View } from "react-native";
 
 interface ButtonProps extends TouchableOpacityProps {
     title: string;
@@ -8,9 +9,10 @@ interface ButtonProps extends TouchableOpacityProps {
     size?: "sm" | "md" | "lg";
     variant?: "primary" | "secondary";
     disabled?: boolean;
+    loading?: boolean;
 }
 
-export default function Button({ title, leftSection, rightSection, size = "md", variant = "primary", disabled = false, ...props }: ButtonProps) {
+export default function Button({ title, leftSection, rightSection, size = "md", variant = "primary", disabled = false, loading = false, ...props }: ButtonProps) {
     const variantStyles = {
         primary: {
             button: "bg-primary-500",
@@ -52,11 +54,27 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
             `}
             {...props}
         >
-            {leftSection}
-            <Text className={`${variantStyles[variant].text} ${sizeStyles[size].text}`}>
+            <View className={loading ? 'opacity-0' : ''}>
+                {leftSection}
+            </View>
+            <Text 
+                className={`
+                    ${variantStyles[variant].text} 
+                    ${sizeStyles[size].text}
+                    ${loading ? 'opacity-0' : ''}
+                `}
+            >
                 {title}
             </Text>
-            {rightSection}
+            {loading && (
+                <ActivityIndicator 
+                    size="small" 
+                    className={`${variantStyles[variant].text} absolute`} 
+                />
+            )}
+            <View className={loading ? 'opacity-0' : ''}>
+                {rightSection}
+            </View>
         </TouchableOpacity>
     )
 }
