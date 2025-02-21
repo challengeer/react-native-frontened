@@ -34,6 +34,9 @@
         "contacts": "Kontakty",
         "friendRequests": "Žiadosti o priateľstvo"
     },
+    "challenges": {
+        "header": "Výzvy"
+    },
     "settings": {
         "header": "Nastavenia",
         "account": "Účet",

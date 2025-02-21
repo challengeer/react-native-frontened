@@ -34,6 +34,9 @@
         "contacts": "Contacts",
         "friendRequests": "Friend requests"
     },
+    "challenges": {
+        "header": "Challenges"
+    },
     "settings": {
         "header": "Settings",
         "account": "Account",
