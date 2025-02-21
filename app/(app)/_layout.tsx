@@ -1,6 +1,6 @@
 import { Redirect, Stack } from "expo-router";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/components/context/AuthProvider";
 import * as SplashScreen from 'expo-splash-screen';
 
 // Keep the splash screen visible while we fetch the resources
