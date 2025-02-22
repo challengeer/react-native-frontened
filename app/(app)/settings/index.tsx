@@ -12,35 +12,26 @@ import { useAuth } from "@/components/context/AuthProvider";
 import { useContext } from "react";
 import { LanguageContext } from "@/components/context/LanguageProvider";
 
+const ROUTE_MAP = {
+    appearance: "/settings/app_appearance",
+    language: "/settings/language",
+    displayName: "/settings/name",
+    username: "/settings/username",
+    mobileNumber: "/settings/mobile",
+    email: "/settings/email",
+    password: "/settings/password",
+} as const;
+
 export default function SettingsPage() {
     const { user, logout } = useAuth();
     const { language } = useContext(LanguageContext) as { language: string };
 
-    const handleOptionPress = (key: string) => {
-        switch (key) {
-            case "appearance":
-                router.push("/settings/app_appearance");
-                break;
-            case "language":
-                router.push("/settings/language");
-                break;
-            case "displayName":
-                router.push("/settings/name");
-                break;
-            case "username":
-                router.push("/settings/username");
-                break;
-            case "mobileNumber":
-                router.push("/settings/mobile");
-                break;
-            case "email":
-                router.push("/settings/email");
-                break;
-            case "password":
-                router.push("/settings/password");
-                break;
-            default:
-                console.log(`No route defined for ${key}`);
+    const handleOptionPress = (key: keyof typeof ROUTE_MAP) => {
+        const route = ROUTE_MAP[key];
+        if (route) {
+            router.push(route);
+        } else {
+            console.log(`No route defined for ${key}`);
         }
     };
 
@@ -127,7 +118,7 @@ export default function SettingsPage() {
                                 key={item.key}
                                 title={item.title}
                                 value={item.value}
-                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.key)}
+                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.key as keyof typeof ROUTE_MAP)}
                                 rightSection={item.rightSection}
                                 borderBottom={index !== settingsData.length - 1}
                                 withArrow
