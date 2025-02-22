@@ -3,7 +3,7 @@ import { ChevronRightIcon } from "react-native-heroicons/outline";
 import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
 
-interface OptionButtonProps {
+interface SettingsItemProps {
     title: React.ReactNode;
     value?: React.ReactNode;
     onPress?: () => void;
@@ -23,7 +23,7 @@ export default function SettingsItem({
     borderBottom = false, 
     rounded = false, 
     withArrow = false 
-}: OptionButtonProps) {
+}: SettingsItemProps) {
     return (
         <TouchableOpacity
             onPress={onPress}
