@@ -1,11 +1,12 @@
 import i18n from "@/i18n";
 import { View } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useAuth } from "@/components/context/AuthProvider";
+import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import FriendRequests from "@/components/friends/FriendRequests";
-import FriendSearch from "@/components/friends/FriendSearch";
 import Avatar from "@/components/common/Avatar";
+import IconCircle from "@/components/common/IconCircle";
 
 export default function FriendsHeader() {
     const { user } = useAuth();
@@ -25,7 +26,7 @@ export default function FriendsHeader() {
             rightSection={
                 <View className="flex-row gap-2 items-center">
                     <FriendRequests />
-                    <FriendSearch />
+                    <IconCircle onPress={() => router.push("/search")} icon={MagnifyingGlassIcon} />
                 </View>
             }
         />

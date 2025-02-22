@@ -140,7 +140,6 @@ export default function FriendRequests() {
                                             <Button
                                                 size="sm"
                                                 title="Accept"
-                                                loading={acceptMutation.isPending && acceptMutation.variables === friendRequest.request_id}
                                                 onPress={() => acceptMutation.mutate(friendRequest.request_id)}
                                                 leftSection={
                                                     <Icon

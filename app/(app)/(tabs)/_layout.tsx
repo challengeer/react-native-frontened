@@ -14,12 +14,12 @@ export default function Layout() {
     return (
         <Tabs>
             <TabSlot />
-            <TabList className="border-t bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800">
-                <TabTrigger name="challenges" href="/challenges" style={styles.tabTrigger} className="py-2 w-1/2 items-center gap-0.5">
+            <TabList className="items-center border-t bg-white dark:bg-neutral-900 border-neutral-100 dark:border-neutral-800 h-20">
+                <TabTrigger name="challenges" href="/challenges" style={styles.tabTrigger} className="w-1/2 items-center gap-0.5">
                     <Icon icon={segments[2] === "challenges" ? BoltIconSolid : BoltIconOutline} size={28} strokeWidth={1.5} />
                     <Text className="text-sm font-medium">{i18n.t("tabs.challenges")}</Text>
                 </TabTrigger>
-                <TabTrigger name="friends" href="/friends" style={styles.tabTrigger} className="py-2 w-1/2 items-center gap-0.5">
+                <TabTrigger name="friends" href="/friends" style={styles.tabTrigger} className="w-1/2 items-center gap-0.5">
                     <Icon icon={segments[2] === "friends" ? UsersIconSolid : UsersIconOutline} size={28} strokeWidth={1.5} />
                     <Text className="text-sm font-medium">{i18n.t("tabs.friends")}</Text>
                 </TabTrigger>
