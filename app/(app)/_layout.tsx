@@ -6,20 +6,21 @@ import * as SplashScreen from 'expo-splash-screen';
 // Keep the splash screen visible while we fetch the resources
 SplashScreen.preventAutoHideAsync();
 
+// Create QueryClient outside component to persist between renders
+const queryClient = new QueryClient()
+
 export default function AppLayout() {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
-        // Hide the splash screen once we're done loading
-        SplashScreen.hideAsync();
         return null;
     }
+
+    SplashScreen.hideAsync();
 
     if (!isAuthenticated) {
         return <Redirect href="/auth" />
     }
-
-    const queryClient = new QueryClient()
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -27,6 +28,9 @@ export default function AppLayout() {
                 screenOptions={{
                     headerShown: false,
                     animation: "none",
+                    contentStyle: {
+                        backgroundColor: "transparent",
+                    }
                 }}
             />
         </QueryClientProvider>

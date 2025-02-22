@@ -6,8 +6,7 @@ import { AuthProvider } from "@/components/context/AuthProvider";
 
 import { useEffect } from "react";
 import { useColorScheme } from "nativewind";
-import { StatusBar, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar, Platform, View } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { Slot } from "expo-router";
 
@@ -29,9 +28,9 @@ export default function Root() {
                     backgroundColor={backgroundColor}
                 />
                 
-                <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+                <View className="flex-1 bg-white dark:bg-neutral-900">
                     <Slot />
-                </SafeAreaView>
+                </View>
             </AuthProvider>
         </LanguageProvider>
     )
