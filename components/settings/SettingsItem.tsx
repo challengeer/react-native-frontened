@@ -14,7 +14,7 @@ interface OptionButtonProps {
     withArrow?: boolean;
 }
 
-export default function OptionButton({ 
+export default function SettingsItem({ 
     title, 
     value, 
     onPress, 
