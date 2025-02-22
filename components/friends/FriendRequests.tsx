@@ -1,7 +1,7 @@
 import i18n from '@/i18n';
 import api from '@/lib/api';
-import React, { useState } from 'react';
-import { Modal, Pressable, View, ScrollView, ActivityIndicator } from 'react-native'
+import React, { useCallback, useState } from 'react';
+import { Modal, Pressable, View, ScrollView, ActivityIndicator, RefreshControl } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,11 +13,15 @@ import Icon from '@/components/common/Icon';
 import Text from '@/components/common/Text';
 import UserItem from '@/components/common/UserItem';
 
+interface FriendRequest extends UserInterface {
+    request_id: string;
+}
+
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
-    const { data: friendRequests, isPending, error } = useQuery({
+    const { data: friendRequests, isPending, error, refetch } = useQuery({
         queryKey: ["friend-requests"],
         queryFn: async () => {
             const response = await api.get("/friends/requests");
@@ -34,15 +38,50 @@ export default function FriendRequests() {
         mutationFn: async (requestId: string) => {
             await api.put("/friends/accept", { request_id: requestId });
         },
-        onSuccess: invalidateQueries,
+        onMutate: async (requestId) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['friend-requests'] });
+            
+            // Snapshot the previous value
+            const previousRequests = queryClient.getQueryData(['friend-requests']);
+            
+            // Optimistically update friend requests
+            queryClient.setQueryData(['friend-requests'], (old: FriendRequest[]) => 
+                old.filter(request => request.request_id !== requestId)
+            );
+            
+            return { previousRequests };
+        },
+        onError: (err, requestId, context) => {
+            // Rollback on error
+            queryClient.setQueryData(['friend-requests'], context?.previousRequests);
+        },
+        onSettled: invalidateQueries,
     });
 
     const rejectMutation = useMutation({
         mutationFn: async (requestId: string) => {
             await api.put("/friends/reject", { request_id: requestId });
         },
-        onSuccess: invalidateQueries,
+        onMutate: async (requestId) => {
+            await queryClient.cancelQueries({ queryKey: ['friend-requests'] });
+            const previousRequests = queryClient.getQueryData(['friend-requests']);
+            
+            queryClient.setQueryData(['friend-requests'], (old: FriendRequest[]) => 
+                old.filter(request => request.request_id !== requestId)
+            );
+            
+            return { previousRequests };
+        },
+        onError: (err, requestId, context) => {
+            queryClient.setQueryData(['friend-requests'], context?.previousRequests);
+        },
+        onSettled: invalidateQueries,
     });
+
+    const handleRefresh = useCallback(() => {
+        refetch();
+    }, [refetch]);
 
     return (
         <>
@@ -82,21 +121,27 @@ export default function FriendRequests() {
                         <ScrollView
                             overScrollMode="never"
                             showsVerticalScrollIndicator={false}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isPending}
+                                    onRefresh={handleRefresh}
+                                />
+                            }
                         >
-                            {friendRequests.map((user: UserInterface) => (
+                            {friendRequests.map((friendRequest: FriendRequest) => (
                                 <UserItem
-                                    key={user.request_id}
-                                    userId={user.user_id}
-                                    displayName={user.display_name}
-                                    username={user.username}
-                                    profilePicture={user.profile_picture}
+                                    key={friendRequest.request_id}
+                                    userId={friendRequest.user_id}
+                                    displayName={friendRequest.display_name}
+                                    username={friendRequest.username}
+                                    profilePicture={friendRequest.profile_picture}
                                     rightSection={
                                         <View className="flex-row gap-2 items-center">
                                             <Button
                                                 size="sm"
                                                 title="Accept"
-                                                loading={acceptMutation.isPending && acceptMutation.variables === user.request_id}
-                                                onPress={() => acceptMutation.mutate(user.request_id)}
+                                                loading={acceptMutation.isPending && acceptMutation.variables === friendRequest.request_id}
+                                                onPress={() => acceptMutation.mutate(friendRequest.request_id)}
                                                 leftSection={
                                                     <Icon
                                                         icon={UserPlusIcon}
@@ -106,7 +151,7 @@ export default function FriendRequests() {
                                                 } />
                                             <Icon
                                                 icon={XMarkIcon}
-                                                onPress={() => rejectMutation.mutate(user.request_id)}
+                                                onPress={() => rejectMutation.mutate(friendRequest.request_id)}
                                             />
                                         </View>
                                     }
