@@ -131,6 +131,8 @@ export default function SettingsPage() {
                                 rightSection={item.rightSection}
                                 borderBottom={index !== settingsData.length - 1}
                                 withArrow
+                                isFirst={index === 0}
+                                isLast={index === settingsData.length - 1}
                             />
                         ))}
                     </View>

@@ -12,6 +12,8 @@ interface SettingsItemProps {
     borderBottom?: boolean;
     rounded?: boolean;
     withArrow?: boolean;
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
 export default function SettingsItem({ 
@@ -22,7 +24,9 @@ export default function SettingsItem({
     className = "", 
     borderBottom = false, 
     rounded = false, 
-    withArrow = false 
+    withArrow = false,
+    isFirst = false,
+    isLast = false 
 }: SettingsItemProps) {
     return (
         <TouchableOpacity
@@ -31,6 +35,8 @@ export default function SettingsItem({
                 ${className}
                 ${borderBottom ? "border-b" : ""} 
                 ${rounded ? "rounded-lg" : ""}
+                ${isFirst ? "rounded-t-lg" : ""}
+                ${isLast ? "rounded-b-lg border-b-0" : ""}
                 bg-neutral-100 dark:bg-neutral-800 
                 items-center flex-row justify-between p-4 
                 border-neutral-200 dark:border-neutral-700
