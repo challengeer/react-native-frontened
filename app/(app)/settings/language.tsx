@@ -7,11 +7,11 @@ import IconCircle from "@/components/common/IconCircle";
 import { router } from "expo-router";
 import RadioButton from "@/components/settings/RadioButton";
 import i18n from "@/i18n";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { LanguageContext } from "@/components/context/LanguageProvider";
 
 export default function LanguageSettings() {
-    const [currentLanguage, setCurrentLanguage] = useState(i18n.locale);
+    const { language, changeLanguage } = useContext(LanguageContext);
 
     const languages = [
         {
@@ -26,35 +26,8 @@ export default function LanguageSettings() {
         }
     ];
 
-    const handleLanguageSelect = async (languageCode: string) => {
-        try {
-            i18n.locale = languageCode;
-            setCurrentLanguage(languageCode);
-            await AsyncStorage.setItem('appLanguage', languageCode);
-        } catch (error) {
-            console.error('Failed to change language:', error);
-        }
-    };
-
-    useEffect(() => {
-        // Load saved language
-        const loadLanguage = async () => {
-            try {
-                const savedLanguage = await AsyncStorage.getItem('appLanguage');
-                if (savedLanguage) {
-                    i18n.locale = savedLanguage;
-                    setCurrentLanguage(savedLanguage);
-                }
-            } catch (error) {
-                console.error('Error loading language:', error);
-            }
-        };
-
-        loadLanguage();
-    }, []);
-
     return (
-        <ScrollView className="flex-1 bg-white dark:bg-neutral-900">
+        <ScrollView key={language} className="flex-1 bg-white dark:bg-neutral-900">
             <Header
                 title={i18n.t("settings.language.header")}
                 leftSection={
@@ -74,16 +47,13 @@ export default function LanguageSettings() {
                             key={lang.code}
                             title={lang.title}
                             value=""
-                            onPress={() => handleLanguageSelect(lang.code)}
+                            onPress={() => changeLanguage(lang.code)}
                             borderBottom={index !== languages.length - 1}
-                            className={`
-                ${index === 0 ? 'rounded-t-lg' : ''}
-                ${index === languages.length - 1 ? 'rounded-b-lg border-b-0' : ''}
-              `}
+                            className={`${index === 0 ? 'rounded-t-lg' : ''} ${index === languages.length - 1 ? 'rounded-b-lg border-b-0' : ''}`}
                             rightSection={
                                 <RadioButton
-                                    selected={currentLanguage === lang.code}
-                                    onPress={() => handleLanguageSelect(lang.code)}
+                                    selected={language === lang.code}
+                                    onPress={() => changeLanguage(lang.code)}
                                 />
                             }
                         />

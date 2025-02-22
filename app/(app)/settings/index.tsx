@@ -9,31 +9,34 @@ import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
 import i18n from "@/i18n";
 import { useAuth } from "@/components/context/AuthProvider";
+import { useContext } from "react";
+import { LanguageContext } from "@/components/context/LanguageProvider";
 
 export default function SettingsPage() {
     const { user, logout } = useAuth();
+    const { language } = useContext(LanguageContext) as { language: string };
 
     const handleOptionPress = (key: string) => {
         switch (key) {
-            case i18n.t("settings.appearance.header"):
+            case "appearance":
                 router.push("/settings/app_appearance");
                 break;
-            case i18n.t("settings.language.header"):
+            case "language":
                 router.push("/settings/language");
                 break;
-            case i18n.t("settings.profile.displayName"):
+            case "displayName":
                 router.push("/settings/name");
                 break;
-            case i18n.t("settings.profile.username"):
+            case "username":
                 router.push("/settings/username");
                 break;
-            case i18n.t("settings.profile.mobileNumber"):
+            case "mobileNumber":
                 router.push("/settings/mobile");
                 break;
-            case i18n.t("settings.profile.email"):
+            case "email":
                 router.push("/settings/email");
                 break;
-            case i18n.t("settings.profile.password"):
+            case "password":
                 router.push("/settings/password");
                 break;
             default:
@@ -41,15 +44,43 @@ export default function SettingsPage() {
         }
     };
 
-    const data = {
-        [i18n.t("settings.profile.displayName")]: user?.display_name || "",
-        [i18n.t("settings.profile.username")]: user?.username || "",
-        [i18n.t("settings.profile.mobileNumber")]: user?.phone_number || "",
-        [i18n.t("settings.profile.email")]: user?.email || "",
-        [i18n.t("settings.profile.password")]: "",
-        [i18n.t("settings.appearance.header")]: "",
-        [i18n.t("settings.language.header")]: "",
-    }
+    const data = [
+        {
+            key: "displayName",
+            title: i18n.t("settings.profile.displayName"),
+            value: user?.display_name || "",
+        },
+        {
+            key: "username",
+            title: i18n.t("settings.profile.username"),
+            value: user?.username || "",
+        },
+        {
+            key: "mobileNumber",
+            title: i18n.t("settings.profile.mobileNumber"),
+            value: user?.phone_number || "",
+        },
+        {
+            key: "email",
+            title: i18n.t("settings.profile.email"),
+            value: user?.email || "",
+        },
+        {
+            key: "password",
+            title: i18n.t("settings.profile.password"),
+            value: "",
+        },
+        {
+            key: "appearance",
+            title: i18n.t("settings.appearance.header"),
+            value: "",
+        },
+        {
+            key: "language",
+            title: i18n.t("settings.language.header"),
+            value: "",
+        },
+    ];
 
     const settingsData = [
         {
@@ -59,17 +90,17 @@ export default function SettingsPage() {
             rightSection: <Avatar name="John Doe" size="sm" />,
             key: "profile-picture"
         },
-        ...Object.entries(data).map(([key, value]) => ({
-            title: key,
-            value,
-            key,
+        ...data.map((item) => ({
+            title: item.title,
+            value: item.value,
+            key: item.key,
             route: null, // Will use handleOptionPress instead
             rightSection: undefined
         }))
     ];
 
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
+        <View key={language} className="flex-1 bg-white dark:bg-neutral-900">
             <Header
                 title={i18n.t("settings.header")}
                 leftSection={
@@ -96,7 +127,7 @@ export default function SettingsPage() {
                                 key={item.key}
                                 title={item.title}
                                 value={item.value}
-                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.title)}
+                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.key)}
                                 rightSection={item.rightSection}
                                 borderBottom={index !== settingsData.length - 1}
                                 withArrow
