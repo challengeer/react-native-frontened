@@ -63,12 +63,12 @@ export default function FriendSearch() {
             queryClient.setQueryData(["user-search", searchQuery], context?.previousUsers);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["user-search", searchQuery] });
+            queryClient.invalidateQueries({ queryKey: ["user-search"] });
         },
     });
 
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
+        <View className="flex-1">
             <View className="px-4 h-20 w-full flex-row items-center gap-4">
                 <SearchBar
                     onSearch={handleSearch}
@@ -90,6 +90,7 @@ export default function FriendSearch() {
                 <ScrollView
                     overScrollMode="never"
                     showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                 >
                     {users.map((user: SearchResult) => (
                         <UserItem
