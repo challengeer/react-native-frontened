@@ -4,7 +4,7 @@ import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
-import OptionButton from "@/components/settings/OptionButton";
+import OptionButton from "@/components/settings/SettingsItem";
 import { useColorScheme } from "nativewind";
 import RadioButton from "@/components/settings/RadioButton";
 import { useEffect, useState } from "react";

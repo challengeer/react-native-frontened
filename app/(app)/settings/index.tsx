@@ -2,7 +2,7 @@ import Text from "@/components/common/Text";
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import OptionButton from "@/components/settings/OptionButton";
+import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";

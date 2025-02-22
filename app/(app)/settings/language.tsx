@@ -1,6 +1,6 @@
 import Text from "@/components/common/Text";
 import { ScrollView, View } from "react-native";
-import OptionButton from "@/components/settings/OptionButton";
+import OptionButton from "@/components/settings/SettingsItem";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
