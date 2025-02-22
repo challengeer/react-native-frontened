@@ -46,13 +46,13 @@ export default function FriendSearch() {
         },
         onMutate: async (userId) => {
             // Cancel outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ["user-search"] });
+            await queryClient.cancelQueries({ queryKey: ["user-search", searchQuery] });
 
             // Snapshot the previous value
-            const previousUsers = queryClient.getQueryData(["user-search"]);
+            const previousUsers = queryClient.getQueryData(["user-search", searchQuery]);
 
             // Optimistically update friend requests
-            queryClient.setQueryData(["user-search"], (old: SearchResult[]) =>
+            queryClient.setQueryData(["user-search", searchQuery], (old: SearchResult[]) =>
                 old.map(user => user.user_id === userId ? { ...user, friendship_status: "pending" } : user)
             );
 
@@ -60,10 +60,10 @@ export default function FriendSearch() {
         },
         onError: (err, userId, context) => {
             // Rollback on error
-            queryClient.setQueryData(["user-search"], context?.previousUsers);
+            queryClient.setQueryData(["user-search", searchQuery], context?.previousUsers);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["user-search"] });
+            queryClient.invalidateQueries({ queryKey: ["user-search", searchQuery] });
         },
     });
 
