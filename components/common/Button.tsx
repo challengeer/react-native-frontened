@@ -10,9 +10,10 @@ interface ButtonProps extends TouchableOpacityProps {
     variant?: "primary" | "secondary";
     disabled?: boolean;
     loading?: boolean;
+    className?: string;
 }
 
-export default function Button({ title, leftSection, rightSection, size = "md", variant = "primary", disabled = false, loading = false, ...props }: ButtonProps) {
+export default function Button({ title, leftSection, rightSection, size = "md", variant = "primary", disabled = false, loading = false, className, ...props }: ButtonProps) {
     const variantStyles = {
         primary: {
             button: "bg-primary-500",
@@ -34,8 +35,8 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
             text: "font-medium text-base"
         },
         md: {
-            container: "py-2 px-4",
-            text: "font-medium text-base"
+            container: "py-3 px-4",
+            text: "font-bold text-lg"
         },
         lg: {
             container: "py-5 px-8",
@@ -51,6 +52,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
                 ${sizeStyles[size].container}
                 ${variantStyles[variant].button}
                 flex-row items-center gap-2 justify-center rounded-full
+                ${className}
             `}
             {...props}
         >

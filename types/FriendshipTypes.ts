@@ -1,0 +1,1 @@
+export type FriendshipStatus = "friends" | "request_sent" | "request_received" | "none";

@@ -6,6 +6,7 @@ import { ScrollView, View, TextInput, ActivityIndicator } from "react-native"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCircleIcon, UserPlusIcon } from "react-native-heroicons/solid";
 import { router } from "expo-router";
+import { FriendshipStatus } from "@/types/FriendshipTypes";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserInterface from "@/types/UserInterface";
@@ -14,7 +15,7 @@ import SearchBar from "@/components/common/SearchBar";
 import Text from "@/components/common/Text";
 
 interface SearchResult extends UserInterface {
-    friendship_status: "friends" | "pending" | "none";
+    friendship_status: FriendshipStatus;
 }
 
 export default function FriendSearch() {
@@ -101,11 +102,11 @@ export default function FriendSearch() {
                             profilePicture={user.profile_picture}
                             rightSection={
                                 <View className="flex-row gap-2 items-center">
-                                    {user.friendship_status === "pending" && (
+                                    {user.friendship_status === "request_sent" && (
                                         <Button
                                             size="sm"
+                                            variant="secondary"
                                             title="Added"
-                                            disabled
                                             leftSection={
                                                 <Icon
                                                     icon={CheckCircleIcon}
