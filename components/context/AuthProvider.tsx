@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { UserPrivateInterface } from '@/types/UserInterface';
+import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import api from '@/lib/api';
@@ -27,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserPrivateInterface | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const queryClient = useQueryClient();
 
     const fetchUserProfile = async () => {
         try {
@@ -56,8 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 throw new Error(result.data.detail || 'Authentication failed');
             }
 
-            console.log(result.data);
-
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
             
@@ -84,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await SecureStore.deleteItemAsync('refresh_token');
             setUser(null);
             setIsAuthenticated(false);
+            queryClient.clear();
             router.replace('/auth');
         } catch (error) {
             console.error('Logout error:', error);
