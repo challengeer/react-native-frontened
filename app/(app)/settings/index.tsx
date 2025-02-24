@@ -37,9 +37,17 @@ export default function SettingsPage() {
         }
     };
 
-    const handleImageSelect = useCallback((uri: string) => {
-        setProfileImage(uri);
-        // Add your logic to save the image to the user profile
+    const handleImageSelect = useCallback(async (formData: FormData) => {
+        try {
+            // Get the image URI from the FormData for preview
+            const imageUri = (formData.get('image') as any).uri;
+            setProfileImage(imageUri);
+
+            // Here you can send the formData to your server
+            // await uploadImage(formData);
+        } catch (error) {
+            console.error('Error handling image:', error);
+        }
     }, []);
 
     const pickImage = useImagePicker({ onImageSelect: handleImageSelect });
@@ -92,7 +100,7 @@ export default function SettingsPage() {
                 <Avatar 
                     name="John Doe" 
                     size="sm" 
-                    imageUri={profileImage}
+                    source={profileImage}
                 />
             ),
             key: "profile-picture"
