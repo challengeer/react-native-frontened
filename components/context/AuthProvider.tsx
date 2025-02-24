@@ -56,6 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 throw new Error(result.data.detail || 'Authentication failed');
             }
 
+            console.log(result.data);
+
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
             

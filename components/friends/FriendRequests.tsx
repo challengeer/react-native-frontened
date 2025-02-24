@@ -4,14 +4,13 @@ import React, { useCallback, useState } from 'react';
 import { Modal, Pressable, View, ScrollView, ActivityIndicator, RefreshControl } from 'react-native'
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import UserInterface from '@/types/UserInterface';
 import IconCircle from '@/components/common/IconCircle';
 import Header from '@/components/common/Header';
-import Button from '@/components/common/Button';
-import Icon from '@/components/common/Icon';
 import Text from '@/components/common/Text';
 import UserItem from '@/components/common/UserItem';
+import FriendActionButton from '../common/FriendActionButton';
 
 interface FriendRequest extends UserInterface {
     request_id: string;
@@ -19,64 +18,13 @@ interface FriendRequest extends UserInterface {
 
 export default function FriendRequests() {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const queryClient = useQueryClient();
 
-    const { data: friendRequests, isPending, error, refetch } = useQuery({
+    const { data: friendRequests, isPending, error, refetch } = useQuery<FriendRequest[]>({
         queryKey: ["friend-requests"],
         queryFn: async () => {
             const response = await api.get("/friends/requests");
             return response.data;
         },
-    });
-
-    const invalidateQueries = () => {
-        queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
-        queryClient.invalidateQueries({ queryKey: ['friends'] });
-    }
-
-    const acceptMutation = useMutation({
-        mutationFn: async (requestId: string) => {
-            await api.put("/friends/accept", { request_id: requestId });
-        },
-        onMutate: async (requestId) => {
-            // Cancel outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ['friend-requests'] });
-            
-            // Snapshot the previous value
-            const previousRequests = queryClient.getQueryData(['friend-requests']);
-            
-            // Optimistically update friend requests
-            queryClient.setQueryData(['friend-requests'], (old: FriendRequest[]) => 
-                old.filter(request => request.request_id !== requestId)
-            );
-            
-            return { previousRequests };
-        },
-        onError: (err, requestId, context) => {
-            // Rollback on error
-            queryClient.setQueryData(['friend-requests'], context?.previousRequests);
-        },
-        onSettled: invalidateQueries,
-    });
-
-    const rejectMutation = useMutation({
-        mutationFn: async (requestId: string) => {
-            await api.put("/friends/reject", { request_id: requestId });
-        },
-        onMutate: async (requestId) => {
-            await queryClient.cancelQueries({ queryKey: ['friend-requests'] });
-            const previousRequests = queryClient.getQueryData(['friend-requests']);
-            
-            queryClient.setQueryData(['friend-requests'], (old: FriendRequest[]) => 
-                old.filter(request => request.request_id !== requestId)
-            );
-            
-            return { previousRequests };
-        },
-        onError: (err, requestId, context) => {
-            queryClient.setQueryData(['friend-requests'], context?.previousRequests);
-        },
-        onSettled: invalidateQueries,
     });
 
     const handleRefresh = useCallback(() => {
@@ -136,23 +84,11 @@ export default function FriendRequests() {
                                     username={friendRequest.username}
                                     profilePicture={friendRequest.profile_picture}
                                     rightSection={
-                                        <View className="flex-row gap-2 items-center">
-                                            <Button
-                                                size="sm"
-                                                title="Accept"
-                                                onPress={() => acceptMutation.mutate(friendRequest.request_id)}
-                                                leftSection={
-                                                    <Icon
-                                                        icon={UserPlusIcon}
-                                                        lightColor="white"
-                                                        darkColor="white"
-                                                    />
-                                                } />
-                                            <Icon
-                                                icon={XMarkIcon}
-                                                onPress={() => rejectMutation.mutate(friendRequest.request_id)}
-                                            />
-                                        </View>
+                                        <FriendActionButton
+                                            userId={friendRequest.user_id}
+                                            requestId={friendRequest.request_id}
+                                            friendshipStatus="request_received"
+                                        />
                                     }
                                 />
                             ))}
