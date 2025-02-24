@@ -13,14 +13,17 @@ import IconCircle from "@/components/common/IconCircle";
 import Avatar from "@/components/common/Avatar";
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
+import { useFriendActions } from '@/lib/hooks/useFriendActions';
 
 interface UserProfile extends UserInterface {
+    request_id?: string;
     friendship_status: FriendshipStatus;
 }
 
 export default function UserPage() {
     const { user_id } = useLocalSearchParams<{ user_id: string }>();
     const { user } = useAuth();
+    const { addFriend, acceptRequest, rejectRequest } = useFriendActions();
 
     const { data, isPending, error } = useQuery<UserProfile>({
         queryKey: ["user", user_id],
@@ -62,7 +65,7 @@ export default function UserPage() {
                             size="md"
                             className="mt-6 w-full"
                             title="Add"
-                            onPress={() => { }}
+                            onPress={() => addFriend.mutate(user_id)}
                             leftSection={
                                 <Icon
                                     icon={UserPlusIcon}
@@ -96,7 +99,7 @@ export default function UserPage() {
                                 size="md"
                                 className="flex-1"
                                 title="Accept"
-                                onPress={() => { }}
+                                onPress={() => data.request_id && acceptRequest.mutate(data.request_id)}
                                 leftSection={
                                     <Icon
                                         icon={UserPlusIcon}
@@ -110,7 +113,7 @@ export default function UserPage() {
                                 className="flex-1"
                                 variant="secondary"
                                 title="Ignore"
-                                onPress={() => { }}
+                                onPress={() => data.request_id && rejectRequest.mutate(data.request_id)}
                                 leftSection={
                                     <Icon
                                         icon={UserMinusIcon}

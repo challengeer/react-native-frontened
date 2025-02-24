@@ -10,6 +10,9 @@ import { StatusBar, Platform, View } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Root() {
     const { colorScheme } = useColorScheme();
@@ -23,9 +26,10 @@ export default function Root() {
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <LanguageProvider>
-                <AuthProvider>
-                    <StatusBar
+            <QueryClientProvider client={queryClient}>
+                <LanguageProvider>
+                    <AuthProvider>
+                        <StatusBar
                     barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
                     backgroundColor={backgroundColor}
                 />
@@ -33,8 +37,9 @@ export default function Root() {
                 <View className="flex-1 bg-white dark:bg-neutral-900">
                     <Slot />
                     </View>
-                </AuthProvider>
-            </LanguageProvider>
+                    </AuthProvider>
+                </LanguageProvider>
+            </QueryClientProvider>
         </GestureHandlerRootView>
     )
 };
