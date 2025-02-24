@@ -1,6 +1,6 @@
 import Text from "@/components/common/Text";
 import { router } from "expo-router";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, TouchableOpacity } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
@@ -9,8 +9,9 @@ import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
 import i18n from "@/i18n";
 import { useAuth } from "@/components/context/AuthProvider";
-import { useContext } from "react";
+import { useContext, useState, useCallback } from "react";
 import { LanguageContext } from "@/components/context/LanguageProvider";
+import useImagePicker from "@/components/settings/imagePicker";
 
 const ROUTE_MAP = {
     appearance: "/settings/app_appearance",
@@ -25,6 +26,7 @@ const ROUTE_MAP = {
 export default function SettingsPage() {
     const { user, logout } = useAuth();
     const { language } = useContext(LanguageContext) as { language: string };
+    const [profileImage, setProfileImage] = useState<string | null>(null);
 
     const handleOptionPress = (key: keyof typeof ROUTE_MAP) => {
         const route = ROUTE_MAP[key];
@@ -34,6 +36,13 @@ export default function SettingsPage() {
             console.log(`No route defined for ${key}`);
         }
     };
+
+    const handleImageSelect = useCallback((uri: string) => {
+        setProfileImage(uri);
+        // Add your logic to save the image to the user profile
+    }, []);
+
+    const pickImage = useImagePicker({ onImageSelect: handleImageSelect });
 
     const data = [
         {
@@ -77,8 +86,15 @@ export default function SettingsPage() {
         {
             title: "Profile picture",
             value: "",
-            route: "/settings/profilePicture",
-            rightSection: <Avatar name="John Doe" size="sm" />,
+            route: null,
+            onPress: pickImage,
+            rightSection: (
+                <Avatar 
+                    name="John Doe" 
+                    size="sm" 
+                    imageUri={profileImage}
+                />
+            ),
             key: "profile-picture"
         },
         ...data.map((item) => ({
@@ -118,7 +134,7 @@ export default function SettingsPage() {
                                 key={item.key}
                                 title={item.title}
                                 value={item.value}
-                                onPress={() => item.route ? router.push(item.route as any) : handleOptionPress(item.key as keyof typeof ROUTE_MAP)}
+                                onPress={item.onPress || (() => item.route ? router.push(item.route as any) : handleOptionPress(item.key as keyof typeof ROUTE_MAP))}
                                 rightSection={item.rightSection}
                                 borderBottom={index !== settingsData.length - 1}
                                 withArrow
