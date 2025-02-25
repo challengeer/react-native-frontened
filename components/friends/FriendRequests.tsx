@@ -1,7 +1,9 @@
 import i18n from '@/i18n';
 import api from '@/lib/api';
-import React, { useCallback, useState } from 'react';
-import { Modal, Pressable, View, ScrollView, ActivityIndicator, RefreshControl } from 'react-native'
+import React, { useCallback, useMemo, useRef } from 'react';
+import { useColorScheme } from 'nativewind';
+import { Pressable, View, ActivityIndicator } from 'react-native'
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import { useQuery } from '@tanstack/react-query';
@@ -17,7 +19,11 @@ interface FriendRequest extends UserInterface {
 }
 
 export default function FriendRequests() {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const { colorScheme } = useColorScheme();
+    const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
+
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const snapPoints = useMemo(() => ["100%"], []);
 
     const { data: friendRequests, isPending, error, refetch } = useQuery<FriendRequest[]>({
         queryKey: ["friend-requests"],
@@ -31,51 +37,56 @@ export default function FriendRequests() {
         refetch();
     }, [refetch]);
 
+    const handleModalOpen = useCallback(() => {
+        bottomSheetRef.current?.present();
+    }, []);
+
+    const handleModalClose = useCallback(() => {
+        bottomSheetRef.current?.dismiss();
+    }, []);
+
     return (
         <>
             {/* Friend request button for opening modal */}
             <View className="relative">
-                <IconCircle icon={UserPlusIcon} onPress={() => setIsModalVisible(true)} />
+                <IconCircle icon={UserPlusIcon} onPress={handleModalOpen} />
                 {friendRequests && friendRequests.length > 0 &&
-                    <Pressable onPress={() => setIsModalVisible(true)} className="absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
+                    <Pressable onPress={handleModalOpen} className="absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
                         <Text className="text-white text-xs font-medium">{friendRequests.length}</Text>
                     </Pressable>
                 }
             </View>
 
             {/* MODAL FOR FRIEND REQUESTS */}
-            <Modal
-                visible={isModalVisible}
-                animationType="slide"
-                presentationStyle="pageSheet"
-                onRequestClose={() => setIsModalVisible(false)}
-            >
-                <View className="flex-1 bg-white dark:bg-neutral-900">
+            <BottomSheetModal
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                index={0}
+                backgroundStyle={{ backgroundColor }}
+                enableDynamicSizing={false}
+                handleComponent={() => (
                     <Header
                         title={i18n.t("friends.friendRequests")}
                         leftSection={
                             <IconCircle
                                 icon={XMarkIcon}
-                                onPress={() => setIsModalVisible(false)}
+                                onPress={handleModalClose}
                             />
                         }
                     />
-
+                )}
+            >
+                <BottomSheetScrollView
+                    className="flex-1"
+                    overScrollMode="never"
+                    showsVerticalScrollIndicator={false}
+                >
                     {isPending ? (
                         <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
                     ) : error ? (
                         <Text className="p-4">Error</Text>
                     ) : (
-                        <ScrollView
-                            overScrollMode="never"
-                            showsVerticalScrollIndicator={false}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={isPending}
-                                    onRefresh={handleRefresh}
-                                />
-                            }
-                        >
+                        <>
                             {friendRequests.map((friendRequest: FriendRequest) => (
                                 <UserItem
                                     key={friendRequest.request_id}
@@ -92,10 +103,10 @@ export default function FriendRequests() {
                                     }
                                 />
                             ))}
-                        </ScrollView>
+                        </>
                     )}
-                </View>
-            </Modal>
+                </BottomSheetScrollView>
+            </BottomSheetModal>
         </>
     );
 }
