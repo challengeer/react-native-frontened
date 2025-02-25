@@ -41,12 +41,13 @@ export default function FriendActionButton({
     }
 
     if (friendshipStatus === "request_received") {
-        <View className="flex-row items-center gap-2">
-            <Button
-                size="sm"
-                title="Accept"
-                onPress={() => requestId && acceptRequest.mutate(requestId)}
-                leftSection={
+        return (
+            <View className="flex-row items-center gap-2">
+                <Button
+                    size="sm"
+                    title="Accept"
+                    onPress={() => requestId && acceptRequest.mutate(requestId)}
+                    leftSection={
                     <Icon
                         icon={UserPlusIcon}
                         lightColor="white"
@@ -56,9 +57,10 @@ export default function FriendActionButton({
             />
             <Icon
                 icon={XMarkIcon}
-                onPress={() => requestId && rejectRequest.mutate(requestId)}
-            />
-        </View>
+                    onPress={() => requestId && rejectRequest.mutate(requestId)}
+                />
+            </View>
+        );
     }
 
     return (
