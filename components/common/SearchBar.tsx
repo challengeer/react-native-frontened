@@ -27,8 +27,6 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
             <View className="absolute top-3 left-4 z-10">
                 <Icon
                     icon={MagnifyingGlassIcon}
-                    lightColor="#737373"
-                    darkColor="#a3a3a3"
                     onPress={() => inputRef.current?.focus()}
                 />
             </View>

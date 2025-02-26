@@ -52,10 +52,12 @@ export default function FriendSearch() {
                     onSearch={handleSearch}
                     inputRef={searchInputRef}
                 />
-                <Text onPress={() => {
-                    setSearchQuery("");
-                    router.back();
-                }} >
+                <Text
+                    className="font-medium"
+                    onPress={() => {
+                        setSearchQuery("");
+                        router.back();
+                    }} >
                     {i18n.t("searchBar.cancel")}
                 </Text>
             </View>
@@ -73,7 +75,7 @@ export default function FriendSearch() {
                     <View className="gap-4">
                         {searchResults?.friends.length > 0 && (
                             <View>
-                                <Text className="px-4 pb-2 text-lg font-bold">Friends</Text>
+                                <Text className="px-4 pb-2 text-lg font-bold">{i18n.t("userSearch.friends")}</Text>
                                 {searchResults?.friends.map((user: SearchResult, index: number) => (
                                     <UserItem
                                         key={user.user_id}
@@ -96,7 +98,7 @@ export default function FriendSearch() {
 
                         {searchResults?.request_sent.length > 0 && (
                             <View>
-                                <Text className="px-4 pb-2 text-lg font-bold">Requests Sent</Text>
+                                <Text className="px-4 pb-2 text-lg font-bold">{i18n.t("userSearch.request_sent")}</Text>
                                 {searchResults?.request_sent.map((user: SearchResult, index: number) => (
                                     <UserItem
                                         key={user.user_id}
@@ -119,7 +121,7 @@ export default function FriendSearch() {
 
                         {searchResults?.request_received.length > 0 && (
                             <View>
-                                <Text className="px-4 pb-2 text-lg font-bold">Requests Received</Text>
+                                <Text className="px-4 pb-2 text-lg font-bold">{i18n.t("userSearch.request_received")}</Text>
                                 {searchResults?.request_received.map((user: SearchResult, index: number) => (
                                     <UserItem
                                         key={user.user_id}
@@ -142,7 +144,7 @@ export default function FriendSearch() {
 
                         {searchResults?.none.length > 0 && (
                             <View>
-                                <Text className="px-4 pb-2 text-lg font-bold">More results</Text>
+                                <Text className="px-4 pb-2 text-lg font-bold">{i18n.t("userSearch.more_results")}</Text>
                                 {searchResults?.none.map((user: SearchResult, index: number) => (
                                     <UserItem
                                         key={user.user_id}

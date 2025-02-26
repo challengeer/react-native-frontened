@@ -1,8 +1,8 @@
-import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { ActivityIndicator, Pressable, PressableProps } from "react-native";
 import Text from "@/components/common/Text";
 import { View } from "react-native";
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends PressableProps {
     title: string;
     leftSection?: React.ReactNode;
     rightSection?: React.ReactNode;
@@ -31,7 +31,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
 
     const sizeStyles = {
         sm: {
-            container: "py-1.5 px-3",
+            container: "py-1.5 px-2.5",
             text: "font-medium text-base"
         },
         md: {
@@ -45,13 +45,13 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
     }
     
     return (
-        <TouchableOpacity
+        <Pressable
             disabled={disabled}
             className={`
                 ${disabled && "opacity-20"}
                 ${sizeStyles[size].container}
                 ${variantStyles[variant].button}
-                flex-row items-center gap-2 justify-center rounded-full
+                flex-row items-center gap-1.5 justify-center rounded-full
                 ${className}
             `}
             {...props}
@@ -77,7 +77,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
             <View className={loading ? 'opacity-0' : ''}>
                 {rightSection}
             </View>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 

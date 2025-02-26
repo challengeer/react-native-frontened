@@ -34,6 +34,18 @@
         "contacts": "Kontakty",
         "friendRequests": "Žiadosti o priateľstvo"
     },
+    "friendActionButton": {
+        "add": "Pridať",
+        "added": "Pridaný",
+        "accept": "Prijať",
+        "ignore": "Ignorovať"
+    },
+    "userSearch": {
+        "friends": "Priatelia",
+        "request_sent": "Odoslané žiadosti",
+        "request_received": "Prijaté žiadosti",
+        "more_results": "Viac výsledkov"
+    },
     "challenges": {
         "header": "Výzvy"
     },

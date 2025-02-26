@@ -1,8 +1,9 @@
+import i18n from "@/i18n";
 import api from "@/lib/api";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckIcon } from "react-native-heroicons/outline";
+import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckCircleIcon } from "react-native-heroicons/outline";
 import { UserPlusIcon, UserMinusIcon } from "react-native-heroicons/solid";
 import { useAuth } from "@/components/context/AuthProvider";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
@@ -64,7 +65,7 @@ export default function UserPage() {
                         <Button
                             size="md"
                             className="mt-6 w-full"
-                            title="Add"
+                            title={i18n.t("friendActionButton.add")}
                             onPress={() => addFriend.mutate(user_id)}
                             leftSection={
                                 <Icon
@@ -81,12 +82,12 @@ export default function UserPage() {
                             size="md"
                             className="mt-6 w-full"
                             variant="secondary"
-                            title="Added"
+                            title={i18n.t("friendActionButton.added")}
                             onPress={() => { }}
                             leftSection={
                                 <Icon
-                                    icon={CheckIcon}
-                                    lightColor="white"
+                                    icon={CheckCircleIcon}
+                                    lightColor="black"
                                     darkColor="white"
                                 />
                             }
@@ -98,7 +99,7 @@ export default function UserPage() {
                             <Button
                                 size="md"
                                 className="flex-1"
-                                title="Accept"
+                                title={i18n.t("friendActionButton.accept")}
                                 onPress={() => data.request_id && acceptRequest.mutate(data.request_id)}
                                 leftSection={
                                     <Icon
@@ -112,7 +113,7 @@ export default function UserPage() {
                                 size="md"
                                 className="flex-1"
                                 variant="secondary"
-                                title="Ignore"
+                                title={i18n.t("friendActionButton.ignore")}
                                 onPress={() => data.request_id && rejectRequest.mutate(data.request_id)}
                                 leftSection={
                                     <Icon

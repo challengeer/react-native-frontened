@@ -34,6 +34,18 @@
         "contacts": "Contacts",
         "friendRequests": "Friend requests"
     },
+    "friendActionButton": {
+        "add": "Add",
+        "added": "Added",
+        "accept": "Accept",
+        "ignore": "Ignore"
+    },
+    "userSearch": {
+        "friends": "Friends",
+        "request_sent": "Requests sent",
+        "request_received": "Requests received",
+        "more_results": "More results"
+    },
     "challenges": {
         "header": "Challenges"
     },

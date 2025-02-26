@@ -1,10 +1,11 @@
-import React from 'react';
+import i18n from '@/i18n';
 import { View } from 'react-native';
-import { UserPlusIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
+import { UserPlusIcon, XMarkIcon } from "react-native-heroicons/solid";
+import { CheckCircleIcon } from "react-native-heroicons/outline";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
 import { useFriendActions } from '@/lib/hooks/useFriendActions';
-import Button from './Button';
-import Icon from './Icon';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
 
 interface FriendActionButtonProps {
     userId: string;
@@ -28,11 +29,11 @@ export default function FriendActionButton({
             <Button
                 size="sm"
                 variant="secondary"
-                title="Added"
+                title={i18n.t("friendActionButton.added")}
                 leftSection={
                     <Icon
-                        icon={CheckIcon}
-                        lightColor="white"
+                        icon={CheckCircleIcon}
+                        lightColor="black"
                         darkColor="white"
                     />
                 }
@@ -45,7 +46,7 @@ export default function FriendActionButton({
             <View className="flex-row items-center gap-2">
                 <Button
                     size="sm"
-                    title="Accept"
+                    title={i18n.t("friendActionButton.accept")}
                     onPress={() => requestId && acceptRequest.mutate(requestId)}
                     leftSection={
                     <Icon
@@ -66,7 +67,7 @@ export default function FriendActionButton({
     return (
         <Button
             size="sm"
-            title="Add"
+            title={i18n.t("friendActionButton.add")}
             onPress={() => addFriend.mutate(userId)}
             leftSection={
                 <Icon
