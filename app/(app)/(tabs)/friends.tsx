@@ -40,9 +40,10 @@ export default function FriendsPage() {
                         />
                     }
                 >
-                    {friends.map((user: UserInterface) => (
+                    {friends.map((user: UserInterface, index: number) => (
                         <UserItem
                             key={user.user_id}
+                            index={index}
                             userId={user.user_id}
                             displayName={user.display_name}
                             username={user.username}

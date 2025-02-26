@@ -87,9 +87,10 @@ export default function FriendRequests() {
                         <Text className="p-4">Error</Text>
                     ) : (
                         <>
-                            {friendRequests.map((friendRequest: FriendRequest) => (
+                            {friendRequests.map((friendRequest: FriendRequest, index: number) => (
                                 <UserItem
                                     key={friendRequest.request_id}
+                                    index={index}
                                     userId={friendRequest.user_id}
                                     displayName={friendRequest.display_name}
                                     username={friendRequest.username}
