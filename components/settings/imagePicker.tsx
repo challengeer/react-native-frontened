@@ -16,13 +16,14 @@ export default function useImagePicker({ onImageSelect }: ImagePickerProps) {
                 { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
             );
 
-            // Create FormData for backend
             const formData = new FormData();
-            formData.append('image', {
+            const imageInfo = {
                 uri: manipulatedImage.uri,
                 type: 'image/jpeg',
-                name: 'profile-image.jpg'
-            } as any);
+                name: 'profile-picture.jpg'
+            };
+
+            formData.append('file', imageInfo as any);
 
             return formData;
         } catch (error) {

@@ -1,16 +1,17 @@
+import i18n from "@/i18n";
+import api from "@/lib/api";
 import Text from "@/components/common/Text";
+import { useContext, useCallback } from "react";
+import { useAuth } from "@/components/context/AuthProvider";
 import { router } from "expo-router";
-import { ScrollView, View, TouchableOpacity } from "react-native";
+import { ScrollView, View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { LanguageContext } from "@/components/context/LanguageProvider";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
-import i18n from "@/i18n";
-import { useAuth } from "@/components/context/AuthProvider";
-import { useContext, useState, useCallback } from "react";
-import { LanguageContext } from "@/components/context/LanguageProvider";
 import useImagePicker from "@/components/settings/imagePicker";
 
 const ROUTE_MAP = {
@@ -24,9 +25,8 @@ const ROUTE_MAP = {
 } as const;
 
 export default function SettingsPage() {
-    const { user, logout } = useAuth();
+    const { user, logout, refreshUser } = useAuth();
     const { language } = useContext(LanguageContext) as { language: string };
-    const [profileImage, setProfileImage] = useState<string | null>(null);
 
     const handleOptionPress = (key: keyof typeof ROUTE_MAP) => {
         const route = ROUTE_MAP[key];
@@ -39,16 +39,19 @@ export default function SettingsPage() {
 
     const handleImageSelect = useCallback(async (formData: FormData) => {
         try {
-            // Get the image URI from the FormData for preview
-            const imageUri = (formData.get('image') as any).uri;
-            setProfileImage(imageUri);
+            // Upload the image to the server with proper headers
+            await api.put('/user/profile-picture', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
 
-            // Here you can send the formData to your server
-            // await uploadImage(formData);
+            // Refresh the user profile
+            await refreshUser();
         } catch (error) {
             console.error('Error handling image:', error);
         }
-    }, []);
+    }, [refreshUser]);
 
     const pickImage = useImagePicker({ onImageSelect: handleImageSelect });
 
@@ -100,7 +103,7 @@ export default function SettingsPage() {
                 <Avatar 
                     name="John Doe" 
                     size="sm" 
-                    source={profileImage}
+                    source={user?.profile_picture}
                 />
             ),
             key: "profile-picture"
