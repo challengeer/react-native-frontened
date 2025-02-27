@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { LanguageContext } from "@/components/context/LanguageProvider";
+import { useQueryClient } from "@tanstack/react-query";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
@@ -27,6 +28,7 @@ const ROUTE_MAP = {
 export default function SettingsPage() {
     const { user, logout, refreshUser } = useAuth();
     const { language } = useContext(LanguageContext) as { language: string };
+    const queryClient = useQueryClient();
 
     const handleOptionPress = (key: keyof typeof ROUTE_MAP) => {
         const route = ROUTE_MAP[key];
@@ -48,6 +50,9 @@ export default function SettingsPage() {
 
             // Refresh the user profile
             await refreshUser();
+            await queryClient.invalidateQueries({
+                queryKey: ["user", user?.user_id?.toString()]
+            });
         } catch (error) {
             console.error('Error handling image:', error);
         }
