@@ -1,68 +1,93 @@
 import i18n from "@/i18n";
+import api from "@/lib/api";
 import { useCallback, useState } from "react";
-import { CheckCircleIcon, XCircleIcon, QuestionMarkCircleIcon } from "react-native-heroicons/solid";
-import { View } from "react-native";
+import { CheckIcon, XMarkIcon } from "react-native-heroicons/outline";
+import { View, TextInputProps, ActivityIndicator } from "react-native";
 import { debounce } from "lodash";
 import InputBar from "@/components/common/InputBar";
-import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
-import axios from "axios";
 
-export default function UsernameInput() {
-    const [usernameState, setUsernameState] = useState<"available" | "taken" | "checking" | undefined>();
+const USERNAME_MAX_LENGTH = 15;
+const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
+const USERNAME_MIN_LENGTH = 1;
 
-    const search = async (username: string) => {
-        if (!username) return setUsernameState(undefined);
-        setUsernameState("checking");
-        const response = await axios.get(`https://challengeer.srodo.sk/check-username/${username}`);
-        setUsernameState(response.data.exists ? "taken" : "available");
-    }
+interface UsernameInputProps extends TextInputProps {
+    onValidationChange?: (isValid: boolean) => void;
+}
 
-    const debouncedSearch = useCallback(debounce(search, 500), []);
+export default function UsernameInput({ value, onChangeText, onValidationChange, ...props }: UsernameInputProps) {
+    const [usernameState, setUsernameState] = useState<"available" | "taken" | "checking" | "invalid" | undefined>();
 
-    let stateComponent = undefined;
-    switch (usernameState) {
-        case "available":
-            stateComponent = (
-                <View className="flex-row items-center gap-1">
-                    <Icon icon={CheckCircleIcon} size={20} lightColor="#22c55e" darkColor="#22c55e" />
-                    <Text type="secondary" className="text-sm">
-                        {i18n.t("register.usernameAvailable")}
-                    </Text>
-                </View>
-            )
-            break;
-        case "taken":
-            stateComponent = (
-                <View className="flex-row items-center gap-1">
-                    <Icon icon={XCircleIcon} size={20} lightColor="#ef4444" darkColor="#ef4444" />
-                    <Text type="secondary" className="text-sm">
-                        {i18n.t("register.usernameTaken")}
-                    </Text>
-                </View>
-            );
-            break;
-        case "checking":
-            stateComponent = (
-                <View className="flex-row items-center gap-1">
-                    <Icon icon={QuestionMarkCircleIcon} size={20} lightColor="#737373" darkColor="#a3a3a3" />
-                    <Text type="secondary" className="text-sm">
-                        {i18n.t("register.usernameChecking")}
-                    </Text>
-                </View>
-            );
-            break;
-    }
+    const checkUsername = useCallback(
+        debounce(async (username: string) => {
+            if (!username || username.length < USERNAME_MIN_LENGTH) {
+                setUsernameState(undefined);
+                onValidationChange?.(false);
+                return;
+            }
+
+            if (!USERNAME_REGEX.test(username)) {
+                setUsernameState("invalid");
+                onValidationChange?.(false);
+                return;
+            }
+
+            if (username.length > USERNAME_MAX_LENGTH) {
+                setUsernameState("invalid");
+                onValidationChange?.(false);
+                return;
+            }
+
+            setUsernameState("checking");
+            try {
+                const response = await api.get(`/auth/check-username?username=${username}`);
+                setUsernameState(response.data.exists ? "taken" : "available");
+                onValidationChange?.(response.data.exists ? false : true);
+            } catch (error) {
+                setUsernameState(undefined);
+                onValidationChange?.(false);
+            }
+        }, 500),
+        []
+    );
+
+    const handleChangeText = (text: string) => {
+        const sanitizedText = text.trim();
+        if (text === sanitizedText) {
+            onValidationChange?.(false);
+            checkUsername(sanitizedText);
+        }
+        onChangeText?.(sanitizedText);
+    };
+
+    const getStatusIcon = () => {
+        switch (usernameState) {
+            case "available":
+                return <Icon icon={CheckIcon} lightColor="#22c55e" darkColor="#22c55e" />;
+            case "taken":
+                return <Icon icon={XMarkIcon} lightColor="#ef4444" darkColor="#ef4444" />;
+            case "invalid":
+                return <Icon icon={XMarkIcon} lightColor="#ef4444" darkColor="#ef4444" />;
+            case "checking":
+                return <ActivityIndicator size="small" color="#a855f7" />;
+            default:
+                return null;
+        }
+    };
 
     return (
-        <View className="gap-2">
+        <View className="relative">
             <InputBar
-                label={i18n.t("register.usernameLabel")}
+                description={i18n.t("settings.username.description")}
                 keyboardType="default"
-                onChangeText={debouncedSearch}
-                autoFocus
+                value={value}
+                onChangeText={handleChangeText}
+                maxLength={USERNAME_MAX_LENGTH}
+                {...props}
             />
-            {stateComponent}
+            <View className="absolute right-4 top-4">
+                {getStatusIcon()}
+            </View>
         </View>
     );
 }
