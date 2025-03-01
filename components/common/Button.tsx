@@ -32,15 +32,18 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
     const sizeStyles = {
         sm: {
             container: "py-1.5 px-2.5",
-            text: "font-medium text-base"
+            text: "font-medium text-base",
+            activityIndicator: "small",
         },
         md: {
             container: "py-3 px-4",
-            text: "font-bold text-lg"
+            text: "font-bold text-lg",
+            activityIndicator: 28,
         },
         lg: {
             container: "py-5 px-8",
-            text: "font-bold text-xl"
+            text: "font-bold text-xl",
+            activityIndicator: "large",
         }
     }
     
@@ -69,8 +72,8 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
                 {title}
             </Text>
             {loading && (
-                <ActivityIndicator 
-                    size="small" 
+                <ActivityIndicator
+                    size={sizeStyles[size].activityIndicator as "small" | "large"}
                     className={`${variantStyles[variant].text} absolute`} 
                 />
             )}
