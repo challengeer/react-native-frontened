@@ -62,7 +62,7 @@
         },
         "username": {
             "header": "Používateľské meno",
-            "description": "Maximálne 15 znakov"
+            "description": "Maximálne 15 znakov, len písmená, čísla a podčiarkovníky"
         },
         "language": {
             "header": "Jazyk",

@@ -62,7 +62,7 @@
         },
         "username": {
             "header": "Username",
-            "description": "Max 15 characters"
+            "description": "Max 15 characters, only letters, numbers and underscores"
         },
         "language": {
             "header": "Language",
