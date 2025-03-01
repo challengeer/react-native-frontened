@@ -53,6 +53,17 @@
         "header": "Settings",
         "account": "Account",
         "privacy": "Privacy",
+        "profilePicture": {
+            "header": "Profile picture"
+        },
+        "displayName": {
+            "header": "Name",
+            "description": "Max 30 characters"
+        },
+        "username": {
+            "header": "Username",
+            "description": "Max 15 characters"
+        },
         "language": {
             "header": "Language",
             "selectLanguage": "Select language",

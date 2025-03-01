@@ -53,6 +53,17 @@
         "header": "Nastavenia",
         "account": "Účet",
         "privacy": "Súkromie",
+        "profilePicture": {
+            "header": "Profilový obrázok"
+        },
+        "displayName": {
+            "header": "Meno",
+            "description": "Maximálne 30 znakov"
+        },
+        "username": {
+            "header": "Používateľské meno",
+            "description": "Maximálne 15 znakov"
+        },
         "language": {
             "header": "Jazyk",
             "selectLanguage": "Vyberte jazyk",
@@ -68,7 +79,7 @@
             "matchSystem": "Podľa systému"
         },
         "profile": {
-            "displayName": "Zobrazované meno",
+            "displayName": "Meno",
             "username": "Používateľské meno",
             "email": "Email",
             "mobileNumber": "Telefónne číslo",
