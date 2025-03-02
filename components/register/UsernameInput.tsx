@@ -16,35 +16,23 @@ interface UsernameInputProps extends TextInputProps {
 }
 
 export default function UsernameInput({ value, onChangeText, onValidationChange, ...props }: UsernameInputProps) {
-    const [usernameState, setUsernameState] = useState<"available" | "taken" | "checking" | "invalid" | undefined>();
+    const [usernameState, setUsernameState] = useState<"invalid" | "correct" | "verifying">("correct");
 
     const checkUsername = useCallback(
         debounce(async (username: string) => {
-            if (!username || username.length < USERNAME_MIN_LENGTH) {
-                setUsernameState(undefined);
-                onValidationChange?.(false);
-                return;
-            }
-
-            if (!USERNAME_REGEX.test(username)) {
+            if (!username || username.length < USERNAME_MIN_LENGTH || username.length > USERNAME_MAX_LENGTH || !USERNAME_REGEX.test(username)) {
                 setUsernameState("invalid");
                 onValidationChange?.(false);
                 return;
             }
 
-            if (username.length > USERNAME_MAX_LENGTH) {
-                setUsernameState("invalid");
-                onValidationChange?.(false);
-                return;
-            }
-
-            setUsernameState("checking");
+            setUsernameState("verifying");
             try {
                 const response = await api.get(`/auth/check-username?username=${username}`);
-                setUsernameState(response.data.exists ? "taken" : "available");
+                setUsernameState(response.data.exists ? "invalid" : "correct");
                 onValidationChange?.(response.data.exists ? false : true);
             } catch (error) {
-                setUsernameState(undefined);
+                setUsernameState("invalid");
                 onValidationChange?.(false);
             }
         }, 500),
@@ -53,22 +41,18 @@ export default function UsernameInput({ value, onChangeText, onValidationChange,
 
     const handleChangeText = (text: string) => {
         const sanitizedText = text.trim();
-        if (text === sanitizedText) {
-            onValidationChange?.(false);
-            checkUsername(sanitizedText);
-        }
         onChangeText?.(sanitizedText);
+        onValidationChange?.(false);
+        checkUsername(sanitizedText);
     };
 
     const getStatusIcon = () => {
         switch (usernameState) {
-            case "available":
+            case "correct":
                 return <Icon icon={CheckIcon} lightColor="#22c55e" darkColor="#22c55e" />;
-            case "taken":
-                return <Icon icon={XMarkIcon} lightColor="#ef4444" darkColor="#ef4444" />;
             case "invalid":
                 return <Icon icon={XMarkIcon} lightColor="#ef4444" darkColor="#ef4444" />;
-            case "checking":
+            case "verifying":
                 return <ActivityIndicator size="small" color="#a855f7" />;
             default:
                 return null;
@@ -80,6 +64,7 @@ export default function UsernameInput({ value, onChangeText, onValidationChange,
             <InputBar
                 description={i18n.t("settings.username.description")}
                 keyboardType="default"
+                autoCapitalize="none"
                 value={value}
                 onChangeText={handleChangeText}
                 maxLength={USERNAME_MAX_LENGTH}
