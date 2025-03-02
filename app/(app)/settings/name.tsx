@@ -45,7 +45,7 @@ export default function Name() {
     return (
         <>
             <Header
-                title={i18n.t("settings.displayName.header")}
+                title={i18n.t("settings.account.displayName.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -58,12 +58,12 @@ export default function Name() {
                 <InputBar
                     value={name}
                     onChangeText={setName}
-                    description={i18n.t("settings.displayName.description")}
+                    description={i18n.t("settings.account.displayName.description")}
                     maxLength={NAME_MAX_LENGTH}
                     autoFocus
                 />
                 <Button
-                    title={i18n.t("settings.profile.save")}
+                    title={i18n.t("buttons.save")}
                     size="lg"
                     disabled={!isValidName || isLoading}
                     loading={isLoading}

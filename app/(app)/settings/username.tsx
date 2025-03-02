@@ -42,7 +42,7 @@ export default function Username() {
     return (
         <>
             <Header
-                title={i18n.t("settings.username.header")}
+                title={i18n.t("settings.account.username.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -53,12 +53,14 @@ export default function Username() {
 
             <View className="flex-1 px-4 pb-4 justify-between">
                 <UsernameInput
+                    description={i18n.t("settings.account.username.description")}
                     value={username}
                     onChangeText={setUsername}
                     onValidationChange={setIsValidUsername}
+                    autoFocus
                 />
                 <Button
-                    title={i18n.t("settings.profile.save")}
+                    title={i18n.t("buttons.save")}
                     size="lg"
                     disabled={!isValidUsername || isLoading}
                     loading={isLoading}

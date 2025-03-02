@@ -1,13 +1,13 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
-import Text from "@/components/common/Text";
-import { useContext, useCallback } from "react";
+// import * as Application from "expo-application";
+import React, { useCallback } from "react";
 import { useAuth } from "@/components/context/AuthProvider";
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { LanguageContext } from "@/components/context/LanguageProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import Text from "@/components/common/Text";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
@@ -15,29 +15,9 @@ import Button from "@/components/common/Button";
 import Avatar from "@/components/common/Avatar";
 import useImagePicker from "@/components/settings/imagePicker";
 
-const ROUTE_MAP = {
-    appearance: "/settings/app_appearance",
-    language: "/settings/language",
-    displayName: "/settings/name",
-    username: "/settings/username",
-    mobileNumber: "/settings/mobile",
-    email: "/settings/email",
-    password: "/settings/password",
-} as const;
-
 export default function SettingsPage() {
     const { user, logout, refreshUser } = useAuth();
-    const { language } = useContext(LanguageContext) as { language: string };
     const queryClient = useQueryClient();
-
-    const handleOptionPress = (key: keyof typeof ROUTE_MAP) => {
-        const route = ROUTE_MAP[key];
-        if (route) {
-            router.push(route);
-        } else {
-            console.log(`No route defined for ${key}`);
-        }
-    };
 
     const handleImageSelect = useCallback(async (formData: FormData) => {
         try {
@@ -60,70 +40,54 @@ export default function SettingsPage() {
 
     const pickImage = useImagePicker({ onImageSelect: handleImageSelect });
 
-    const data = [
+    const accountSettings = [
         {
-            key: "displayName",
-            title: i18n.t("settings.profile.displayName"),
-            value: user?.display_name || "",
-        },
-        {
-            key: "username",
-            title: i18n.t("settings.profile.username"),
-            value: user?.username || "",
-        },
-        {
-            key: "mobileNumber",
-            title: i18n.t("settings.profile.mobileNumber"),
-            value: user?.phone_number || "",
-        },
-        {
-            key: "email",
-            title: i18n.t("settings.profile.email"),
-            value: user?.email || "",
-        },
-        {
-            key: "password",
-            title: i18n.t("settings.profile.password"),
-            value: "",
-        },
-        {
-            key: "appearance",
-            title: i18n.t("settings.appearance.header"),
-            value: "",
-        },
-        {
-            key: "language",
-            title: i18n.t("settings.language.header"),
-            value: "",
-        },
-    ];
-
-    const settingsData = [
-        {
-            title: "Profile picture",
-            value: "",
-            route: null,
-            onPress: pickImage,
+            key: "profilePicture",
             rightSection: (
-                <Avatar 
-                    name="John Doe" 
-                    size="sm" 
+                <Avatar
+                    name={user?.display_name || ""}
+                    size="sm"
                     source={user?.profile_picture}
                 />
             ),
-            key: "profile-picture"
+            onPress: pickImage,
         },
-        ...data.map((item) => ({
-            title: item.title,
-            value: item.value,
-            key: item.key,
-            route: null, // Will use handleOptionPress instead
-            rightSection: undefined
-        }))
+        {
+            key: "displayName",
+            rightSection: user?.display_name || "",
+            onPress: () => router.push("/settings/name"),
+        },
+        {
+            key: "username",
+            rightSection: user?.username || "",
+            onPress: () => router.push("/settings/username"),
+        },
+        {
+            key: "phoneNumber",
+            rightSection: user?.phone_number || "",
+            onPress: () => router.push("/settings/mobile"),
+        },
+        {
+            key: "email",
+            rightSection: user?.email || "",
+            onPress: () => router.push("/settings/email"),
+        },
+        {
+            key: "password",
+            onPress: () => router.push("/settings/password"),
+        },
+        {
+            key: "appearance",
+            onPress: () => router.push("/settings/app_appearance"),
+        },
+        {
+            key: "language",
+            onPress: () => router.push("/settings/language"),
+        },
     ];
 
     return (
-        <View key={language} className="flex-1 bg-white dark:bg-neutral-900">
+        <>
             <Header
                 title={i18n.t("settings.header")}
                 leftSection={
@@ -139,43 +103,39 @@ export default function SettingsPage() {
                 showsVerticalScrollIndicator={false}
                 className="px-4"
             >
-                {/* ACCOUNT SETTINGS */}
+                <Text className="mb-2 text-lg font-bold">
+                    {i18n.t("settings.account.title")}
+                </Text>
+
                 <View className="mb-4">
-                    <Text className="mb-2 text-2xl font-bold">
-                        {i18n.t("settings.account")}
-                    </Text>
-                    <View className="overflow-hidden rounded-lg">
-                        {settingsData.map((item, index) => (
-                            <OptionButton
-                                key={item.key}
-                                title={item.title}
-                                value={item.value}
-                                onPress={item.onPress || (() => item.route ? router.push(item.route as any) : handleOptionPress(item.key as keyof typeof ROUTE_MAP))}
-                                rightSection={item.rightSection}
-                                borderBottom={index !== settingsData.length - 1}
-                                withArrow
-                                isFirst={index === 0}
-                                isLast={index === settingsData.length - 1}
-                            />
-                        ))}
-                    </View>
+                    {accountSettings.map((item, index) => (
+                        <OptionButton
+                            key={item.key}
+                            itemIndex={index}
+                            totalItems={accountSettings.length}
+                            title={i18n.t(`settings.account.${item.key}.header`)}
+                            rightSection={item.rightSection}
+                            onPress={item.onPress}
+                            showArrow
+                        />
+                    ))}
                 </View>
 
-                {/* PRIVACY POLICY & LOG OUT */}
+                <Text className="mb-2 text-lg font-bold">
+                    {i18n.t("settings.privacy.title")}
+                </Text>
+
                 <View className="mb-4">
-                    <Text className="mb-2 text-2xl font-bold">
-                        {i18n.t("settings.privacy")}
-                    </Text>
                     <OptionButton
-                        title={i18n.t("settings.privacyPolicy")}
-                        rounded
-                        onPress={() => router.push("/settings/privacyPolicy")}
-                        withArrow
+                        itemIndex={0}
+                        totalItems={1}
+                        title={i18n.t("settings.privacy.privacyPolicy.header")}
+                        showArrow
                     />
                 </View>
 
                 <Button
-                    title={i18n.t("settings.logout")}
+                    title={i18n.t("buttons.logout")}
                     size="lg"
                     variant="logout"
                     onPress={logout}
@@ -185,12 +145,13 @@ export default function SettingsPage() {
                 <View className="my-4 items-center justify-center">
                     <Text type="secondary" className="text-sm">
                         {i18n.t("settings.version")}
+                        {/* {i18n.t("settings.version", { version: Application.nativeApplicationVersion })} */}
                     </Text>
                     <Text type="secondary" className="text-sm">
                         {i18n.t("settings.location")}
                     </Text>
                 </View>
             </ScrollView>
-        </View>
+        </>
     )
 }

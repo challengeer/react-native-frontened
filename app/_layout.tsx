@@ -1,7 +1,7 @@
 import "../global.css";
 
 import "@/i18n";
-import LanguageProvider from "@/components/context/LanguageProvider";
+import AppearanceProvider from "@/components/context/AppearanceProvider";
 import { AuthProvider } from "@/components/context/AuthProvider";
 
 import { useEffect } from "react";
@@ -27,7 +27,7 @@ export default function Root() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <LanguageProvider>
+            <AppearanceProvider>
                 <AuthProvider>
                     <GestureHandlerRootView style={{ flex: 1 }}>
                         <BottomSheetModalProvider>
@@ -42,7 +42,7 @@ export default function Root() {
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
                 </AuthProvider>
-            </LanguageProvider>
+            </AppearanceProvider>
         </QueryClientProvider>
     )
 };

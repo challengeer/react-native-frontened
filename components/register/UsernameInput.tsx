@@ -1,17 +1,16 @@
-import i18n from "@/i18n";
 import api from "@/lib/api";
 import { useCallback, useState } from "react";
 import { CheckIcon, XMarkIcon } from "react-native-heroicons/outline";
-import { View, TextInputProps, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { debounce } from "lodash";
-import InputBar from "@/components/common/InputBar";
+import InputBar, { InputBarProps } from "@/components/common/InputBar";
 import Icon from "@/components/common/Icon";
 
 const USERNAME_MAX_LENGTH = 15;
 const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
 const USERNAME_MIN_LENGTH = 1;
 
-interface UsernameInputProps extends TextInputProps {
+interface UsernameInputProps extends InputBarProps {
     onValidationChange?: (isValid: boolean) => void;
 }
 
@@ -62,7 +61,6 @@ export default function UsernameInput({ value, onChangeText, onValidationChange,
     return (
         <View className="relative">
             <InputBar
-                description={i18n.t("settings.username.description")}
                 keyboardType="default"
                 autoCapitalize="none"
                 autoComplete="off"

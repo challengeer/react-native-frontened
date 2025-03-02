@@ -2,7 +2,7 @@ import { TextInput, TextInputProps, View } from "react-native";
 import Text from "@/components/common/Text";
 
 
-interface InputBarProps extends TextInputProps {
+export interface InputBarProps extends TextInputProps {
     label?: string;
     description?: string;
     className?: string;

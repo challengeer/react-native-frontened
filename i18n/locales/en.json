@@ -4,6 +4,20 @@
         "challenges": "Challenges",
         "friends": "Friends"
     },
+    "buttons": {
+        "save": "Save",
+        "logout": "Log out"
+    },
+    "friendActionButton": {
+        "add": "Add",
+        "added": "Added",
+        "accept": "Accept",
+        "ignore": "Ignore"
+    },
+    "searchBar": {
+        "placeholder": "Search",
+        "cancel": "Cancel"
+    },
     "register": {
         "header": "Create account",
         "nameLabel": "What's your name?",
@@ -25,20 +39,10 @@
     "countryPrefix": {
         "header": "Country prefix"
     },
-    "searchBar": {
-        "placeholder": "Search",
-        "cancel": "Cancel"
-    },
     "friends": {
         "header": "Friends",
         "contacts": "Contacts",
         "friendRequests": "Friend requests"
-    },
-    "friendActionButton": {
-        "add": "Add",
-        "added": "Added",
-        "accept": "Accept",
-        "ignore": "Ignore"
     },
     "userSearch": {
         "friends": "Friends",
@@ -51,44 +55,50 @@
     },
     "settings": {
         "header": "Settings",
-        "account": "Account",
-        "privacy": "Privacy",
-        "profilePicture": {
-            "header": "Profile picture"
+        "account": {
+            "title": "My account",
+            "profilePicture": {
+                "header": "Profile picture"
+            },
+            "displayName": {
+                "header": "Name",
+                "description": "Max 30 characters"
+            },
+            "username": {
+                "header": "Username",
+                "description": "Max 15 characters, only letters, numbers and underscores"
+            },
+            "phoneNumber": {
+                "header": "Phone number",
+                "description": "We will send SMS code for verification"
+            },
+            "email": {
+                "header": "Email",
+                "description": "We will send email for verification"
+            },
+            "password": {
+                "header": "Reset password",
+                "description": "Enter your new password. Minimum 8 characters."
+            },
+            "appearance": {
+                "header": "App appearance",
+                "light": "Light",
+                "dark": "Dark",
+                "system": "Match system"
+            },
+            "language": {
+                "header": "Language",
+                "en": "English",
+                "sk": "Slovak"
+            }
         },
-        "displayName": {
-            "header": "Name",
-            "description": "Max 30 characters"
+        "privacy": {
+            "title": "Privacy",
+            "privacyPolicy": {
+                "header": "Privacy policy"
+            }
         },
-        "username": {
-            "header": "Username",
-            "description": "Max 15 characters, only letters, numbers and underscores"
-        },
-        "language": {
-            "header": "Language",
-            "selectLanguage": "Select language",
-            "english": "English",
-            "englishDescription": "English language",
-            "slovak": "Slovenčina",
-            "slovakDescription": "Slovak language"
-        },
-        "appearance": {
-            "header": "App appearance",
-            "light": "Light",
-            "dark": "Dark",
-            "matchSystem": "Match system"
-        },
-        "profile": {
-            "displayName": "Display name",
-            "username": "Username",
-            "email": "Email",
-            "mobileNumber": "Mobile number",
-            "password": "Password",
-            "save": "Save"
-        },
-        "privacyPolicy": "Privacy policy",
-        "logout": "Log out",
-        "version": "Challengeer v 1.0.0",
+        "version": "Challengeer v{{version}}",
         "location": "Košice, Slovakia"
     }
 }

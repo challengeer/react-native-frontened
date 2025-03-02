@@ -1,61 +1,25 @@
-import { View } from "react-native";
-import Text from "@/components/common/Text";
+import i18n from "@/i18n";
+import React, { useContext } from "react";
+import { ScrollView } from "react-native";
+import { router } from "expo-router";
+import { AppearanceContext } from "@/components/context/AppearanceProvider";
+import { useColorScheme } from "nativewind";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
 import OptionButton from "@/components/settings/SettingsItem";
-import { useColorScheme } from "nativewind";
 import RadioButton from "@/components/settings/RadioButton";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Appearance } from 'react-native';
-import i18n from "@/i18n";
+
+const themes = ["light", "dark"];
 
 export default function AppAppearance() {
-    const { colorScheme, setColorScheme } = useColorScheme();
-    const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | 'system'>(colorScheme === 'light' ? 'light' : 'dark');
-
-    useEffect(() => {
-        // Load saved preference
-        AsyncStorage.getItem('themePreference').then(value => {
-            if (value) {
-                setSelectedTheme(value as 'light' | 'dark' | 'system');
-                if (value === 'system') {
-                    const systemColorScheme = Appearance.getColorScheme() || 'light';
-                    setColorScheme(systemColorScheme);
-                }
-            }
-        });
-
-        // Add listener for system theme changes
-        const subscription = Appearance.addChangeListener(({ colorScheme: newColorScheme }) => {
-            if (selectedTheme === 'system') {
-                setColorScheme(newColorScheme || 'light');
-            }
-        });
-
-        // Cleanup subscription
-        return () => subscription.remove();
-    }, [selectedTheme, setColorScheme]);
-
-    const handleThemeChange = async (theme: 'light' | 'dark' | 'system') => {
-        setSelectedTheme(theme);
-        await AsyncStorage.setItem('themePreference', theme);
-
-        if (theme === 'system') {
-            // Use React Native's Appearance API instead of window.matchMedia
-            const systemColorScheme = Appearance.getColorScheme() || 'light';
-            setColorScheme(systemColorScheme);
-        } else {
-            setColorScheme(theme);
-        }
-    };
+    const { colorScheme } = useColorScheme();
+    const { changeColorScheme } = useContext(AppearanceContext);
 
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
+        <>
             <Header
-                title={i18n.t("settings.appearance.header")}
+                title={i18n.t("settings.account.appearance.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}
@@ -63,36 +27,21 @@ export default function AppAppearance() {
                     />
                 }
             />
-            <View className="px-4 py-2">
-                <OptionButton
-                    title={i18n.t("settings.appearance.light")}
-                    value=""
-                    onPress={() => handleThemeChange('light')}
-                    className="rounded-t-lg"
-                    borderBottom
-                    rightSection={
-                        <RadioButton selected={selectedTheme === 'light'} />
-                    }
-                />
-                <OptionButton
-                    title={i18n.t("settings.appearance.dark")}
-                    value=""
-                    onPress={() => handleThemeChange('dark')}
-                    borderBottom
-                    rightSection={
-                        <RadioButton selected={selectedTheme === 'dark'} />
-                    }
-                />
-                <OptionButton
-                    title={i18n.t("settings.appearance.matchSystem")}
-                    value=""
-                    onPress={() => handleThemeChange('system')}
-                    className="rounded-b-lg"
-                    rightSection={
-                        <RadioButton selected={selectedTheme === 'system'} />
-                    }
-                />
-            </View>
-        </View>
+            
+            <ScrollView className="flex-1 px-4">
+                {themes.map((theme, index) => (
+                    <OptionButton
+                        key={theme}
+                        itemIndex={index}
+                        totalItems={themes.length}
+                        title={i18n.t(`settings.account.appearance.${theme}`)}
+                        onPress={() => changeColorScheme(theme as "light" | "dark")}
+                        rightSection={
+                            <RadioButton selected={colorScheme === theme} />
+                        }
+                    />
+                ))}
+            </ScrollView>
+        </>
     );
 }

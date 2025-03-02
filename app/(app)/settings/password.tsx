@@ -1,28 +1,31 @@
-import { useState } from "react";
+import i18n from "@/i18n";
+import React, { useState } from "react";
 import { View } from "react-native";
+import { router } from "expo-router";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
 import PasswordInput from "@/components/register/PasswordInput";
 import Button from "@/components/common/Button";
-import i18n from "@/i18n";  
 
 export default function Password() {
     const [password, setPassword] = useState("");
+
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
-            <Header title={i18n.t("settings.profile.password")} leftSection={
+        <>
+            <Header title={i18n.t("settings.account.password.header")} leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}
                     onPress={() => router.back()}
                 />} />
-            <View className="px-4 py-2">
-                <PasswordInput value={password} onChange={setPassword} />
+
+            <View className="flex-1 px-4 pb-4 justify-between">
+                <PasswordInput
+                    value={password}
+                    onChange={setPassword}
+                />
+                <Button title={i18n.t("buttons.save")} size="lg" />
             </View>
-            <View className="px-4 py-2 absolute bottom-4 left-0 right-0"> 
-                <Button title={i18n.t("settings.profile.save")} size="lg" />
-            </View>
-        </View>
+        </>
     );
 }   

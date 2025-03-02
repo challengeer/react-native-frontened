@@ -49,46 +49,56 @@
     "challenges": {
         "header": "Výzvy"
     },
+    "buttons": {
+        "save": "Uložiť",
+        "logout": "Odhlásiť sa"
+    },
     "settings": {
         "header": "Nastavenia",
-        "account": "Účet",
-        "privacy": "Súkromie",
-        "profilePicture": {
-            "header": "Profilový obrázok"
+        "account": {
+            "title": "Môj účet",
+            "profilePicture": {
+                "header": "Profilový obrázok"
+            },
+            "displayName": {
+                "header": "Meno",
+                "description": "Maximálne 30 znakov"
+            },
+            "username": {
+                "header": "Používateľské meno",
+                "description": "Maximálne 15 znakov, len písmená, čísla a podčiarkovníky"
+            },
+            "phoneNumber": {
+                "header": "Telefónne číslo",
+                "description": "Pošleme vám SMS kód na overenie"
+            },
+            "email": {
+                "header": "Email",
+                "description": "Pošleme vám email na overenie"
+            },
+            "password": {
+                "header": "Zmeniť heslo",
+                "description": "Zadajte nové heslo. Minimálne 8 znakov."
+            },
+            "appearance": {
+                "header": "Vzhľad aplikácie",
+                "light": "Svetlý",
+                "dark": "Tmavý",
+                "system": "Podľa systému"
+            },
+            "language": {
+                "header": "Jazyk",
+                "en": "Angličtina",
+                "sk": "Slovenčina"
+            }
         },
-        "displayName": {
-            "header": "Meno",
-            "description": "Maximálne 30 znakov"
+        "privacy": {
+            "title": "Súkromie",
+            "privacyPolicy": {
+                "header": "Zásady ochrany osobných údajov"
+            }
         },
-        "username": {
-            "header": "Používateľské meno",
-            "description": "Maximálne 15 znakov, len písmená, čísla a podčiarkovníky"
-        },
-        "language": {
-            "header": "Jazyk",
-            "selectLanguage": "Vyberte jazyk",
-            "english": "English",
-            "englishDescription": "Anglický jazyk",
-            "slovak": "Slovenčina",
-            "slovakDescription": "Slovenský jazyk"
-        },
-        "appearance": {
-            "header": "Vzhľad aplikácie",
-            "light": "Svetlý",
-            "dark": "Tmavý",
-            "matchSystem": "Podľa systému"
-        },
-        "profile": {
-            "displayName": "Meno",
-            "username": "Používateľské meno",
-            "email": "Email",
-            "mobileNumber": "Telefónne číslo",
-            "password": "Heslo",
-            "save": "Uložiť"
-        },
-        "privacyPolicy": "Zásady ochrany osobných údajov",
-        "logout": "Odhlásiť sa",
-        "version": "Challengeer v 1.0.0",
+        "version": "Challengeer v{{version}}",
         "location": "Košice, Slovensko"
     }
 }

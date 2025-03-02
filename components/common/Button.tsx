@@ -7,7 +7,7 @@ interface ButtonProps extends PressableProps {
     leftSection?: React.ReactNode;
     rightSection?: React.ReactNode;
     size?: "sm" | "md" | "lg";
-    variant?: "primary" | "secondary";
+    variant?: "primary" | "secondary" | "logout";
     disabled?: boolean;
     loading?: boolean;
     className?: string;
