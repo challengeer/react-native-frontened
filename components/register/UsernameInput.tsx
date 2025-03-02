@@ -65,6 +65,7 @@ export default function UsernameInput({ value, onChangeText, onValidationChange,
                 description={i18n.t("settings.username.description")}
                 keyboardType="default"
                 autoCapitalize="none"
+                autoComplete="off"
                 value={value}
                 onChangeText={handleChangeText}
                 maxLength={USERNAME_MAX_LENGTH}
