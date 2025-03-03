@@ -1,6 +1,6 @@
 import { View, Pressable } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient'; 
 import Text from "@/components/common/Text";
-import { LinearGradient } from 'expo-linear-gradient'; /* install expo-linear-gradient and build again */
 
 interface ChallengesItemProps {
     title: string;
@@ -13,7 +13,7 @@ interface ChallengesItemProps {
     index?: number;
 }
 
-export default function ChallengesItem({ title, type, text, time, rightSection, onPress, isActive = false, index }: ChallengesItemProps) {
+export default function ChallengeItem({ title, type, text, time, rightSection, onPress, isActive = false, index }: ChallengesItemProps) {
     return (
         <Pressable className={`gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 flex-row items-center ${index === 0 ? "border-t" : ""}`} onPress={onPress}>
             {isActive ? (
