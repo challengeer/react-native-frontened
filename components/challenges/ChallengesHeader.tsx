@@ -1,11 +1,10 @@
 import i18n from "@/i18n";
-import { View } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useAuth } from "@/components/context/AuthProvider";
+import { PlusIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
-import FriendRequests from "@/components/friends/FriendRequests";
-import FriendSearch from "@/components/friends/FriendSearch";
 import Avatar from "@/components/common/Avatar";
+import IconCircle from "@/components/common/IconCircle";
 
 export default function ChallengesHeader() {
     const { user } = useAuth();
@@ -21,6 +20,9 @@ export default function ChallengesHeader() {
                         source={user?.profile_picture}
                     />
                 </Link>
+            }
+            rightSection={
+                <IconCircle onPress={() => router.push("/(app)/create_challenge")} icon={PlusIcon} />
             }
         />
     )
