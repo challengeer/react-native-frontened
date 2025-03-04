@@ -53,6 +53,11 @@
         "save": "Uložiť",
         "logout": "Odhlásiť sa"
     },
+    "user": {
+        "header": "Profil",
+        "streak": "Streak",
+        "totalChallenges": "Splnené výzvy"
+    },
     "settings": {
         "header": "Nastavenia",
         "account": {

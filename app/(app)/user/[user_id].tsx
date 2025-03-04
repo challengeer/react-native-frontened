@@ -38,7 +38,7 @@ export default function UserPage() {
     return (
         <SafeAreaView className="flex-1">
             <Header
-                title="Profile"
+                title={i18n.t("user.header")}
                 leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />}
                 rightSection={
                     <View className="flex-row items-center gap-2">
@@ -131,14 +131,14 @@ export default function UserPage() {
                             <Text className="text-2xl">🔥</Text>
                             <View className="flex-col">
                                 <Text className="text-xl">12 days</Text>
-                                <Text type="secondary" className="text-sm">Current streak</Text>
+                                <Text type="secondary" className="text-sm">{i18n.t("user.streak")}</Text>
                             </View>
                         </View>
                         <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-lg flex-1">
                             <Text className="text-2xl">🎯</Text>
                             <View className="flex-col">
                                 <Text className="text-xl">10</Text>
-                                <Text type="secondary" className="text-sm">Total Challenges</Text>
+                                <Text type="secondary" className="text-sm">{i18n.t("user.totalChallenges")}</Text>
                             </View>
                         </View>
                     </View>

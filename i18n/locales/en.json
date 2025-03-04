@@ -53,6 +53,11 @@
     "challenges": {
         "header": "Challenges"
     },
+    "user": {
+        "header": "Profile",
+        "streak": "Streak",
+        "totalChallenges": "Total Challenges"
+    },
     "settings": {
         "header": "Settings",
         "account": {
