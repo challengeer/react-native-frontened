@@ -33,7 +33,8 @@ export default function CreateChallenge() {
       const response = await api.post("/challenges/create", {
         title,
         description,
-        start_date: new Date().toISOString(),
+        emoji: "🏃‍♂️",
+        category: "Running",
       });
       setChallengeId(response.data.challenge_id);
     } catch (err) {

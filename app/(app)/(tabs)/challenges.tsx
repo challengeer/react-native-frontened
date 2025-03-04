@@ -1,14 +1,19 @@
-import { View, ScrollView, RefreshControl } from "react-native";
-import { router } from "expo-router";
+import api from "@/lib/api";
+import React, { useCallback } from "react";
+import { View, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
+import { Challenge } from "@/types/Challenge";
+import { useQuery } from "@tanstack/react-query";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import Text from "@/components/common/Text";
 import ChallengesHeader from "@/components/challenges/ChallengesHeader";
-import api from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+
+interface ChallengesResponse {
+    challenges: Challenge[];
+    invitations: Challenge[];
+}
 
 export default function ChallengesPage() {
-    const { data: challenges, isPending: isChallengesPending, refetch: refetchChallenges } = useQuery({
+    const { data, isPending, error, refetch } = useQuery<ChallengesResponse>({
         queryKey: ["challenges"],
         queryFn: async () => {
             const response = await api.get("/challenges/list");
@@ -16,47 +21,61 @@ export default function ChallengesPage() {
         },
     });
 
-    const { data: invites, isPending: isInvitesPending, refetch: refetchInvites } = useQuery({
-        queryKey: ["challenge-invites"],
-        queryFn: async () => {
-            const response = await api.get("/challenges/invites");
-            return response.data;
-        },
-    });
-
     const refresh = useCallback(() => {
-        refetchChallenges();
-        refetchInvites();
-    }, [refetchChallenges, refetchInvites]);
+        refetch();
+    }, [refetch]);
 
     return (
-        <ScrollView
-        className="flex-1 bg-white dark:bg-neutral-900"
-        refreshControl={<RefreshControl refreshing={isChallengesPending || isInvitesPending} onRefresh={refresh} />}>
+        <>
             <ChallengesHeader />
-            {challenges?.map((challenge, index) => (
-                <ChallengeItem 
-                    key={challenge.title}
-                    time={challenge.end_date}
-                    {...challenge} 
-                    onPress={() => router.push("/challenge/1")} 
-                    index={index} 
-                />
-            ))}
-            <View className="py-3">
-                <Text className="text-left text-neutral-500 text-2xl font-bold px-4">Invites</Text>
-                {invites?.map((invite, index) => (
-                    <ChallengeItem 
-                        key={invite.title} 
-                        {...invite} 
-                        onPress={() => router.push("/challenge/1")} 
-                        index={index}
-                        showActions
-                        onJoin={() => router.push("/challenge/1")}
-                        onCancel={() => console.log("Cancelled invite")}
-                    />
-                ))}
-            </View>
-        </ScrollView>
+
+            {isPending ? (
+                <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
+            ) : error ? (
+                <Text className="p-4">Error</Text>
+            ) : (
+                <ScrollView
+                    overScrollMode="never"
+                    showsVerticalScrollIndicator={false}
+                    contentContainerClassName="gap-4"
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isPending}
+                            onRefresh={refresh}
+                        />
+                    }
+                >
+                    {data.challenges.map((challenge, index) => (
+                        <ChallengeItem
+                            index={index}
+                            challengeId={challenge.challenge_id}
+                            key={challenge.title}
+                            title={challenge.title}
+                            emoji={challenge.emoji}
+                            category={challenge.category}
+                            endDate={challenge.end_date}
+                        />
+                    ))}
+
+                    {data.invitations.length > 0 && (
+                        <View>
+                            <Text className="px-4 pb-2 text-lg font-bold">Invitations</Text>
+
+                            {data.invitations.map((invite, index) => (
+                                <ChallengeItem
+                                    index={index}
+                                    challengeId={invite.challenge_id}
+                                    key={invite.title}
+                                    title={invite.title}
+                                    emoji={invite.emoji}
+                                    category={invite.category}
+                                    endDate={invite.end_date}
+                                />
+                            ))}
+                        </View>
+                    )}
+                </ScrollView>
+            )}
+        </>
     )
 }
