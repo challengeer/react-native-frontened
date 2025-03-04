@@ -15,7 +15,7 @@ interface ChallengesItemProps {
 
 export default function ChallengeItem({ title, type, text, time, rightSection, onPress, isActive = false, index }: ChallengesItemProps) {
     return (
-        <Pressable className={`gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 flex-row items-center ${index === 0 ? "border-t" : ""}`} onPress={onPress}>
+        <Pressable className={`gap-2 px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 flex-row items-center ${index === 0 ? "border-t" : ""}`} onPress={onPress}>
             {isActive ? (
                 <LinearGradient
                     colors={['#6366F1', '#A855F7', '#EC4899']}
@@ -33,9 +33,9 @@ export default function ChallengeItem({ title, type, text, time, rightSection, o
                     </View>
                 </LinearGradient>
             ) : (
-                <View className="items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 p-0.5">
+                <View className="w-14 h-14 rounded-full p-0.5 bg-neutral-100 dark:bg-neutral-800">
                     <View className="flex-1 items-center border-2 border-white dark:border-neutral-900 justify-center rounded-full bg-white dark:bg-neutral-800">
-                        <Text className="text-white font-medium">{text}</Text>
+                        <Text className="text-neutral-500 dark:text-neutral-400 font-medium text-2xl">{text}</Text>
                     </View>
                 </View>
             )}
