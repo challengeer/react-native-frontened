@@ -5,6 +5,7 @@ import React, { useCallback } from "react";
 import { useAuth } from "@/components/context/AuthProvider";
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import Text from "@/components/common/Text";
@@ -87,7 +88,7 @@ export default function SettingsPage() {
     ];
 
     return (
-        <>
+        <SafeAreaView className="flex-1">
             <Header
                 title={i18n.t("settings.header")}
                 leftSection={
@@ -152,6 +153,6 @@ export default function SettingsPage() {
                     </Text>
                 </View>
             </ScrollView>
-        </>
+        </SafeAreaView>
     )
 }

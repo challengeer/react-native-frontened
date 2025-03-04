@@ -2,6 +2,7 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useAuth } from "@/components/context/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
@@ -43,7 +44,7 @@ export default function Name() {
     };
 
     return (
-        <>
+        <SafeAreaView className="flex-1">
             <Header
                 title={i18n.t("settings.account.displayName.header")}
                 leftSection={
@@ -70,6 +71,6 @@ export default function Name() {
                     onPress={handleSubmit}
                 />
             </View>
-        </>
+        </SafeAreaView>
     );
 }   

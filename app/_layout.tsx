@@ -6,7 +6,7 @@ import { AuthProvider } from "@/components/context/AuthProvider";
 
 import { useEffect } from "react";
 import { useColorScheme } from "nativewind";
-import { StatusBar, Platform, View } from "react-native";
+import { StatusBar, Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,13 +17,13 @@ const queryClient = new QueryClient();
 
 export default function Root() {
     const { colorScheme } = useColorScheme();
-    const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
 
     useEffect(() => {
         if (Platform.OS === "android") {
-            NavigationBar.setBackgroundColorAsync(backgroundColor);
+            NavigationBar.setPositionAsync("absolute");
+            NavigationBar.setBackgroundColorAsync("transparent");
         }
-    }, [colorScheme]);
+    }, []);
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -33,12 +33,10 @@ export default function Root() {
                         <BottomSheetModalProvider>
                             <StatusBar
                                 barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                                backgroundColor={backgroundColor}
+                                backgroundColor="transparent"
                             />
 
-                            <View className="flex-1 bg-white dark:bg-neutral-900">
-                                <Slot />
-                            </View>
+                            <Slot />
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
                 </AuthProvider>

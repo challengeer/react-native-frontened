@@ -1,6 +1,7 @@
 import i18n from "@/i18n";
 import React, { useContext } from "react";
 import { ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { AppearanceContext } from "@/components/context/AppearanceProvider";
@@ -15,7 +16,7 @@ export default function LanguageSettings() {
     const { language, changeLanguage } = useContext(AppearanceContext);
 
     return (
-        <>
+        <SafeAreaView className="flex-1">
             <Header
                 title={i18n.t("settings.account.language.header")}
                 leftSection={
@@ -40,6 +41,6 @@ export default function LanguageSettings() {
                     />
                 ))}
             </ScrollView>
-        </>
+        </SafeAreaView>
     );
 }

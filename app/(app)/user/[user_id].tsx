@@ -2,6 +2,7 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckCircleIcon } from "react-native-heroicons/outline";
 import { UserPlusIcon, UserMinusIcon } from "react-native-heroicons/solid";
@@ -35,7 +36,7 @@ export default function UserPage() {
     });
 
     return (
-        <View className="flex-1 bg-white dark:bg-neutral-900">
+        <SafeAreaView className="flex-1">
             <Header
                 title="Profile"
                 leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />}
@@ -127,6 +128,6 @@ export default function UserPage() {
                     )}
                 </ScrollView>
             )}
-        </View>
+        </SafeAreaView>
     )
 }
