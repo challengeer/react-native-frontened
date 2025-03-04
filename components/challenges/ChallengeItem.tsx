@@ -1,19 +1,33 @@
 import { View, Pressable } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient'; 
+import { LinearGradient } from 'expo-linear-gradient';
 import Text from "@/components/common/Text";
+import ChallengeActionButton from "./ChallengeActionButton";
 
 interface ChallengesItemProps {
     title: string;
     type: string;
     text: string;
     time: string;
-    rightSection?: React.ReactNode;
     onPress: () => void;
     isActive?: boolean;
     index?: number;
+    showActions?: boolean;
+    onJoin?: () => void;
+    onCancel?: () => void;
 }
 
-export default function ChallengeItem({ title, type, text, time, rightSection, onPress, isActive = false, index }: ChallengesItemProps) {
+export default function ChallengeItem({
+    title,
+    type,
+    text,
+    time,
+    onPress,
+    isActive = false,
+    index,
+    showActions = false,
+    onJoin,
+    onCancel
+}: ChallengesItemProps) {
     return (
         <Pressable className={`gap-2 px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 flex-row items-center ${index === 0 ? "border-t" : ""}`} onPress={onPress}>
             {isActive ? (
@@ -46,7 +60,7 @@ export default function ChallengeItem({ title, type, text, time, rightSection, o
                     <Text type="secondary" className="text-base"> {time}</Text>
                 </View>
             </View>
-            {rightSection}
+            {showActions && <ChallengeActionButton onJoin={onJoin} onCancel={onCancel} title="Join" />}
         </Pressable>
     )
 }
