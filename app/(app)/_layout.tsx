@@ -3,12 +3,15 @@ import { Redirect, Stack } from "expo-router";
 import { useAuth } from "@/components/context/AuthProvider";
 import { AppearanceContext } from "@/components/context/AppearanceProvider";
 import * as SplashScreen from 'expo-splash-screen';
+import { useColorScheme } from "nativewind";
 
 // Keep the splash screen visible while we fetch the resources
 SplashScreen.preventAutoHideAsync();
 
 export default function AppLayout() {
     const { isAuthenticated, isLoading } = useAuth();
+    const { colorScheme } = useColorScheme();
+    const backgroundColor = colorScheme === "dark" ? "#171717" : "white";
     // used to re-render the app when the language changes
     const { language } = useContext(AppearanceContext);
 
@@ -28,9 +31,7 @@ export default function AppLayout() {
             screenOptions={{
                 headerShown: false,
                 animation: "none",
-                contentStyle: {
-                    backgroundColor: "transparent",
-                }
+                contentStyle: { backgroundColor }
             }}
         />
     )

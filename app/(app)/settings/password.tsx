@@ -1,6 +1,7 @@
 import i18n from "@/i18n";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
@@ -12,7 +13,7 @@ export default function Password() {
     const [password, setPassword] = useState("");
 
     return (
-        <>
+        <SafeAreaView className="flex-1">
             <Header title={i18n.t("settings.account.password.header")} leftSection={
                 <IconCircle
                     icon={ArrowLeftIcon}
@@ -26,6 +27,6 @@ export default function Password() {
                 />
                 <Button title={i18n.t("buttons.save")} size="lg" />
             </View>
-        </>
+        </SafeAreaView>
     );
 }   

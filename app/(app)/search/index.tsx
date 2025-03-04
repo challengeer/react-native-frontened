@@ -3,6 +3,7 @@ import api from "@/lib/api";
 import React, { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView, View, TextInput, ActivityIndicator } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
 import UserInterface from "@/types/UserInterface";
@@ -46,7 +47,7 @@ export default function FriendSearch() {
     };
 
     return (
-        <View className="flex-1">
+        <SafeAreaView className="flex-1">
             <View className="px-4 h-20 w-full flex-row items-center gap-4">
                 <SearchBar
                     onSearch={handleSearch}
@@ -167,6 +168,6 @@ export default function FriendSearch() {
                     </View>
                 </ScrollView>
             )}
-        </View>
+        </SafeAreaView>
     );
 }

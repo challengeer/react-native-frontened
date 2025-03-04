@@ -1,5 +1,6 @@
 import i18n from "@/i18n";
 import React, { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
@@ -9,7 +10,7 @@ import Button from "@/components/common/Button";
 
 export default function Email() {
     return (
-        <>
+        <SafeAreaView className="flex-1">
             <Header
                 title={i18n.t("settings.account.email.header")}
                 leftSection={
@@ -27,6 +28,6 @@ export default function Email() {
                 />
                 <Button title={i18n.t("buttons.save")} size="lg" />
             </View>
-        </>
+        </SafeAreaView>
     );
 }   
