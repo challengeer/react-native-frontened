@@ -3,38 +3,45 @@ import Text from "@/components/common/Text";
 import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import i18n from "@/i18n";
 
 interface ActivityCalendarProps {
     selectedDates?: string[];
-    onMonthChange?: (month: Date) => void; /* fetching i guess */
+    onMonthChange?: (month: Date) => void;
 }
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const TRANSLATIONS = {
+    en: {
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    sk: {
+        months: ['Január', 'Február', 'Marec', 'Apríl', 'Máj', 'Jún', 'Júl', 'August', 'September', 'Október', 'November', 'December'],
+        weekdays: ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne']
+    }
+};
 
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
         const month = date.getMonth();
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
-        
-        // Get the day of week for the first day (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+
         let firstDayOfWeek = firstDay.getDay();
-        // Convert Sunday from 0 to 7 to match our Monday-first calendar
         firstDayOfWeek = firstDayOfWeek === 0 ? 7 : firstDayOfWeek;
-        
+
         const daysInMonth = lastDay.getDate();
         const weeks: (number | null)[][] = [];
         let currentWeek: (number | null)[] = [];
-        
-        // Add empty days before the first day of the month
+
         for (let i = 1; i < firstDayOfWeek; i++) {
             currentWeek.push(null);
         }
-        
-        // Add all days of the month
+
         for (let day = 1; day <= daysInMonth; day++) {
             if (currentWeek.length === 7) {
                 weeks.push(currentWeek);
@@ -42,13 +49,12 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             }
             currentWeek.push(day);
         }
-        
-        // Add empty days after the last day of the month
+
         while (currentWeek.length < 7) {
             currentWeek.push(null);
         }
         weeks.push(currentWeek);
-        
+
         return weeks;
     };
 
@@ -60,7 +66,9 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     };
 
     const formatMonthYear = (date: Date) => {
-        return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        return `${currentTranslation.months[month]} ${year}`;
     };
 
     const isSelected = (day: number | null) => {
@@ -84,9 +92,9 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     </TouchableOpacity>
                 </View>
             </View>
-            
+
             <View className="mb-2 flex-row justify-between">
-                {WEEKDAYS.map(day => (
+                {currentTranslation.weekdays.map(day => (
                     <View key={day} className="w-9 items-center">
                         <Text className="text-sm text-neutral-500">{day}</Text>
                     </View>
@@ -96,8 +104,8 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             {weeks.map((week, weekIndex) => (
                 <View key={weekIndex} className="flex-row justify-between mb-2">
                     {week.map((day, dayIndex) => (
-                        <View 
-                            key={dayIndex} 
+                        <View
+                            key={dayIndex}
                             className={`w-9 h-9 rounded-lg items-center justify-center
                                 ${isSelected(day) ? 'bg-purple-500' : 'bg-neutral-100 dark:bg-neutral-800'}
                                 ${day === null ? 'opacity-0' : ''}`}
@@ -113,4 +121,4 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             ))}
         </View>
     );
-} 
+}

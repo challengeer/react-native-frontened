@@ -56,7 +56,8 @@
     "user": {
         "header": "Profile",
         "streak": "Streak",
-        "totalChallenges": "Total Challenges"
+        "totalChallenges": "Total Challenges",
+        "activity": "Activity"
     },
     "settings": {
         "header": "Settings",
@@ -105,5 +106,32 @@
         },
         "version": "Challengeer v{{version}}",
         "location": "Košice, Slovakia"
+    },
+    "calendar": {
+        "months": {
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        },
+        "weekdays": {
+            "short": {
+                "mon": "Mon",
+                "tue": "Tue",
+                "wed": "Wed",
+                "thu": "Thu",
+                "fri": "Fri",
+                "sat": "Sat",
+                "sun": "Sun"
+            }
+        }
     }
 }

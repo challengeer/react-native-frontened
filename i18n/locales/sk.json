@@ -56,7 +56,8 @@
     "user": {
         "header": "Profil",
         "streak": "Streak",
-        "totalChallenges": "Splnené výzvy"
+        "totalChallenges": "Splnené výzvy",
+        "activity": "Aktivita"
     },
     "settings": {
         "header": "Nastavenia",
