@@ -72,7 +72,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const weeks = getDaysInMonth(currentDate);
 
     return (
-        <View className="px-4">
+        <View className="mt-6">
             <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-lg font-medium">{formatMonthYear(currentDate)}</Text>
                 <View className="flex-row gap-4">

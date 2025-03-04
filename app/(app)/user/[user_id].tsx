@@ -16,6 +16,7 @@ import Avatar from "@/components/common/Avatar";
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
 import { useFriendActions } from '@/lib/hooks/useFriendActions';
+import ActivityCalendar from "@/components/user/ActivityCalendar"
 
 interface UserProfile extends UserInterface {
     request_id?: string;
@@ -34,6 +35,22 @@ export default function UserPage() {
             return response.data;
         },
     });
+
+    // Sample selected dates - replace with real data from your API
+    const selectedDates = [
+        "2025-03-01",
+        "2025-03-02",
+        "2025-03-03",
+        "2025-03-12",
+        "2025-03-13",
+        "2025-03-14",
+        "2025-03-16",
+        "2025-03-17",
+        "2025-03-18",
+        "2025-03-19",
+        "2025-03-20",
+        "2025-03-21",
+    ];
 
     return (
         <SafeAreaView className="flex-1">
@@ -142,6 +159,11 @@ export default function UserPage() {
                             </View>
                         </View>
                     </View>
+
+                    <Text className="text-2xl font-bold mt-6">{i18n.t("user.activity")}</Text>
+                    <ActivityCalendar
+                        selectedDates={selectedDates}
+                    />
                 </ScrollView>
             )}
         </SafeAreaView>
