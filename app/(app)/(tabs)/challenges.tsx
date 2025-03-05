@@ -29,53 +29,57 @@ export default function ChallengesPage() {
         <>
             <ChallengesHeader />
 
-            {isPending ? (
-                <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
-            ) : error ? (
-                <Text className="p-4">Error</Text>
-            ) : (
-                <ScrollView
-                    overScrollMode="never"
-                    showsVerticalScrollIndicator={false}
-                    contentContainerClassName="gap-4"
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={isPending}
-                            onRefresh={refresh}
-                        />
-                    }
-                >
-                    {data.challenges.map((challenge, index) => (
-                        <ChallengeItem
-                            index={index}
-                            challengeId={challenge.challenge_id}
-                            key={challenge.title}
-                            title={challenge.title}
-                            emoji={challenge.emoji}
-                            category={challenge.category}
-                            endDate={challenge.end_date}
-                        />
-                    ))}
-
-                    {data.invitations.length > 0 && (
-                        <View>
-                            <Text className="px-4 pb-2 text-lg font-bold">Invitations</Text>
-
-                            {data.invitations.map((invite, index) => (
+            <ScrollView
+                overScrollMode="never"
+                showsVerticalScrollIndicator={false}
+                contentContainerClassName="gap-4"
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isPending}
+                        onRefresh={refresh}
+                    />
+                }
+            >
+                {isPending ? (
+                    <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
+                ) : error ? (
+                    <Text className="p-4">Error</Text>
+                ) : (
+                    <>
+                        {
+                            data.challenges.map((challenge, index) => (
                                 <ChallengeItem
                                     index={index}
-                                    challengeId={invite.challenge_id}
-                                    key={invite.title}
-                                    title={invite.title}
-                                    emoji={invite.emoji}
-                                    category={invite.category}
-                                    endDate={invite.end_date}
+                                    challengeId={challenge.challenge_id}
+                                    key={challenge.title}
+                                    title={challenge.title}
+                                    emoji={challenge.emoji}
+                                    category={challenge.category}
+                                    endDate={challenge.end_date}
                                 />
-                            ))}
-                        </View>
-                    )}
-                </ScrollView>
-            )}
+                            ))
+                        }
+
+                        {data.invitations.length > 0 && (
+                            <View>
+                                <Text className="px-4 pb-2 text-lg font-bold">Invitations</Text>
+
+                                {data.invitations.map((invite, index) => (
+                                    <ChallengeItem
+                                        index={index}
+                                        challengeId={invite.challenge_id}
+                                        key={invite.title}
+                                        title={invite.title}
+                                        emoji={invite.emoji}
+                                        category={invite.category}
+                                        endDate={invite.end_date}
+                                    />
+                                ))}
+                            </View>
+                        )}
+                    </>
+                )}
+            </ScrollView>
         </>
     )
 }
