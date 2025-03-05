@@ -144,14 +144,14 @@ export default function UserPage() {
                         </View>
                     )}
                     <View className="flex-row items-center gap-2 mt-6">
-                        <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-lg flex-1">
+                        <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
                             <Text className="text-2xl">🔥</Text>
                             <View className="flex-col">
                                 <Text className="text-xl font-bold">12 days</Text>
                                 <Text type="secondary" className="text-base">{i18n.t("user.streak")}</Text>
                             </View>
                         </View>
-                        <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-lg flex-1">
+                        <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
                             <Text className="text-2xl">🎯</Text>
                             <View className="flex-col">
                                 <Text className="text-xl font-bold">10</Text>
