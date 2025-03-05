@@ -147,15 +147,15 @@ export default function UserPage() {
                         <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-lg flex-1">
                             <Text className="text-2xl">🔥</Text>
                             <View className="flex-col">
-                                <Text className="text-xl">12 days</Text>
-                                <Text type="secondary" className="text-sm">{i18n.t("user.streak")}</Text>
+                                <Text className="text-xl font-bold">12 days</Text>
+                                <Text type="secondary" className="text-base">{i18n.t("user.streak")}</Text>
                             </View>
                         </View>
                         <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-lg flex-1">
                             <Text className="text-2xl">🎯</Text>
                             <View className="flex-col">
-                                <Text className="text-xl">10</Text>
-                                <Text type="secondary" className="text-sm">{i18n.t("user.totalChallenges")}</Text>
+                                <Text className="text-xl font-bold">10</Text>
+                                <Text type="secondary" className="text-base">{i18n.t("user.totalChallenges")}</Text>
                             </View>
                         </View>
                     </View>
