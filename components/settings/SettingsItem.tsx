@@ -36,7 +36,7 @@ export default function SettingsItem({
         >
             {typeof title === "string" ? <Text className="font-medium">{title}</Text> : title}
             <View className="flex-row items-center gap-2">
-                {typeof rightSection === "string" ? <Text type="secondary">{rightSection}</Text> : rightSection}
+                {typeof rightSection === "string" ? <Text type="secondary" className="text-base">{rightSection}</Text> : rightSection}
                 {showArrow && (
                     <Icon icon={ChevronRightIcon} lightColor="#737373" darkColor="#a3a3a3" />
                 )}
