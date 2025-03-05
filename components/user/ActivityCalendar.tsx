@@ -83,7 +83,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     return (
         <View className="mt-6">
             <View className="flex-row justify-between items-center mb-4">
-                <Text className="text-lg font-medium">{formatMonthYear(currentDate)}</Text>
+                <Text className="font-medium">{formatMonthYear(currentDate)}</Text>
                 <View className="flex-row gap-3">
                     <IconCircle icon={ChevronLeftIcon} onPress={() => changeMonth(-1)} />
                     <IconCircle icon={ChevronRightIcon} onPress={() => changeMonth(1)} />
@@ -93,7 +93,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             <View className="mb-2 flex-row justify-between">
                 {currentTranslation.weekdays.map(day => (
                     <View key={day} className="w-9 items-center">
-                        <Text className="text-sm text-neutral-500">{day}</Text>
+                        <Text className="text-base text-neutral-500">{day}</Text>
                     </View>
                 ))}
             </View>
@@ -108,7 +108,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                                 ${day === null ? 'opacity-0' : ''}`}
                         >
                             {day !== null && (
-                                <Text className={`text-sm ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
+                                <Text className={`text-base ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                     {day}
                                 </Text>
                             )}
