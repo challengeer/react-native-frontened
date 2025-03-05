@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outlin
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import i18n from "@/i18n";
+import IconCircle from "../common/IconCircle";
 
 interface ActivityCalendarProps {
     selectedDates?: string[];
@@ -83,13 +84,9 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         <View className="mt-6">
             <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-lg font-medium">{formatMonthYear(currentDate)}</Text>
-                <View className="flex-row gap-4">
-                    <TouchableOpacity onPress={() => changeMonth(-1)}>
-                        <ChevronLeftIcon size={24} color="#6B7280" />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => changeMonth(1)}>
-                        <ChevronRightIcon size={24} color="#6B7280" />
-                    </TouchableOpacity>
+                <View className="flex-row gap-3">
+                    <IconCircle icon={ChevronLeftIcon} onPress={() => changeMonth(-1)} />
+                    <IconCircle icon={ChevronRightIcon} onPress={() => changeMonth(1)} />
                 </View>
             </View>
 
