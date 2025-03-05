@@ -10,6 +10,7 @@ import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
 import { ScrollView, View } from "react-native";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
+import UserItem from "@/components/common/UserItem";
 
 
 export default function ChallengePage() {
@@ -18,28 +19,32 @@ export default function ChallengePage() {
     return (
         <SafeAreaView className="flex-1">
             <Header title={i18n.t("challenges.header")} leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />} />
-            <ScrollView className="px-4">
-                <View className="items-center gap-2">
-                    <View className="flex-row items-center gap-2">
-                        <ChallengeAvatar emoji="🏃‍♂️" hasNewSubmissions={true} size="lg" />
+            <ScrollView>
+                <View className="gap-2 px-4 mb-4">
+                    <View className="items-center gap-2">
+                        <View className="flex-row items-center gap-2">
+                            <ChallengeAvatar emoji="🏃‍♂️" hasNewSubmissions={true} size="lg" />
+                        </View>
+                        <Text className="text-2xl font-bold">Challenge: {challenge_id}</Text>
+                        <Text type="secondary" className="text-base">Don't forget to join the challenge!</Text>
                     </View>
-                    <Text className="text-2xl font-bold">Challenge: {challenge_id}</Text>
-                    <Text type="secondary" className="text-base">Don't forget to join the challenge!</Text>
-                </View>
-                <View className="gap-2 mt-4">
-                    <View className="flex-row items-center gap-2">
-                        <Icon icon={TrophyIcon} lightColor="#737373" darkColor="#a3a3a3"/>
-                        <Text type="secondary">Running 10km</Text>
+                    <View className="gap-2 mt-4">
+                        <View className="flex-row items-center gap-2">
+                            <Icon icon={TrophyIcon} lightColor="#737373" darkColor="#a3a3a3" />
+                            <Text type="secondary">Running 10km</Text>
+                        </View>
+                        <View className="flex-row items-center gap-2">
+                            <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" /> {/* Change color later maybe? */}
+                            <Text type="secondary">2h left</Text>
+                        </View>
                     </View>
-                    <View className="flex-row items-center gap-2">
-                        <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3"/> {/* Change color later maybe? */}
-                        <Text type="secondary">2h left</Text>
+                    <View className="mt-4 gap-2 flex-row">
+                        <Button title="Join" onPress={() => { }} className="flex-1" />
+                        <Button variant="secondary" title="Ignore" onPress={() => { }} className="flex-1" />
                     </View>
+                    <Text className="text-2xl font-bold mt-4">Participants</Text>
                 </View>
-                <View className="mt-4 gap-2 flex-row">
-                    <Button title="Join" onPress={() => {}} className="flex-1"/>
-                    <Button variant="secondary" title="Ignore" onPress={() => {}} className="flex-1"/>
-                </View>
+                <UserItem userId="1" displayName="John Doe" username="john_doe" />
             </ScrollView>
         </SafeAreaView>
     )
