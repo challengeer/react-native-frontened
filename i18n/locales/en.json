@@ -56,6 +56,10 @@
         "buttons": {
             "join": "Join",
             "ignore": "Ignore"
+        },
+        "invitations": {
+            "title": "Invitations",
+            "description": "{{display_name}} invited you to join this challenge"
         }
     },
     "user": {

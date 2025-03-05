@@ -1,9 +1,11 @@
+import i18n from "@/i18n";
 import { View, Pressable } from "react-native";
 import { router } from "expo-router";
 import Text from "@/components/common/Text";
-import ChallengeActionButton from "./ChallengeActionButton";
+import ChallengeActionButton from "@/components/challenges/ChallengeActionButton";
 import Avatar from "@/components/common/Avatar";
-import ChallengeAvatar from "./ChallengeAvatar";
+import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
+import UserInterface from "@/types/UserInterface";
 
 interface ChallengesItemProps {
     index?: number;
@@ -13,10 +15,7 @@ interface ChallengesItemProps {
     category: string;
     endDate: string;
     hasNewSubmissions?: boolean;
-    showActions?: boolean;
-    onJoin?: () => void;
-    onCancel?: () => void;
-    notification?: string;
+    sender?: UserInterface;
 }
 
 export default function ChallengeItem({
@@ -26,21 +25,20 @@ export default function ChallengeItem({
     emoji,
     category,
     endDate,
-    hasNewSubmissions = true,
-    showActions = false,
-    onJoin,
-    onCancel,
-    notification
+    hasNewSubmissions = false,
+    sender
 }: ChallengesItemProps) {
     const formattedEndDate = `${Math.ceil((new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60))} hours left`
 
     return (
         <View className={`px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
-            {notification && (
-                <View className="flex-row items-center gap-2 mb-2">
-                    <Avatar size="xs" name="John Doe" />
-                    <Text className="text-sm text-neutral-500 dark:text-neutral-400">{notification}</Text>
-                </View>
+            {sender && (
+                <Pressable className="flex-row items-center gap-2 mb-2" onPress={() => router.push(`/(app)/user/${sender.user_id}`)}>
+                    <Avatar size="xs" name={sender.display_name} source={sender.profile_picture} />
+                    <Text type="secondary" className="text-sm">
+                        {i18n.t("challenges.invitations.description", { display_name: sender.display_name })}
+                    </Text>
+                </Pressable>
             )}
 
             <Pressable
@@ -54,11 +52,11 @@ export default function ChallengeItem({
                 />
 
                 <View className="flex-1">
-                    <Text className="text-lg font-medium">{title}</Text>
+                    <Text className="text-lg font-medium line-clamp-1">{title}</Text>
                     <Text type="secondary" className="text-base">{category} &middot; {formattedEndDate}</Text>
                 </View>
                 
-                {showActions && <ChallengeActionButton onJoin={onJoin} onCancel={onCancel} title="Join" />}
+                {sender && <ChallengeActionButton onJoin={() => {}} onCancel={() => {}} title="Join" />}
             </Pressable>
         </View>
     )

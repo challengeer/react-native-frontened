@@ -52,6 +52,10 @@
         "buttons": {
             "join": "Pridať sa",
             "ignore": "Ignorovať"
+        },
+        "invitations": {
+            "title": "Pozvánky",
+            "description": "{{display_name}} vás pozval do tejto výzvy"
         }
     },
     "buttons": {

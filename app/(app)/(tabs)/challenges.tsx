@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useCallback } from "react";
 import { View, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
@@ -6,10 +7,15 @@ import { useQuery } from "@tanstack/react-query";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import Text from "@/components/common/Text";
 import ChallengesHeader from "@/components/challenges/ChallengesHeader";
+import UserInterface from "@/types/UserInterface";
+
+interface Invitation extends Challenge {
+    sender: UserInterface;
+}
 
 interface ChallengesResponse {
     challenges: Challenge[];
-    invitations: Challenge[];
+    invitations: Invitation[];
 }
 
 export default function ChallengesPage() {
@@ -32,7 +38,6 @@ export default function ChallengesPage() {
             <ScrollView
                 overScrollMode="never"
                 showsVerticalScrollIndicator={false}
-                contentContainerClassName="gap-4"
                 refreshControl={
                     <RefreshControl
                         refreshing={isPending}
@@ -62,7 +67,7 @@ export default function ChallengesPage() {
 
                         {data.invitations.length > 0 && (
                             <View>
-                                <Text className="px-4 pb-2 text-lg font-bold">Invitations</Text>
+                                <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.invitations.title")}</Text>
 
                                 {data.invitations.map((invite, index) => (
                                     <ChallengeItem
@@ -73,6 +78,7 @@ export default function ChallengesPage() {
                                         emoji={invite.emoji}
                                         category={invite.category}
                                         endDate={invite.end_date}
+                                        sender={invite.sender}
                                     />
                                 ))}
                             </View>
