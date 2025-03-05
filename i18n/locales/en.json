@@ -57,6 +57,11 @@
             "join": "Join",
             "ignore": "Ignore"
         },
+        "noChallenges": {
+            "title": "✨ Ready for a New Challenge?",
+            "description": "Life's more exciting with goals! Set up a new challenge and start making progress today.",
+            "button": "Create Challenge"
+        },
         "invitations": {
             "title": "Invitations",
             "description": "{{display_name}} invited you to join this challenge"

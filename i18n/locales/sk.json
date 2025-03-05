@@ -53,6 +53,11 @@
             "join": "Pridať sa",
             "ignore": "Ignorovať"
         },
+        "noChallenges": {
+            "title": "✨ Pripravený na novú výzvu?",
+            "description": "Život je zábavnejší s cieľmi! Nastavte novú výzvu a začnite robiť pokrok dnes.",
+            "button": "Vytvoriť výzvu"
+        },
         "invitations": {
             "title": "Pozvánky",
             "description": "{{display_name}} vás pozval do tejto výzvy"

@@ -8,6 +8,10 @@ import ChallengeItem from "@/components/challenges/ChallengeItem";
 import Text from "@/components/common/Text";
 import ChallengesHeader from "@/components/challenges/ChallengesHeader";
 import UserInterface from "@/types/UserInterface";
+import Button from "@/components/common/Button";
+import { router } from "expo-router";
+import { PlusIcon } from "react-native-heroicons/outline";
+import Icon from "@/components/common/Icon";
 
 interface Invitation extends Challenge {
     sender: UserInterface;
@@ -51,19 +55,37 @@ export default function ChallengesPage() {
                     <Text className="p-4">Error</Text>
                 ) : (
                     <>
-                        {
-                            data.challenges.map((challenge, index) => (
-                                <ChallengeItem
-                                    index={index}
-                                    challengeId={challenge.challenge_id}
-                                    key={challenge.title}
-                                    title={challenge.title}
-                                    emoji={challenge.emoji}
-                                    category={challenge.category}
-                                    endDate={challenge.end_date}
+                        {data.challenges.length === 0 && (
+                            <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl">
+                                <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noChallenges.title")}</Text>
+                                <Text type="secondary" className="text-base mb-6">
+                                    {i18n.t("challenges.noChallenges.description")}
+                                </Text>
+                                <Button
+                                    title={i18n.t("challenges.noChallenges.button")}
+                                    onPress={() => router.push("/create_challenge")}
+                                    leftSection={
+                                        <Icon
+                                            icon={PlusIcon}
+                                            lightColor="#fff"
+                                            darkColor="#fff"
+                                        />
+                                    }
                                 />
-                            ))
-                        }
+                            </View>
+                        )}
+
+                        {data.challenges.map((challenge, index) => (
+                            <ChallengeItem
+                                index={index}
+                                challengeId={challenge.challenge_id}
+                                key={challenge.title}
+                                title={challenge.title}
+                                emoji={challenge.emoji}
+                                category={challenge.category}
+                                endDate={challenge.end_date}
+                            />
+                        ))}
 
                         {data.invitations.length > 0 && (
                             <View>
