@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
 import { ScrollView, View } from "react-native";
 import Icon from "@/components/common/Icon";
+import Button from "@/components/common/Button";
 
 
 export default function ChallengePage() {
@@ -34,6 +35,10 @@ export default function ChallengePage() {
                         <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3"/> {/* Change color later maybe? */}
                         <Text type="secondary">2h left</Text>
                     </View>
+                </View>
+                <View className="mt-4 gap-2 flex-row">
+                    <Button title="Join" onPress={() => {}} className="flex-1"/>
+                    <Button variant="secondary" title="Ignore" onPress={() => {}} className="flex-1"/>
                 </View>
             </ScrollView>
         </SafeAreaView>
