@@ -47,7 +47,12 @@
         "more_results": "Viac výsledkov"
     },
     "challenges": {
-        "header": "Výzvy"
+        "header": "Výzvy",
+        "participants": "Účastníci",
+        "buttons": {
+            "join": "Pridať sa",
+            "ignore": "Ignorovať"
+        }
     },
     "buttons": {
         "save": "Uložiť",

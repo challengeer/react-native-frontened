@@ -1,13 +1,13 @@
+import i18n from "@/i18n";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
-import Text from "@/components/common/Text";
-import Header from "@/components/common/Header";
-import i18n from "@/i18n";
-import IconCircle from "@/components/common/IconCircle";
 import { ArrowLeftIcon, ClockIcon, TrophyIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
-import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
 import { ScrollView, View } from "react-native";
+import Text from "@/components/common/Text";
+import Header from "@/components/common/Header";
+import IconCircle from "@/components/common/IconCircle";
+import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserItem from "@/components/common/UserItem";
@@ -39,10 +39,10 @@ export default function ChallengePage() {
                         </View>
                     </View>
                     <View className="mt-4 gap-2 flex-row">
-                        <Button title="Join" onPress={() => { }} className="flex-1" />
-                        <Button variant="secondary" title="Ignore" onPress={() => { }} className="flex-1" />
+                        <Button title={i18n.t("challenges.buttons.join")} onPress={() => { }} className="flex-1" />
+                        <Button variant="secondary" title={i18n.t("challenges.buttons.ignore")} onPress={() => { }} className="flex-1" />
                     </View>
-                    <Text className="text-2xl font-bold mt-4">Participants</Text>
+                    <Text className="text-2xl font-bold mt-4">{i18n.t("challenges.participants")}</Text>
                 </View>
                 <UserItem userId="1" displayName="John Doe" username="john_doe" />
             </ScrollView>
