@@ -49,15 +49,15 @@ export default function FriendActionButton({
                     title={i18n.t("friendActionButton.accept")}
                     onPress={() => requestId && acceptRequest.mutate(requestId)}
                     leftSection={
-                    <Icon
-                        icon={UserPlusIcon}
-                        lightColor="white"
-                        darkColor="white"
-                    />
-                }
-            />
-            <Icon
-                icon={XMarkIcon}
+                        <Icon
+                            icon={UserPlusIcon}
+                            lightColor="white"
+                            darkColor="white"
+                        />
+                    }
+                />
+                <Icon
+                    icon={XMarkIcon}
                     onPress={() => requestId && rejectRequest.mutate(requestId)}
                 />
             </View>
