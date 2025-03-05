@@ -99,11 +99,11 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             </View>
 
             {weeks.map((week, weekIndex) => (
-                <View key={weekIndex} className="flex-row justify-between mb-2">
+                <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
                     {week.map((day, dayIndex) => (
                         <View
                             key={dayIndex}
-                            className={`w-9 h-9 rounded-lg items-center justify-center
+                            className={`aspect-square flex-1 rounded-lg items-center justify-center
                                 ${isSelected(day) ? 'bg-purple-500' : 'bg-neutral-100 dark:bg-neutral-800'}
                                 ${day === null ? 'opacity-0' : ''}`}
                         >
