@@ -36,7 +36,12 @@ export default function ChallengeItem({
         <View className={`px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
             {sender && (
                 <Pressable className="flex-row items-center gap-2 mb-2" onPress={() => router.push(`/(app)/user/${sender.user_id}`)}>
-                    <Avatar size="xs" name={sender.display_name} source={sender.profile_picture} />
+                    <Avatar
+                        size="xs"
+                        name={sender.display_name}
+                        source={sender.profile_picture}
+                    />
+
                     <Text type="secondary" className="text-sm">
                         {i18n.t("challenges.invitations.description", { display_name: sender.display_name })}
                     </Text>
@@ -47,8 +52,9 @@ export default function ChallengeItem({
                 className="flex-row items-center gap-3"
                 onPress={() => router.push(`/(app)/challenge/${challengeId}`)}
             >
-                <ChallengeAvatar 
-                    emoji={emoji} 
+                <ChallengeAvatar
+                    challengeId={challengeId}
+                    emoji={emoji}
                     hasNewSubmissions={hasNewSubmissions}
                     size="md"
                 />
@@ -57,7 +63,7 @@ export default function ChallengeItem({
                     <Text className="text-lg font-medium line-clamp-1">{title}</Text>
                     <Text type="secondary" className="text-base">{category} &middot; {formattedEndDate}</Text>
                 </View>
-                
+
                 {invitationId && <ChallengeActionButton invitationId={invitationId} />}
             </Pressable>
         </View>
