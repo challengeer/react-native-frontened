@@ -1,13 +1,17 @@
 import { useRef, useState } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Button, Pressable, Text, View, Image, StatusBar } from "react-native";
+import { Pressable, Text, View, StatusBar } from "react-native";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "@/components/common/Icon";
+import Button from "@/components/common/Button";
+import api from "@/lib/api";
 
 export default function CameraPage() {
+    const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const cameraRef = useRef<CameraView>(null);
     const [permission, requestPermission] = useCameraPermissions();
     const [uri, setUri] = useState<string | null>(null);
@@ -30,7 +34,7 @@ export default function CameraPage() {
     }
 
     const takePicture = async () => {
-        const photo = await cameraRef.current?.takePictureAsync();
+        const photo = await cameraRef.current?.takePictureAsync({ skipProcessing: true });
         setUri(photo?.uri || null);
     };
 
@@ -42,14 +46,67 @@ export default function CameraPage() {
         setFlash((prev) => (prev === "off" ? "on" : "off"));
     };
 
+    const handleSubmit = async () => {
+        if (!uri) return;
+
+        try {
+            const formData = new FormData();
+            formData.append('file', {
+                uri: uri,
+                type: 'image/jpeg',
+                name: 'photo.jpg',
+            } as any);
+
+            const response = await api.post(`/challenges/${challenge_id}/submit`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 200) {
+                router.push(`/(app)/submission/${challenge_id}`);
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            // Handle error appropriately
+        }
+    };
+
     const renderPicture = () => {
         return (
-            <View>
+            <View className="flex-1 relative">
                 <Image
                     source={{ uri: uri || "" }}
-                    className="w-[300px] h-[300px]"
+                    style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                    contentFit="cover"
                 />
-                <Button onPress={() => setUri(null)} title="Take another picture" />
+
+                <LinearGradient
+                    colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
+                    style={{ position: "absolute", top: 0, left: 0, right: 0 }}
+                >
+                    <View className="p-6">
+                        <Icon
+                            icon={XMarkIcon}
+                            lightColor="#fff"
+                            darkColor="#fff"
+                            onPress={() => setUri(null)}
+                        />
+                    </View>
+                </LinearGradient>
+
+                <LinearGradient
+                    colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.25)"]}
+                    style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+                >
+                    <View className="justify-center items-center p-6">
+                        <Button
+                            title="Submit photo"
+                            size="lg"
+                            onPress={handleSubmit}
+                        />
+                    </View>
+                </LinearGradient>
             </View>
         );
     };
@@ -60,7 +117,7 @@ export default function CameraPage() {
                 ref={cameraRef}
                 facing={facing}
                 flash={flash}
-                style={{ flex: 1, width: "100%", height: "100%", borderRadius: 24 }}
+                style={{ width: "100%", height: "100%", borderRadius: 24 }}
             >
                 <View className="flex-1 justify-between">
                     <LinearGradient colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}>
@@ -90,7 +147,7 @@ export default function CameraPage() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-black justify-center items-center">
+        <SafeAreaView className="flex-1 bg-black">
             <StatusBar barStyle="light-content" />
             {uri ? renderPicture() : renderCamera()}
         </SafeAreaView>
