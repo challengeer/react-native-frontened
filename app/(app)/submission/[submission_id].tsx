@@ -1,17 +1,17 @@
-import { SafeAreaView, View } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
+import { SafeAreaView, View, Pressable } from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
 import { Image } from "expo-image";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Text from "@/components/common/Text";
-import Avatar from "@/components/common/Avatar";
-import { XMarkIcon } from "react-native-heroicons/outline";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { XMarkIcon } from "react-native-heroicons/outline";
+import Avatar from "@/components/common/Avatar";
+import Text from "@/components/common/Text";
 
 export default function SubmissionPage() {
     const { submission_id } = useLocalSearchParams<{ submission_id: string }>();
-    // const insets = useSafeAreaInsets();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const { data, isLoading } = useQuery({
         queryKey: ["submission", submission_id],
@@ -22,9 +22,23 @@ export default function SubmissionPage() {
         },
     });
 
-    const currentIndex = 0;
     const totalPhotos = data?.length || 0;
     const currentSubmission = data?.[currentIndex];
+
+    const handlePrevious = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentIndex < totalPhotos - 1) {
+            setCurrentIndex(prev => prev + 1);
+        } else {
+            // If we're at the last photo, go back
+            router.back();
+        }
+    };
 
     return (
         <SafeAreaView className="mt-10">  {/* added mt-10 so that the photo does not take the notification bar */}
@@ -55,7 +69,6 @@ export default function SubmissionPage() {
                         <View className="flex-row gap-4">
                             <Text className="text-base">
                                 {currentSubmission?.user?.display_name || "User"}
-
                             </Text>
                             <Text type="secondary" className="text-base">
                                 3h ago
@@ -71,9 +84,21 @@ export default function SubmissionPage() {
                 </View>
             </View>
 
+            {/* Navigation touch areas */}
+            <View className="flex-1 flex-row absolute inset-0 z-20">
+                <Pressable
+                    className="w-1/2 h-full"
+                    onPress={handlePrevious}
+                />
+                <Pressable
+                    className="w-1/2 h-full"
+                    onPress={handleNext}
+                />
+            </View>
+
             {/* The photo of the current submission */}
             <Image
-                source={{ uri: data?.[0].photo_url }}
+                source={{ uri: currentSubmission?.photo_url }}
                 style={{ width: "100%", height: "100%" }}
                 contentFit="cover"
             />
