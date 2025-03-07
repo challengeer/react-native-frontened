@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Pressable } from "react-native";
 import Text from "@/components/common/Text";
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -6,12 +6,14 @@ interface ChallengeAvatarProps {
     emoji: string;
     hasNewSubmissions?: boolean;
     size?: 'md' | 'lg';
+    onPress?: () => void;
 }
 
 export default function ChallengeAvatar({
     emoji,
     hasNewSubmissions = false,
-    size = 'md'
+    size = 'md',
+    onPress
 }: ChallengeAvatarProps) {
     const sizeClasses = {
         md: {
@@ -29,11 +31,11 @@ export default function ChallengeAvatar({
     };
 
     const EmojiView = (
-        <View className={`flex-1 items-center justify-center ${sizeClasses[size].gapPadding} rounded-full bg-white dark:bg-neutral-900`}>
-            <View className={`${sizeClasses[size].container} flex-1 items-center justify-center rounded-full bg-white dark:bg-neutral-800`}>
-                <Text className={`text-white font-medium ${sizeClasses[size].text}`}>{emoji}</Text>
-            </View>
-        </View>
+            <Pressable className={`flex-1 items-center justify-center ${sizeClasses[size].gapPadding} rounded-full bg-white dark:bg-neutral-900`} onPress={onPress}>
+                <View className={`${sizeClasses[size].container} flex-1 items-center justify-center rounded-full bg-white dark:bg-neutral-800`}>
+                    <Text className={`text-white font-medium ${sizeClasses[size].text}`}>{emoji}</Text>
+                </View>
+            </Pressable>
     );
 
     if (hasNewSubmissions) {

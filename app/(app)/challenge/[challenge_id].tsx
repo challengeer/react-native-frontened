@@ -15,6 +15,7 @@ import UserItem from "@/components/common/UserItem";
 
 export default function ChallengePage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
+    const { submission_id } = useLocalSearchParams<{ submission_id: string }>();
 
     return (
         <SafeAreaView className="flex-1">
@@ -23,7 +24,7 @@ export default function ChallengePage() {
                 <View className="gap-2 px-4 mb-4">
                     <View className="items-center gap-2">
                         <View className="flex-row items-center gap-2">
-                            <ChallengeAvatar emoji="🏃‍♂️" hasNewSubmissions={true} size="lg" />
+                            <ChallengeAvatar emoji="🏃‍♂️" hasNewSubmissions={true} size="lg" onPress={() => router.push(`/(app)/submission/${submission_id}`)} />
                         </View>
                         <Text className="text-2xl font-bold">Challenge: {challenge_id}</Text>
                         <Text type="secondary" className="text-base">Don't forget to join the challenge!</Text>
