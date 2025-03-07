@@ -64,7 +64,7 @@ export default function SubmissionPage() {
                     </View>
                     <TouchableOpacity
                         onPress={() => router.back()}
-                        className="w-8 h-8 items-center justify-center rounded-full bg-black/20"
+                        className="w-8 h-8 items-center justify-center rounded-full"
                     >
                         <XMarkIcon color="white" />
                     </TouchableOpacity>
