@@ -15,6 +15,7 @@ import Icon from "@/components/common/Icon";
 
 interface Invitation extends Challenge {
     sender: UserInterface;
+    invitation_id: string;
 }
 
 interface ChallengesResponse {
@@ -55,7 +56,7 @@ export default function ChallengesPage() {
                     <Text className="p-4">Error</Text>
                 ) : (
                     <>
-                        {data.challenges.length === 0 && (
+                        {data.challenges?.length === 0 && (
                             <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl">
                                 <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noChallenges.title")}</Text>
                                 <Text type="secondary" className="text-base mb-6">
@@ -75,7 +76,7 @@ export default function ChallengesPage() {
                             </View>
                         )}
 
-                        {data.challenges.map((challenge, index) => (
+                        {data.challenges?.map((challenge, index) => (
                             <ChallengeItem
                                 index={index}
                                 challengeId={challenge.challenge_id}
@@ -87,7 +88,7 @@ export default function ChallengesPage() {
                             />
                         ))}
 
-                        {data.invitations.length > 0 && (
+                        {data.invitations?.length > 0 && (
                             <View>
                                 <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.invitations.title")}</Text>
 
@@ -101,6 +102,7 @@ export default function ChallengesPage() {
                                         category={invite.category}
                                         endDate={invite.end_date}
                                         sender={invite.sender}
+                                        invitationId={invite.invitation_id}
                                     />
                                 ))}
                             </View>

@@ -16,6 +16,7 @@ interface ChallengesItemProps {
     endDate: string;
     hasNewSubmissions?: boolean;
     sender?: UserInterface;
+    invitationId?: string;
 }
 
 export default function ChallengeItem({
@@ -26,7 +27,8 @@ export default function ChallengeItem({
     category,
     endDate,
     hasNewSubmissions = false,
-    sender
+    sender,
+    invitationId
 }: ChallengesItemProps) {
     const formattedEndDate = `${Math.ceil((new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60))} hours left`
 
@@ -56,7 +58,7 @@ export default function ChallengeItem({
                     <Text type="secondary" className="text-base">{category} &middot; {formattedEndDate}</Text>
                 </View>
                 
-                {sender && <ChallengeActionButton onJoin={() => {}} onCancel={() => {}} title="Join" />}
+                {invitationId && <ChallengeActionButton invitationId={invitationId} />}
             </Pressable>
         </View>
     )

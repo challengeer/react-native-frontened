@@ -1,29 +1,24 @@
-import Button from "@/components/common/Button";
 import { View } from "react-native";
-import Icon from "../common/Icon";
 import { XMarkIcon } from "react-native-heroicons/outline";
+import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
+import Icon from "@/components/common/Icon";
+import Button from "@/components/common/Button";
 
-interface ChallengeActionButtonProps {
-    title?: string;
-    onJoin?: () => void;
-    onCancel?: () => void;
-    showJoinButton?: boolean;
-    showCancelButton?: boolean;
-}
+export default function ChallengeActionButton({ invitationId }: { invitationId: string }) {
+    const { acceptInvite, rejectInvite } = useChallengeActions();
 
-export default function ChallengeActionButton({ 
-    title = "Join", 
-    onJoin, 
-    onCancel,
-    showJoinButton = true,
-    showCancelButton = true
-}: ChallengeActionButtonProps) {
     return (
         <View className="flex-row items-center gap-2">
-            {showJoinButton && <Button title={title} onPress={onJoin} variant="primary" size="sm" />}
-            {showCancelButton && <Icon icon={XMarkIcon} onPress={onCancel} />}
+            <Button
+                size="sm"
+                variant="primary"
+                title="Join"
+                onPress={() => invitationId && acceptInvite.mutate(invitationId)}
+            />
+            <Icon
+                icon={XMarkIcon}
+                onPress={() => invitationId && rejectInvite.mutate(invitationId)}
+            />
         </View>
     )
 }
-
-
