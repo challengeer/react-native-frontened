@@ -19,8 +19,6 @@ export function useChallengeActions() {
                 const acceptedInvite = old.invitations?.find(
                     (invite: any) => invite.invitation_id === invitationId
                 );
-                
-                console.log(acceptedInvite)
 
                 return {
                     ...old,
