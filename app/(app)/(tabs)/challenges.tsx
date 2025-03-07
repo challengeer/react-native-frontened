@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useCallback } from "react";
 import { View, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
-import { Challenge } from "@/types/Challenge";
+import { ChallengeSimple } from "@/types/Challenge";
 import { useQuery } from "@tanstack/react-query";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import Text from "@/components/common/Text";
@@ -13,13 +13,13 @@ import { router } from "expo-router";
 import { PlusIcon } from "react-native-heroicons/outline";
 import Icon from "@/components/common/Icon";
 
-interface Invitation extends Challenge {
+interface Invitation extends ChallengeSimple {
     sender: UserInterface;
     invitation_id: string;
 }
 
 interface ChallengesResponse {
-    challenges: Challenge[];
+    challenges: ChallengeSimple[];
     invitations: Invitation[];
 }
 
