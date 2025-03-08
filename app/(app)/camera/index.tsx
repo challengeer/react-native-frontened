@@ -64,7 +64,7 @@ export default function CameraPage() {
             });
 
             if (response.status === 200) {
-                router.push(`/(app)/submission/${challenge_id}`);
+                router.push(`/(app)/(tabs)/challenges`);
             }
         } catch (error) {
             console.error('Error uploading file:', error);

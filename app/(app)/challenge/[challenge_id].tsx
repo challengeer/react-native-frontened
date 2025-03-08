@@ -74,15 +74,10 @@ export default function ChallengePage() {
                                     <Text type="secondary" className="text-base">{challenge?.category}</Text>
                                 </View>
                                 <View className="flex-row items-center gap-2">
-                                    <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" /> {/* Change color later maybe? */}
+                                    <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" />
                                     <Text type="secondary" className="text-base">{challenge?.end_date}</Text>
                                 </View>
                             </View>
-
-                            {/* <View className="mt-4 gap-2 flex-row">
-                                <Button title={i18n.t("challenges.buttons.join")} onPress={() => { }} className="flex-1" />
-                                <Button variant="secondary" title={i18n.t("challenges.buttons.ignore")} onPress={() => { }} className="flex-1" />
-                            </View> */}
 
                             <Button
                                 title="Add submission"
