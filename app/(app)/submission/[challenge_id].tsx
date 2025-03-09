@@ -49,9 +49,9 @@ export default function SubmissionPage() {
                 <View className="flex-1 relative">
                     <ExpoImage
                         source={{ uri: `https://picsum.photos/seed/${challenge_id}/100/150` }}
-                        style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                        style={{ width: "100%", height: "100%", borderRadius: 24, opacity: 0.8 }}
                         contentFit="cover"
-                        blurRadius={10}
+                        blurRadius={5}
                     />
 
                     <Pressable className="absolute top-6 left-6 -m-4 p-4" onPress={() => router.back()}>
