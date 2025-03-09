@@ -7,6 +7,7 @@ interface ChallengeAvatarProps {
     challengeId?: string;
     emoji: string;
     hasNewSubmissions?: boolean;
+    isInvitation?: boolean;
     size?: "md" | "lg";
 }
 
@@ -14,6 +15,7 @@ export default function ChallengeAvatar({
     challengeId,
     emoji,
     hasNewSubmissions = false,
+    isInvitation = false,
     size = "md",
 }: ChallengeAvatarProps) {
     const sizeClasses = {
@@ -34,7 +36,7 @@ export default function ChallengeAvatar({
     const EmojiView = (
         <Pressable
             className={`items-center justify-center ${sizeClasses[size].gapPadding} rounded-full bg-white dark:bg-neutral-900`}
-            onPress={() => router.push(`/(app)/submission/${challengeId}`)}
+            onPress={() => isInvitation ? null : router.push(`/(app)/submission/${challengeId}`)}
         >
             <View className={`${sizeClasses[size].container} items-center justify-center rounded-full bg-white dark:bg-neutral-800`}>
                 <Text className={`text-white font-medium leading-loose ${sizeClasses[size].text}`}>{emoji}</Text>

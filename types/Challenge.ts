@@ -18,4 +18,5 @@ export interface ChallengeSimple {
     emoji: string;
     category: string;
     end_date: string;
+    has_new_submissions: boolean;
 }

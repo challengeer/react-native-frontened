@@ -56,6 +56,7 @@ export default function ChallengeItem({
                     challengeId={challengeId}
                     emoji={emoji}
                     hasNewSubmissions={hasNewSubmissions}
+                    isInvitation={invitationId !== undefined}
                     size="md"
                 />
 

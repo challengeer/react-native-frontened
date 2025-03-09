@@ -85,6 +85,7 @@ export default function ChallengesPage() {
                                 emoji={challenge.emoji}
                                 category={challenge.category}
                                 endDate={challenge.end_date}
+                                hasNewSubmissions={challenge.has_new_submissions}
                             />
                         ))}
 
