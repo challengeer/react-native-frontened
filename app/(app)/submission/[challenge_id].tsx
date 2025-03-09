@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { View, Pressable } from "react-native";
+import { View, Pressable, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,12 +15,22 @@ export default function SubmissionPage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const { data, isLoading } = useQuery({
+    const { data, isPending, error, isError } = useQuery({
         queryKey: ["submission", challenge_id],
         queryFn: async () => {
-            const respone = await api.get(`/challenges/${challenge_id}/submissions`);
-            return respone.data;
+            try {
+                console.log("Fetching submissions for challenge:", challenge_id);
+                const response = await api.get(`/challenges/${challenge_id}/submissions`);
+                console.log("Submissions fetched successfully");
+                return response.data;
+            } catch (error: any) {
+                if (error.response?.status === 403) {
+                    throw new Error("You need to submit your photo first before viewing others' submissions");
+                }
+                throw error;
+            }
         },
+        retry: false,
     });
 
     const totalPhotos = data?.length || 0;
@@ -40,6 +50,61 @@ export default function SubmissionPage() {
             router.back();
         }
     };
+
+    if (isPending) {
+        return (
+            <SafeAreaView className="flex-1 bg-black">
+                <View className="flex-1 items-center justify-center">
+                    <ActivityIndicator size="large" color="#fff" />
+                    <Text className="text-white mt-4">Loading submissions...</Text>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    if (isError) {
+        return (
+            <SafeAreaView className="flex-1 bg-black">
+                <View className="flex-1 relative">
+                    <Image
+                        source={{ uri: `https://picsum.photos/seed/${challenge_id}/100/150` }}
+                        style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                        contentFit="cover"
+                        blurRadius={10}
+                    />
+                    <View className="absolute inset-0 items-center justify-center p-6">
+                        <Text className="text-white text-center text-lg font-medium mb-4">
+                            {error?.message || "Something went wrong"}
+                        </Text>
+                        <Pressable 
+                            onPress={() => router.back()} 
+                            className="bg-white/20 px-6 py-3 rounded-full"
+                        >
+                            <Text className="text-white font-medium">Go Back</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    if (!data || totalPhotos === 0) {
+        return (
+            <SafeAreaView className="flex-1 bg-black">
+                <View className="flex-1 items-center justify-center p-6">
+                    <Text className="text-white text-center text-lg">
+                        No submissions available yet
+                    </Text>
+                    <Pressable 
+                        onPress={() => router.back()} 
+                        className="mt-4 bg-white/20 px-6 py-3 rounded-full"
+                    >
+                        <Text className="text-white font-medium">Go Back</Text>
+                    </Pressable>
+                </View>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-black">
