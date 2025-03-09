@@ -19,9 +19,7 @@ export default function SubmissionPage() {
         queryKey: ["submission", challenge_id],
         queryFn: async () => {
             try {
-                console.log("Fetching submissions for challenge:", challenge_id);
                 const response = await api.get(`/challenges/${challenge_id}/submissions`);
-                console.log("Submissions fetched successfully");
                 return response.data;
             } catch (error: any) {
                 if (error.response?.status === 403) {
