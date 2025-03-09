@@ -48,19 +48,30 @@ export default function ChallengeAvatar({
                 const response = await api.get(`/challenges/${challengeId}/submissions`);
                 
                 // prefetch all images
-                const submissions = response.data;
-                await Promise.all(
-                    submissions.map((submission: any) => 
-                        ExpoImage.prefetch(submission.photo_url)
-                    )
-                );
+                if (response.data.length > 0) {
+                    const submissions = response.data;
+                    await Promise.all(
+                        submissions.map((submission: any) => 
+                            ExpoImage.prefetch(submission.photo_url)
+                        )
+                    );
+                } else {
+                    ExpoImage.prefetch(`https://picsum.photos/seed/${challengeId}/100/150`);
+                }
                 
-                return submissions;
+                return response.data;
             },
             retry: false,
         });
         setIsLoading(false);
         router.push(`/(app)/submission/${challengeId}`);
+
+        queryClient.invalidateQueries({
+            queryKey: ["challenges"],
+        });
+        queryClient.invalidateQueries({
+            queryKey: ["challenge", challengeId],
+        });
     };
 
     const EmojiView = (
