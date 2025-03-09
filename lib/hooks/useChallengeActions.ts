@@ -27,7 +27,7 @@ export function useChallengeActions() {
                         (invite: any) => invite.invitation_id !== invitationId
                     ),
                     // Add the challenge to challenges array
-                    challenges: [...(old.challenges || []), ...acceptedInvite]
+                    challenges: [...(old.challenges || []), acceptedInvite]
                 };
             });
             
