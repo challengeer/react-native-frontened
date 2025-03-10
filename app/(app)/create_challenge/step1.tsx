@@ -1,9 +1,57 @@
-import { View } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import Text from "@/components/common/Text";
-export default function CreateChallengeStep1() {
+import Button from "@/components/common/Button";
+import InputBar from "@/components/common/InputBar";
+import RadioButton from "@/components/settings/RadioButton";
+
+import { useState } from "react";
+
+interface Step1Props {
+    title: string;
+    setTitle: (title: string) => void;
+    onNext: () => void;
+}
+
+export default function Step1({ title, setTitle, onNext }: Step1Props) {
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    const categories = [
+        { id: "1", name: "Bodyweight Workouts", emoji: "💪" },
+        { id: "2", name: "HIIT (High-Intensity Interval Training)", emoji: "🔥" },
+        { id: "3", name: "Core & Abs", emoji: "🏋️‍♂️" },
+    ];
+
     return (
-        <View>
-            <Text>Create Challenge Step 1</Text>
+        <View className="flex-1 justify-between">
+            <Text className="text-2xl font-bold mb-2">Select sports category</Text>
+            <ScrollView className="flex-1">
+                {categories.map((category) => (
+                    <TouchableOpacity
+                        key={category.id}
+                        className="border-b border-neutral-200 dark:border-neutral-700 py-4 items-center flex-row gap-2"
+                        onPress={() => setSelectedCategory(category.id)}
+                    >
+                        <View className="flex-row items-center justify-between w-full">
+                            <View className="flex-row items-center gap-2">
+                                <Text>{category.emoji}</Text>
+                                <Text>{category.name}</Text>
+                            </View>
+                            <RadioButton
+                                selected={selectedCategory === category.id}
+                                onPress={() => setSelectedCategory(category.id)}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+
+
+            <Button
+                title="Continue"
+                onPress={onNext}
+                disabled={!selectedCategory}
+                className=""
+            />
         </View>
     );
 }
