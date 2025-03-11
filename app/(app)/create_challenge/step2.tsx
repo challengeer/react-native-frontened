@@ -14,7 +14,7 @@ interface Step2Props {
 
 export default function Step2({ title, setTitle, description, setDescription, onNext }: Step2Props) {
     return (
-        <View className="flex-1">
+        <View className="flex-1 mt-6">
             <Text className="text-2xl font-bold mb-2">Add more information</Text>
             {/* Title */}
             <InputBar

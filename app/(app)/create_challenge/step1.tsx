@@ -1,7 +1,6 @@
 import { View, TouchableOpacity, ScrollView } from "react-native";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
-import InputBar from "@/components/common/InputBar";
 import RadioButton from "@/components/settings/RadioButton";
 
 import { useState } from "react";
@@ -22,7 +21,7 @@ export default function Step1({ title, setTitle, onNext }: Step1Props) {
     ];
 
     return (
-        <View className="flex-1 justify-between">
+        <View className="flex-1 mt-6">
             <Text className="text-2xl font-bold mb-2">Select sports category</Text>
             <ScrollView className="flex-1">
                 {categories.map((category) => (
