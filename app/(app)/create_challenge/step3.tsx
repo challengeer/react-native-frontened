@@ -105,7 +105,7 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
                     title={isLoading || inviting ? "Creating..." : "Create Challenge"}
                     onPress={handleSubmit}
                     disabled={isLoading || inviting || selectedFriends.length === 0}
-                    className="flex-1"
+                    className="flex-1 mb-4"
                 />
             </View>
         </View>
