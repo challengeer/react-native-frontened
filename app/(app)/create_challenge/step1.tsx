@@ -6,14 +6,12 @@ import RadioButton from "@/components/settings/RadioButton";
 import { useState } from "react";
 
 interface Step1Props {
-    title: string;
-    setTitle: (title: string) => void;
+    selectedCategory: string | null;
+    setSelectedCategory: (category: string | null) => void;
     onNext: () => void;
 }
 
-export default function Step1({ onNext }: Step1Props) {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
+export default function Step1({ selectedCategory, setSelectedCategory, onNext }: Step1Props) {
     const categories = [
         { id: "1", name: "Bodyweight Workouts", emoji: "💪" },
         { id: "2", name: "HIIT (High-Intensity Interval Training)", emoji: "🔥" },
