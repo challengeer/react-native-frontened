@@ -50,7 +50,7 @@ export default function Step1({ title, setTitle, onNext }: Step1Props) {
                 title="Continue"
                 onPress={onNext}
                 disabled={!selectedCategory}
-                className=""
+                className="mb-4"
             />
         </View>
     );
