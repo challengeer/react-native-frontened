@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import { useState, useEffect } from "react";
 import { View } from "react-native";
 import { CheckCircleIcon } from "react-native-heroicons/solid";
-import InputBar from "@/components/common/InputBar";
+import { InputBar } from "@/components/common/InputBar";
 import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
 import { EyeIcon, EyeSlashIcon } from "react-native-heroicons/outline";

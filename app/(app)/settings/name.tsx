@@ -9,7 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
-import InputBar from "@/components/common/InputBar";
+import { InputBar } from "@/components/common/InputBar";
 import Button from "@/components/common/Button";
 
 const NAME_MAX_LENGTH = 30;

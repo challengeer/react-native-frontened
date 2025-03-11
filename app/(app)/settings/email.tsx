@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
-import InputBar from "@/components/common/InputBar";
+import { InputBar } from "@/components/common/InputBar";
 import Button from "@/components/common/Button";
 
 export default function Email() {

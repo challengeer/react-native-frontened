@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { CheckIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { View, ActivityIndicator } from "react-native";
 import { debounce } from "lodash";
-import InputBar, { InputBarProps } from "@/components/common/InputBar";
+import { InputBar, InputBarProps } from "@/components/common/InputBar";
 import Icon from "@/components/common/Icon";
 
 const USERNAME_MAX_LENGTH = 15;
