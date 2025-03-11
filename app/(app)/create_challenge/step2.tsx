@@ -21,6 +21,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                 value={title}
                 onChangeText={setTitle}
                 className="mb-6"
+                placeholder="Title"
             />
 
             {/* Description (TextArea) */}
@@ -28,6 +29,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                 value={description}
                 onChangeText={setDescription}
                 className="mb-6"
+                placeholder="Description (optional)"
             />
 
             <View className="flex-row gap-4">
