@@ -11,7 +11,7 @@ interface Step1Props {
     onNext: () => void;
 }
 
-export default function Step1({ title, setTitle, onNext }: Step1Props) {
+export default function Step1({ onNext }: Step1Props) {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const categories = [
