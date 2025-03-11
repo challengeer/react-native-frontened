@@ -1,9 +1,43 @@
 import { View } from "react-native";
 import Text from "@/components/common/Text";
-export default function CreateChallengeStep2() {
+import Button from "@/components/common/Button";
+import { InputBar, TextAreaInputBar } from "@/components/common/InputBar";
+import { TextInput } from "react-native";
+
+interface Step2Props {
+    title: string;
+    setTitle: (title: string) => void;
+    description: string;
+    setDescription: (description: string) => void;
+    onNext: () => void;
+}
+
+export default function Step2({ title, setTitle, description, setDescription, onNext }: Step2Props) {
     return (
-        <View>
-            <Text>Create Challenge Step 2</Text>
+        <View className="flex-1">
+            <Text className="text-2xl font-bold mb-2">Add more information</Text>
+            {/* Title */}
+            <InputBar
+                value={title}
+                onChangeText={setTitle}
+                className="mb-6"
+            />
+
+            {/* Description (TextArea) */}
+            <TextAreaInputBar
+                value={description}
+                onChangeText={setDescription}
+                className="mb-6"
+            />
+
+            <View className="flex-row gap-4">
+                <Button
+                    title="Continue"
+                    onPress={onNext}
+                    disabled={!description.trim()}
+                    className="flex-1"
+                />
+            </View>
         </View>
     );
 }

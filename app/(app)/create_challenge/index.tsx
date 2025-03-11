@@ -164,10 +164,11 @@ export default function CreateChallenge() {
         )}
         {currentStep === 2 && (
           <Step2
+            title={title}
+            setTitle={setTitle}
             description={description}
             setDescription={setDescription}
-            onNext={handleNext}
-            onBack={handleBack}
+            onNext={handleNext} 
           />
         )}
         {currentStep === 3 && (
