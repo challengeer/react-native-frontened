@@ -34,7 +34,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                 <Button
                     title="Continue"
                     onPress={onNext}
-                    disabled={!description.trim()}
+                    disabled={!title.trim()}
                     className="flex-1"
                 />
             </View>
