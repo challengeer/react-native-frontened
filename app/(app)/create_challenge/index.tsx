@@ -154,7 +154,7 @@ export default function CreateChallenge() {
   return (
     <SafeAreaView className="flex-1">
       <CreateChallengeHeader currentStep={currentStep} onBack={handleBack} />
-      <ScrollView className="flex-1 px-4">
+      <View className="flex-1 px-4">
         {currentStep === 1 && (
           <Step1
             title={title}
@@ -178,7 +178,7 @@ export default function CreateChallenge() {
             error={error}
           />
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
