@@ -14,6 +14,7 @@ export default function FriendsPage() {
             const response = await api.get("/friends/list");
             return response.data;
         },
+        staleTime: 1000 * 60 * 5,
     });
 
     const handleRefresh = useCallback(() => {

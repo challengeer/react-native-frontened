@@ -30,6 +30,7 @@ export default function ChallengesPage() {
             const response = await api.get("/challenges/list");
             return response.data;
         },
+        staleTime: 1000 * 60 * 5,
     });
 
     const refresh = useCallback(() => {
