@@ -17,6 +17,7 @@ export default function CameraPage() {
     const [uri, setUri] = useState<string | null>(null);
     const [facing, setFacing] = useState<CameraType>("back");
     const [flash, setFlash] = useState<FlashMode>("off");
+    const [isUploading, setIsUploading] = useState(false);
 
     if (!permission) {
         return null;
@@ -48,6 +49,7 @@ export default function CameraPage() {
 
     const handleSubmit = async () => {
         if (!uri) return;
+        setIsUploading(true);
 
         try {
             const formData = new FormData();
@@ -69,6 +71,8 @@ export default function CameraPage() {
         } catch (error) {
             console.error('Error uploading file:', error);
             // Handle error appropriately
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -103,6 +107,8 @@ export default function CameraPage() {
                         <Button
                             title="Submit photo"
                             size="lg"
+                            loading={isUploading}
+                            disabled={isUploading}
                             onPress={handleSubmit}
                         />
                     </View>
