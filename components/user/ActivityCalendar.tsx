@@ -99,7 +99,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             </View>
 
             {weeks.map((week, weekIndex) => (
-                <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
+                <View key={weekIndex} className="flex-row justify-between mb-1.5 gap-1.5">
                     {week.map((day, dayIndex) => (
                         <View
                             key={dayIndex}
@@ -108,7 +108,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                                 ${day === null ? 'opacity-0' : ''}`}
                         >
                             {day !== null && (
-                                <Text className={`text-base ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
+                                <Text className={`text-lg ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                     {day}
                                 </Text>
                             )}
