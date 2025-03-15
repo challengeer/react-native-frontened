@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export default function Header({ leftSection, title, rightSection }: HeaderProps) {
     return (
-        <View className="relative flex-row items-center justify-between gap-2 px-4 h-20">
+        <View className="relative flex-row items-center justify-between gap-2 px-4 h-16">
             <Text className="absolute inset-x-0 text-center text-xl font-bold">{title}</Text>
             <View>{leftSection}</View>
             <View>{rightSection}</View>
