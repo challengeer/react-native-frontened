@@ -1,10 +1,9 @@
+import i18n from "@/i18n";
 import { View } from "react-native";
-import Text from "@/components/common/Text";
 import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
 import { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import i18n from "@/i18n";
-import IconCircle from "../common/IconCircle";
+import Text from "@/components/common/Text";
+import IconCircle from "@/components/common/IconCircle";
 
 interface ActivityCalendarProps {
     selectedDates?: string[];
@@ -25,6 +24,8 @@ const TRANSLATIONS = {
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
+
+    console.log(selectedDates);
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -74,8 +75,23 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const isSelected = (day: number | null) => {
         if (!day) return false;
-        const currentDateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
+        // Create date at midnight in local timezone
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        // Adjust for local timezone offset
+        const offset = date.getTimezoneOffset();
+        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+        const currentDateStr = localDate.toISOString().split('T')[0];
         return selectedDates.some(date => date.split('T')[0] === currentDateStr);
+    };
+
+    const isToday = (day: number | null) => {
+        if (!day) return false;
+        const today = new Date();
+        return (
+            today.getDate() === day &&
+            today.getMonth() === currentDate.getMonth() &&
+            today.getFullYear() === currentDate.getFullYear()
+        );
     };
 
     const weeks = getDaysInMonth(currentDate);
@@ -99,14 +115,17 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             </View>
 
             {weeks.map((week, weekIndex) => (
-                <View key={weekIndex} className="flex-row justify-between mb-1.5 gap-1.5">
+                <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
                     {week.map((day, dayIndex) => (
                         <View
                             key={dayIndex}
-                            className={`aspect-square flex-1 rounded-lg items-center justify-center
-                                ${isSelected(day) ? 'bg-purple-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                            className={`aspect-square flex-1 rounded-lg items-center justify-center relative
+                                ${isSelected(day) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
                                 ${day === null ? 'opacity-0' : ''}`}
                         >
+                            {isToday(day) && (
+                                <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                            )}
                             {day !== null && (
                                 <Text className={`text-lg ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                     {day}
