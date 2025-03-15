@@ -25,8 +25,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
 
-    console.log(selectedDates);
-
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
         const month = date.getMonth();
