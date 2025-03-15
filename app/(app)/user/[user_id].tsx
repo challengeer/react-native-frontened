@@ -21,6 +21,8 @@ import ActivityCalendar from "@/components/user/ActivityCalendar"
 interface UserProfile extends UserInterface {
     request_id?: string;
     friendship_status: FriendshipStatus;
+    total_challenges_completed: number;
+    challenge_completion_dates: string[];
 }
 
 export default function UserPage() {
@@ -35,22 +37,6 @@ export default function UserPage() {
             return response.data;
         },
     });
-
-    // Sample selected dates - replace with real data from your API
-    const selectedDates = [
-        "2025-03-01",
-        "2025-03-02",
-        "2025-03-03",
-        "2025-03-12",
-        "2025-03-13",
-        "2025-03-14",
-        "2025-03-16",
-        "2025-03-17",
-        "2025-03-18",
-        "2025-03-19",
-        "2025-03-20",
-        "2025-03-21",
-    ];
 
     return (
         <SafeAreaView className="flex-1">
@@ -165,7 +151,7 @@ export default function UserPage() {
                             <View className="flex-row items-center gap-2 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
                                 <Text className="text-2xl">🎯</Text>
                                 <View className="flex-col">
-                                    <Text className="text-xl font-bold">10</Text>
+                                    <Text className="text-xl font-bold">{data.total_challenges_completed}</Text>
                                     <Text type="secondary" className="text-base">{i18n.t("user.totalChallenges")}</Text>
                                 </View>
                             </View>
@@ -173,7 +159,7 @@ export default function UserPage() {
 
                         <Text className="text-2xl font-bold mt-6">{i18n.t("user.activity")}</Text>
                         <ActivityCalendar
-                            selectedDates={selectedDates}
+                            selectedDates={data.challenge_completion_dates}
                         />
                     </>
                 )}

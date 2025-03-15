@@ -74,8 +74,8 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const isSelected = (day: number | null) => {
         if (!day) return false;
-        const dateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
-        return selectedDates.includes(dateStr);
+        const currentDateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
+        return selectedDates.some(date => date.split('T')[0] === currentDateStr);
     };
 
     const weeks = getDaysInMonth(currentDate);
