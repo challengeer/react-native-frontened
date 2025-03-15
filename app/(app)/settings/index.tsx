@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
-// import * as Application from "expo-application";
+import * as Application from "expo-application";
 import React, { useCallback } from "react";
 import { useAuth } from "@/components/context/AuthProvider";
 import { router } from "expo-router";
@@ -145,8 +145,7 @@ export default function SettingsPage() {
                 {/* VERSION */}
                 <View className="my-4 items-center justify-center">
                     <Text type="secondary" className="text-sm">
-                        {i18n.t("settings.version")}
-                        {/* {i18n.t("settings.version", { version: Application.nativeApplicationVersion })} */}
+                        {i18n.t("settings.version", { version: Application.nativeApplicationVersion })}
                     </Text>
                     <Text type="secondary" className="text-sm">
                         {i18n.t("settings.location")}
