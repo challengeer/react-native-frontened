@@ -7,8 +7,12 @@ import UserItem from "@/components/common/UserItem";
 import Text from "@/components/common/Text";
 import api from "@/lib/api";
 
+interface Friend extends UserInterface {
+    mutual_streak: number;
+}
+
 export default function FriendsPage() {
-    const { data: friends, isPending, error, refetch } = useQuery({
+    const { data: friends, isPending, error, refetch } = useQuery<Friend[]>({
         queryKey: ["friends"],
         queryFn: async () => {
             const response = await api.get("/friends/list");
@@ -42,7 +46,7 @@ export default function FriendsPage() {
                 ) : (
                     <>
                         {
-                            friends.map((user: UserInterface, index: number) => (
+                            friends.map((user, index) => (
                                 <UserItem
                                     key={user.user_id}
                                     index={index}
@@ -51,7 +55,7 @@ export default function FriendsPage() {
                                     username={user.username}
                                     profilePicture={user.profile_picture}
                                     rightSection={
-                                        <Text>{Math.floor(Math.random() * 10)}🔥</Text>
+                                        <Text>{user.mutual_streak}🔥</Text>
                                     }
                                 />
                             ))
