@@ -1,10 +1,10 @@
-import { View, Pressable } from "react-native";
+import { View, Pressable, GestureResponderEvent } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from "expo-router";
 import Text from "@/components/common/Text";
 
 interface ChallengeAvatarProps {
-    challengeId?: string;
+    challengeId: string;
     emoji: string;
     hasNewSubmissions?: boolean;
     isInvitation?: boolean;
@@ -33,10 +33,22 @@ export default function ChallengeAvatar({
         }
     };
 
+    const handlePress = (event: GestureResponderEvent) => {
+        if (isInvitation) return;
+        router.push({
+            pathname: "/(app)/submission/[challenge_id]",
+            params: {
+                challenge_id: challengeId,
+                x: event.nativeEvent.pageX.toString(),
+                y: event.nativeEvent.pageY.toString()
+            }
+        });
+    };
+
     const EmojiView = (
         <Pressable
             className={`items-center justify-center ${sizeClasses[size].gapPadding} rounded-full bg-white dark:bg-neutral-900`}
-            onPress={isInvitation ? null : () => router.push(`/(app)/submission/${challengeId}`)}
+            onPress={handlePress}
         >
             <View className={`${sizeClasses[size].container} items-center justify-center rounded-full bg-white dark:bg-neutral-800`}>
                 <Text className={`text-white font-medium leading-loose ${sizeClasses[size].text}`}>{emoji}</Text>

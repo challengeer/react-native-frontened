@@ -15,7 +15,7 @@ export default function SubmissionPage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const { data, isPending, isError } = useQuery({
+    const { data, isPending } = useQuery({
         queryKey: ['submissions', challenge_id],
         queryFn: async () => {
             try {
@@ -31,7 +31,7 @@ export default function SubmissionPage() {
                 return response.data;
             } catch (error) {
                 await ExpoImage.prefetch(`https://picsum.photos/seed/${challenge_id}/100/150`);
-                throw error;
+                return [];
             }
         },
         retry: false,
@@ -66,7 +66,7 @@ export default function SubmissionPage() {
         );
     }
 
-    if (isError) {
+    if (data?.length === 0) {
         return (
             <View className="flex-1 relative">
                 <ExpoImage
