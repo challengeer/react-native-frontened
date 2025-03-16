@@ -29,6 +29,11 @@
         "placeholder": "Hľadať",
         "cancel": "Zrušiť"
     },
+    "networkErrorContainer": {
+        "title": "Pripojenie zlyhalo",
+        "description": "Skontrolujte svoje pripojenie k internetu a skúste znova.",
+        "button": "Opakovať"
+    },
     "friends": {
         "header": "Priatelia",
         "contacts": "Kontakty",

@@ -18,6 +18,11 @@
         "placeholder": "Search",
         "cancel": "Cancel"
     },
+    "networkErrorContainer": {
+        "title": "Connection failed",
+        "description": "Check your internet connection and try again.",
+        "button": "Retry"
+    },
     "register": {
         "header": "Create account",
         "nameLabel": "What's your name?",

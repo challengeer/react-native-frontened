@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
@@ -52,7 +52,11 @@ export default function Username() {
                 }
             />
 
-            <View className="flex-1 px-4 pb-4 justify-between">
+            <KeyboardAvoidingView
+                behavior="padding"
+                className="flex-1 px-4 justify-between"
+                keyboardVerticalOffset={16}
+            >
                 <UsernameInput
                     description={i18n.t("settings.account.username.description")}
                     value={username}
@@ -67,7 +71,7 @@ export default function Username() {
                     loading={isLoading}
                     onPress={handleSubmit}
                 />
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }   
