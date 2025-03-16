@@ -11,6 +11,7 @@ export function useChallengeActions() {
         onMutate: async (invitationId) => {
             await queryClient.cancelQueries({ queryKey: ['challenges'] });
             const previousChallenges = queryClient.getQueryData(['challenges']);
+            const previousChallenge = queryClient.getQueryData(['challenge']);
             
             queryClient.setQueryData(['challenges'], (old: any) => {
                 if (!old) return old;
@@ -30,15 +31,20 @@ export function useChallengeActions() {
                     challenges: [...(old.challenges || []), acceptedInvite]
                 };
             });
+
+            queryClient.setQueryData(['challenge'], (old: any) => 
+                old ? { ...old, user_status: "participant" } : old
+            );
             
-            return { previousChallenges };
+            return { previousChallenges, previousChallenge };
         },
         onError: (err, invitationId, context) => {
             queryClient.setQueryData(['challenges'], context?.previousChallenges);
+            queryClient.setQueryData(['challenge'], context?.previousChallenge);
         },
-        // Only invalidate friend-related queries since the request was accepted
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['challenges'] });
+            queryClient.invalidateQueries({ queryKey: ['challenge'] });
         },
     });
 
@@ -49,7 +55,7 @@ export function useChallengeActions() {
         onMutate: async (invitationId) => {
             await queryClient.cancelQueries({ queryKey: ['challenges'] });
             const previousChallenges = queryClient.getQueryData(['challenges']);
-            
+
             queryClient.setQueryData(['challenges'], (old: any) => {
                 if (!old) return old;
                 return {
@@ -63,7 +69,6 @@ export function useChallengeActions() {
         onError: (err, invitationId, context) => {
             queryClient.setQueryData(['challenges'], context?.previousChallenges);
         },
-        // Only invalidate friend requests since we're just removing one
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['challenges'] });
         },
