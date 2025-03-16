@@ -11,6 +11,7 @@ import UserItem from "@/components/common/UserItem";
 import SearchBar from "@/components/common/SearchBar";
 import Text from "@/components/common/Text";
 import FriendActionButton from "@/components/common/FriendActionButton";
+import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 
 interface SearchResult extends UserInterface {
     request_id?: string;
@@ -29,17 +30,20 @@ export default function FriendSearch() {
     const searchInputRef = useRef<TextInput>(null);
 
     useEffect(() => {
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             searchInputRef.current?.focus();
         }, 100);
+
+        return () => clearTimeout(timeout);
     }, []);
 
-    const { data: searchResults, isPending, error } = useQuery<SearchResults>({
+    const { data: searchResults, isPending, isError, refetch } = useQuery<SearchResults>({
         queryKey: ["user-search", searchQuery],
         queryFn: async () => {
             const response = await api.get(`/user/search?q=${encodeURIComponent(searchQuery)}`);
             return response.data;
         },
+        staleTime: 1000 * 60 * 5,
     });
 
     const handleSearch = (query: string) => {
@@ -64,9 +68,9 @@ export default function FriendSearch() {
             </View>
 
             {isPending ? (
-                <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
-            ) : error ? (
-                <Text className="p-4">Error</Text>
+                <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
+            ) : isError ? (
+                <NetworkErrorContainer onRetry={refetch} />
             ) : (
                 <ScrollView
                     overScrollMode="never"
