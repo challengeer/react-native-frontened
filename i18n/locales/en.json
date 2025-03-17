@@ -73,6 +73,12 @@
             "description": "{{display_name}} invited you to join this challenge"
         }
     },
+    "challenge_settings": {
+        "name": {
+            "header": "Name",
+            "description": "Max 30 characters"
+        }
+    },
     "user": {
         "header": "Profile",
         "streak": "Streak",

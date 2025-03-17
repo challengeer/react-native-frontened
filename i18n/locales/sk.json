@@ -69,6 +69,12 @@
             "description": "{{display_name}} vás pozval do tejto výzvy"
         }
     },
+    "challenge_settings": {
+        "name": {
+            "header": "Názov",
+            "description": "Max 30 znakov"
+        }
+    },
     "buttons": {
         "save": "Uložiť",
         "logout": "Odhlásiť sa"

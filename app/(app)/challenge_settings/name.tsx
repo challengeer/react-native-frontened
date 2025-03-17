@@ -1,9 +1,50 @@
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import Text from "@/components/common/Text";
+import Header from "@/components/common/Header";
+import i18n from "@/i18n";
+import IconCircle from "@/components/common/IconCircle";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { router } from "expo-router";
+import { InputBar } from "@/components/common/InputBar";
+import Button from "@/components/common/Button";
+import { useState } from "react";
+
 export default function Name() {
+    const [name, setName] = useState("");
+    const [isValidName, setIsValidName] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        setIsLoading(true);
+    }
+
     return (
-        <View>
-            <Text>Name</Text>
-        </View>
+        <SafeAreaView className="flex-1">
+            <Header
+                title={i18n.t("challenge_settings.name.header")}
+                leftSection={
+                    <IconCircle
+                        icon={ArrowLeftIcon}
+                        onPress={() => router.back()}
+                    />
+                }
+            />
+
+            <View className="flex-1 px-4 pb-4 justify-between">
+                <InputBar
+                    value={name}
+                    onChangeText={setName}
+                    description={i18n.t("challenge_settings.name.description")}
+                    autoFocus
+                />
+                <Button
+                    title={i18n.t("buttons.save")}
+                    size="lg"
+                    disabled={!isValidName || isLoading}
+                    loading={isLoading}
+                    onPress={handleSubmit}
+                />
+            </View>
+        </SafeAreaView>
     )
 }
