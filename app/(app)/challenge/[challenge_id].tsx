@@ -15,6 +15,7 @@ import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserItem from "@/components/common/UserItem";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
+import { useAuth } from "@/components/context/AuthProvider";
 
 interface ChallengeDetail extends Challenge {
     user_status: "participant" | "invited" | "submitted";
@@ -24,6 +25,7 @@ interface ChallengeDetail extends Challenge {
 export default function ChallengePage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const { acceptInvite, rejectInvite } = useChallengeActions();
+    const { user } = useAuth();
 
     const { data: challenge, isPending, isError, refetch } = useQuery<ChallengeDetail>({
         queryKey: ["challenge", challenge_id],
@@ -44,10 +46,12 @@ export default function ChallengePage() {
                     />
                 }
                 rightSection={
-                    <IconCircle
-                        icon={Cog8ToothIcon}
-                        onPress={() => router.push(`/(app)/challenge_settings?challenge_id=${challenge_id}`)}
-                    />
+                    challenge && user?.user_id === challenge.creator.user_id && (
+                        <IconCircle
+                            icon={Cog8ToothIcon}
+                            onPress={() => router.push(`/(app)/challenge_settings?challenge_id=${challenge_id}`)}
+                        />
+                    )
                 }
             />
 
