@@ -3,7 +3,7 @@ import { View, Pressable, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Image as ExpoImage } from "expo-image";
 import { useCallback, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, ArrowLeftIcon } from "react-native-heroicons/outline";
 import Avatar from "@/components/common/Avatar";
@@ -14,6 +14,7 @@ import Button from "@/components/common/Button";
 export default function SubmissionPage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const queryClient = useQueryClient();
 
     const { data, isPending } = useQuery({
         queryKey: ['submissions', challenge_id],
@@ -27,6 +28,9 @@ export default function SubmissionPage() {
                         ExpoImage.prefetch(submission.photo_url)
                     )
                 );
+
+                await queryClient.invalidateQueries({ queryKey: ["challenges"] });
+                await queryClient.invalidateQueries({ queryKey: ["challenge", challenge_id] });
 
                 return response.data;
             } catch (error) {
