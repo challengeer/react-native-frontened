@@ -52,7 +52,7 @@ export default function FriendSearch() {
 
     return (
         <SafeAreaView className="flex-1">
-            <View className="px-4 h-20 w-full flex-row items-center gap-4">
+            <View className="px-4 h-16 w-full flex-row items-center gap-4">
                 <SearchBar
                     onSearch={handleSearch}
                     inputRef={searchInputRef}
