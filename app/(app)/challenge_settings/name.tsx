@@ -1,13 +1,12 @@
-import { SafeAreaView, View } from "react-native";
-import Text from "@/components/common/Text";
-import Header from "@/components/common/Header";
 import i18n from "@/i18n";
-import IconCircle from "@/components/common/IconCircle";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { router } from "expo-router";
+import { useState } from "react";
+import { SafeAreaView, View } from "react-native";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { InputBar } from "@/components/common/InputBar";
 import Button from "@/components/common/Button";
-import { useState } from "react";
+import Header from "@/components/common/Header";
+import IconCircle from "@/components/common/IconCircle";
 
 export default function Name() {
     const [name, setName] = useState("");
