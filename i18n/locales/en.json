@@ -77,6 +77,10 @@
         "name": {
             "header": "Name",
             "description": "Max 30 characters"
+        },
+        "description": {
+            "header": "Description",
+            "description": "Max 500 characters"
         }
     },
     "user": {

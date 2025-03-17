@@ -73,6 +73,10 @@
         "name": {
             "header": "Názov",
             "description": "Max 30 znakov"
+        },
+        "description": {
+            "header": "Popis",
+            "description": "Max 500 znakov"
         }
     },
     "buttons": {
