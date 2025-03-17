@@ -1,12 +1,11 @@
+import { router } from "expo-router";
 import { View, ScrollView, SafeAreaView } from "react-native";
-import Text from "@/components/common/Text";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import SettingsItem from "@/components/settings/SettingsItem";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { router } from "expo-router";
-export default function ChallengeSettings() {
 
+export default function ChallengeSettings() {
     const settingsItems = [
         {
             title: "Name",
@@ -21,6 +20,7 @@ export default function ChallengeSettings() {
             onPress: () => router.push("/challenge_settings/participants"),
         },
     ]
+
     return (
         <SafeAreaView className="flex-1">
             <Header title="Challenge Settings" leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />} />
