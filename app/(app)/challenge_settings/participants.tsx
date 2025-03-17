@@ -33,7 +33,7 @@ export default function Participants() {
     return (
         <SafeAreaView className="flex-1">
             <Header
-                title={i18n.t("challenges.participants")}
+                title={i18n.t("challenge_settings.participants.header")}
                 leftSection={
                     <IconCircle
                         icon={ArrowLeftIcon}

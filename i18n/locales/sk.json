@@ -74,13 +74,20 @@
         }
     },
     "challenge_settings": {
+        "header": "Nastavenia výzvy",
         "name": {
+            "title": "Názov",
             "header": "Názov",
             "description": "Max 30 znakov"
         },
         "description": {
+            "title": "Popis",
             "header": "Popis",
             "description": "Max 500 znakov"
+        },
+        "participants": {
+            "title": "Účastníci",
+            "header": "Účastníci"
         }
     },
     "buttons": {
