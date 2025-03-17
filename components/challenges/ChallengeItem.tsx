@@ -1,6 +1,7 @@
 import i18n from "@/i18n";
 import { View, Pressable } from "react-native";
 import { router } from "expo-router";
+import { getTimeLeft } from "@/utils/timeUtils";
 import Text from "@/components/common/Text";
 import ChallengeActionButton from "@/components/challenges/ChallengeActionButton";
 import Avatar from "@/components/common/Avatar";
@@ -62,7 +63,7 @@ export default function ChallengeItem({
 
                 <View className="flex-1">
                     <Text className="text-lg font-medium line-clamp-1">{title}</Text>
-                    <Text type="secondary" className="text-base">{category} &middot; {formattedEndDate}</Text>
+                    <Text type="secondary" className="text-base">{category} &middot; {getTimeLeft(endDate)}</Text>
                 </View>
 
                 {invitationId && <ChallengeActionButton invitationId={invitationId} />}

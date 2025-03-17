@@ -4,6 +4,10 @@
         "challenges": "Výzvy",
         "friends": "Priatelia"
     },
+    "time": {
+        "left": "zostáva {{time}}",
+        "ago": "pred {{time}}"
+    },
     "register": {
         "header": "Vytvoriť účet",
         "nameLabel": "Ako sa voláš?",

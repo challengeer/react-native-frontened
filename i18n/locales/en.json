@@ -8,6 +8,10 @@
         "save": "Save",
         "logout": "Log out"
     },
+    "time": {
+        "left": "{{time}} left",
+        "ago": "{{time}} ago"
+    },
     "friendActionButton": {
         "add": "Add",
         "added": "Added",

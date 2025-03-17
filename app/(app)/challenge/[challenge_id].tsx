@@ -7,6 +7,8 @@ import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, X
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
+import { getTimeLeft } from "@/utils/timeUtils";
+import { useAuth } from "@/components/context/AuthProvider";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
@@ -15,7 +17,6 @@ import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserItem from "@/components/common/UserItem";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
-import { useAuth } from "@/components/context/AuthProvider";
 
 interface ChallengeDetail extends Challenge {
     user_status: "participant" | "invited" | "submitted";
@@ -92,7 +93,7 @@ export default function ChallengePage() {
                             </View>
                             <View className="flex-row items-center gap-2">
                                 <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" />
-                                <Text type="secondary" className="text-base">{challenge?.end_date}</Text>
+                                <Text type="secondary" className="text-base">{getTimeLeft(challenge?.end_date)}</Text>
                             </View>
                         </View>
 

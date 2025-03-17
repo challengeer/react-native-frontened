@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, ArrowLeftIcon } from "react-native-heroicons/outline";
+import { getTimeAgo } from "@/utils/timeUtils";
 import Avatar from "@/components/common/Avatar";
 import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
@@ -156,12 +157,12 @@ export default function SubmissionPage() {
                                 name={currentSubmission?.user?.display_name || "User"}
                             />
 
-                            <View>
+                            <View className="flex-row items-center gap-2">
                                 <Text className="leading-tight font-medium">
                                     {currentSubmission?.user?.display_name || "User"}
                                 </Text>
                                 <Text className="leading-tight text-base opacity-80">
-                                    {currentSubmission?.submitted_at}
+                                    {getTimeAgo(currentSubmission?.submitted_at)}
                                 </Text>
                             </View>
                         </Pressable>
