@@ -54,6 +54,7 @@
     "challenges": {
         "header": "Výzvy",
         "participants": "Účastníci",
+        "creator": "Tvorca výzvy",
         "buttons": {
             "join": "Pridať sa",
             "ignore": "Ignorovať"

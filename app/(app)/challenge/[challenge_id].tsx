@@ -1,9 +1,9 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
-import React, { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
+import React, { ActivityIndicator, RefreshControl, ScrollView, View, Text as RNText } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeftIcon, ClockIcon, TrophyIcon, Cog8ToothIcon } from "react-native-heroicons/outline";
+import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, TrophyIcon, XCircleIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
@@ -41,12 +41,6 @@ export default function ChallengePage() {
                     <IconCircle
                         icon={ArrowLeftIcon}
                         onPress={() => router.back()}
-                    />
-                }
-                rightSection={
-                    <IconCircle
-                        icon={Cog8ToothIcon}
-                        onPress={() => router.push(`/challenge_settings`)} /* No idea why there is an error*/
                     />
                 }
             />
@@ -119,20 +113,55 @@ export default function ChallengePage() {
                         )}
                     </View>
 
-                    <Text className="px-4 pt-6 pb-2 text-lg font-bold">{i18n.t("challenges.participants")}</Text>
-                    {[challenge?.creator, ...(challenge?.participants || [])].map((participant, index) => (
-                        <UserItem
-                            key={participant.user_id}
-                            index={index}
-                            userId={participant.user_id}
-                            displayName={participant.display_name}
-                            username={participant.username}
-                            profilePicture={participant.profile_picture}
-                            rightSection={
-                                <Text type="secondary" className="text-sm">{participant.has_submitted ? "Submitted" : "Not submitted"}</Text>
-                            }
-                        />
-                    ))}
+                    <Text className="px-4 pt-6 pb-2 text-lg font-bold">{i18n.t("challenges.creator")}</Text>
+                    <UserItem
+                        key={challenge?.creator.user_id}
+                        index={0}
+                        userId={challenge?.creator.user_id}
+                        title={challenge?.creator.display_name}
+                        subtitle={
+                            <View className="flex-row items-center gap-1">
+                                {challenge?.creator.has_submitted ? (
+                                    <Icon icon={CheckCircleIcon} size={20} strokeWidth={1.5} lightColor="#737373" darkColor="#a3a3a3" />
+                                ) : (
+                                    <Icon icon={ClockIcon} size={20} strokeWidth={1.5} lightColor="#737373" darkColor="#a3a3a3" />
+                                )}
+                                <Text type="secondary" className="text-base">
+                                    {challenge?.creator.has_submitted ? "Completed" : "Waiting for submission"}
+                                </Text>
+                            </View>
+                        }
+                        name={challenge?.creator.display_name}
+                        profilePicture={challenge?.creator.profile_picture}
+                    />
+
+                    {challenge?.participants?.length > 0 && (
+                        <>
+                            <Text className="px-4 pt-6 pb-2 text-lg font-bold">{i18n.t("challenges.participants")}</Text>
+                            {[...challenge.participants].map((participant, index) => (
+                                <UserItem
+                                    key={participant.user_id}
+                                    index={index}
+                                    userId={participant.user_id}
+                                    title={participant.display_name}
+                                    subtitle={
+                                        <View className="flex-row items-center gap-1">
+                                            {participant.has_submitted ? (
+                                                <Icon icon={CheckCircleIcon} size={20} strokeWidth={1.5} lightColor="#737373" darkColor="#a3a3a3" />
+                                            ) : (
+                                                <Icon icon={ClockIcon} size={20} strokeWidth={1.5} lightColor="#737373" darkColor="#a3a3a3" />
+                                            )}
+                                            <Text type="secondary" className="text-base">
+                                                {participant.has_submitted ? "Completed" : "Waiting for submission"}
+                                            </Text>
+                                        </View>
+                                    }
+                                    name={participant.display_name}
+                                    profilePicture={participant.profile_picture}
+                                />
+                            ))}
+                        </>
+                    )}
                 </ScrollView>
             )}
         </SafeAreaView>

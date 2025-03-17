@@ -84,8 +84,9 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
                         <UserItem
                             key={friend.user_id}
                             userId={friend.user_id}
-                            displayName={friend.display_name}
-                            username={friend.username}
+                            title={friend.display_name}
+                            subtitle={`@${friend.username}`}
+                            name={friend.display_name}
                             profilePicture={friend.profile_picture}
                             rightSection={
                                 <Button

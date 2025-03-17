@@ -58,6 +58,7 @@
     "challenges": {
         "header": "Challenges",
         "participants": "Participants",
+        "creator": "Creator",
         "buttons": {
             "join": "Join",
             "ignore": "Ignore"

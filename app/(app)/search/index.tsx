@@ -86,8 +86,9 @@ export default function FriendSearch() {
                                         key={user.user_id}
                                         index={index}
                                         userId={user.user_id}
-                                        displayName={user.display_name}
-                                        username={user.username}
+                                        title={user.display_name}
+                                        subtitle={`@${user.username}`}
+                                        name={user.display_name}
                                         profilePicture={user.profile_picture}
                                         rightSection={
                                             <FriendActionButton
@@ -109,8 +110,9 @@ export default function FriendSearch() {
                                         key={user.user_id}
                                         index={index}
                                         userId={user.user_id}
-                                        displayName={user.display_name}
-                                        username={user.username}
+                                        title={user.display_name}
+                                        subtitle={`@${user.username}`}
+                                        name={user.display_name}
                                         profilePicture={user.profile_picture}
                                         rightSection={
                                             <FriendActionButton
@@ -132,8 +134,9 @@ export default function FriendSearch() {
                                         key={user.user_id}
                                         index={index}
                                         userId={user.user_id}
-                                        displayName={user.display_name}
-                                        username={user.username}
+                                        title={user.display_name}
+                                        subtitle={`@${user.username}`}
+                                        name={user.display_name}
                                         profilePicture={user.profile_picture}
                                         rightSection={
                                             <FriendActionButton
@@ -155,8 +158,9 @@ export default function FriendSearch() {
                                         key={user.user_id}
                                         index={index}
                                         userId={user.user_id}
-                                        displayName={user.display_name}
-                                        username={user.username}
+                                        title={user.display_name}
+                                        subtitle={`@${user.username}`}
+                                        name={user.display_name}
                                         profilePicture={user.profile_picture}
                                         rightSection={
                                             <FriendActionButton
