@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { router, useLocalSearchParams } from "expo-router";
 import { View, ScrollView, SafeAreaView } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
@@ -21,22 +22,22 @@ export default function ChallengeSettings() {
 
     const settingsItems = [
         {
-            title: "Name",
+            title: i18n.t("challenge_settings.name.title"),
             onPress: () => router.push(`/challenge_settings/name?challenge_id=${challenge_id}`),
         },
         {
-            title: "Description",
+            title: i18n.t("challenge_settings.description.title"),
             onPress: () => router.push(`/challenge_settings/description?challenge_id=${challenge_id}`),
         },
         {
-            title: "Participants",
+            title: i18n.t("challenge_settings.participants.title"),
             onPress: () => router.push(`/challenge_settings/participants?challenge_id=${challenge_id}`),
         },
     ]
 
     return (
         <SafeAreaView className="flex-1">
-            <Header title="Challenge Settings" leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />} />
+            <Header title={i18n.t("challenge_settings.header")} leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />} />
             <ScrollView className="px-4">
                 <View className="mb-4">
                     {settingsItems.map((item, index) => (

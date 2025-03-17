@@ -74,13 +74,20 @@
         }
     },
     "challenge_settings": {
+        "header": "Challenge Settings",
         "name": {
+            "title": "Name",
             "header": "Name",
             "description": "Max 30 characters"
         },
         "description": {
+            "title": "Description",
             "header": "Description",
             "description": "Max 500 characters"
+        },
+        "participants": {
+            "title": "Participants",
+            "header": "Participants"
         }
     },
     "user": {
