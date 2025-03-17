@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import React, { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeftIcon, ClockIcon, TrophyIcon } from "react-native-heroicons/outline";
+import { ArrowLeftIcon, ClockIcon, TrophyIcon, Cog8ToothIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
@@ -41,6 +41,12 @@ export default function ChallengePage() {
                     <IconCircle
                         icon={ArrowLeftIcon}
                         onPress={() => router.back()}
+                    />
+                }
+                rightSection={
+                    <IconCircle
+                        icon={Cog8ToothIcon}
+                        onPress={() => router.push(`/challenge_settings`)} /* No idea why there is an error*/
                     />
                 }
             />
