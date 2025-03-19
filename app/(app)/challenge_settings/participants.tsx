@@ -4,7 +4,7 @@ import { View, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router, Redirect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/outline";
 import { Challenge } from "@/types/Challenge";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
@@ -40,6 +40,7 @@ export default function Participants() {
                         onPress={() => router.back()}
                     />
                 }
+                rightSection={<IconCircle icon={PlusIcon} onPress={() => router.push(`/challenge_settings/participants?challenge_id=${challenge_id}`)} />}
             />
 
             {isPending ? (
