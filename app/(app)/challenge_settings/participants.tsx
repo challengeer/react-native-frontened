@@ -1,7 +1,7 @@
 import React from "react";
 import i18n from "@/i18n";
 import api from "@/lib/api";
-import { View, ScrollView, ActivityIndicator } from "react-native";
+import { View, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useLocalSearchParams, router, Redirect } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +17,7 @@ import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRef, useCallback } from "react";
 import Button from "@/components/common/Button";
 import { useColorScheme } from "nativewind";
+import ParticipantItem from "@/components/challenge_settings/ParticipantItem";
 
 export default function Participants() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
@@ -55,6 +56,7 @@ export default function Participants() {
         },
     });
 
+
     const [selectedFriends, setSelectedFriends] = React.useState<string[]>([]);
 
     const handleModalOpen = useCallback(() => {
@@ -72,6 +74,10 @@ export default function Participants() {
                 ? prev.filter(id => id !== userId)
                 : [...prev, userId]
         );
+    };
+
+    const handleRemoveParticipant = (participantId: string) => {
+       
     };
 
     // If the current user is not the creator, redirect back
@@ -100,7 +106,7 @@ export default function Participants() {
                 <ScrollView className="flex-1">
                     {challenge?.participants && challenge.participants.length > 0 ? (
                         challenge.participants.map((participant, index) => (
-                            <UserItem
+                            <ParticipantItem
                                 key={participant.user_id}
                                 index={index}
                                 userId={participant.user_id}
@@ -114,11 +120,7 @@ export default function Participants() {
                                 }
                                 name={participant.display_name}
                                 profilePicture={participant.profile_picture}
-                                rightSection={
-                                    <View className="bg-neutral-50 dark:bg-neutral-800 px-3 py-1 rounded-full">
-                                        <Text type="secondary" className="text-sm">Added</Text>
-                                    </View>
-                                }
+                                onRemove={() => handleRemoveParticipant(participant.user_id)}
                             />
                         ))
                     ) : (
