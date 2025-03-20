@@ -1,15 +1,23 @@
 import i18n from "@/i18n";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { SafeAreaView, View } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { TextAreaInputBar } from "@/components/common/InputBar";
+import { useQuery } from "@tanstack/react-query";
+import { Challenge } from "@/types/Challenge";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";
 
 export default function Description() {
-    const [description, setDescription] = useState("");
+    const { challenge_id } = useLocalSearchParams();
+
+    const { data: challenge } = useQuery<Challenge>({
+        queryKey: ['challenge', challenge_id],
+    });
+
+    const [description, setDescription] = useState(challenge?.description ?? "");
     const [isValidDescription, setIsValidDescription] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
