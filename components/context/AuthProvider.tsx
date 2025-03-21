@@ -1,10 +1,11 @@
+import api from '@/lib/api';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { UserPrivateInterface } from '@/types/UserInterface';
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { getFCMToken } from '@/lib/notifications';
 import * as SecureStore from 'expo-secure-store';
-import api from '@/lib/api';
 
 // Configure GoogleSignin
 GoogleSignin.configure({
@@ -52,7 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 throw new Error('No ID token received');
             }
 
-            const result = await api.post('/auth/google', { token: idToken });
+            // Get FCM token
+            const fcmToken = await getFCMToken();
+
+            // Send both tokens to the backend
+            const result = await api.post('/auth/google', { 
+                token: idToken,
+                fcm_token: fcmToken 
+            });
 
             if (result.status !== 200) {
                 throw new Error(result.data.detail || 'Authentication failed');
