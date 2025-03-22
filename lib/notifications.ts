@@ -1,23 +1,26 @@
-import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
+import { getMessaging, getToken, onMessage, AuthorizationStatus } from '@react-native-firebase/messaging';
+import * as Notifications from 'expo-notifications';
 
-export async function registerForPushNotificationsAsync() {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+const requestUserPermission = async () => {
+    const messaging = getMessaging();
+    const authStatus = await messaging.requestPermission();
+    const enabled =
+        authStatus === AuthorizationStatus.AUTHORIZED ||
+        authStatus === AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+        console.log("Authorization status:", authStatus);
     }
-    if (finalStatus !== 'granted') {
-        alert('Failed to get push token!');
-        return;
-    }
-}
+
+    return enabled;
+};
 
 export async function getFCMToken() {
     try {
-        await registerForPushNotificationsAsync();
-        const fcmToken = (await Notifications.getExpoPushTokenAsync()).data;
+        await requestUserPermission();
+        const messaging = getMessaging();
+        const fcmToken = await getToken(messaging);
         return fcmToken;
     } catch (error) {
         console.log('Error getting FCM token:', error);
@@ -34,9 +37,16 @@ export function setupNotificationHandlers() {
         }),
     });
 
+    const messaging = getMessaging();
+    
+    onMessage(messaging, async (remoteMessage) => {
+        console.log('Received foreground message:', remoteMessage);
+        console.log('Notification data:', remoteMessage.data);
+    });
+
     // Handle notification taps
-    Notifications.addNotificationResponseReceivedListener((response: Notifications.NotificationResponse) => {
-        const data = response.notification.request.content.data;
+    messaging.onNotificationOpenedApp((message) => {
+        const data = message.notification?.data;
 
         switch (data.type) {
             case 'challenge_invite':
