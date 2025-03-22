@@ -9,6 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.challengeer.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
@@ -16,6 +18,7 @@
     },
     "android": {
       "package": "com.challengeer.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -44,7 +47,8 @@
         }
       ],
       "@react-native-google-signin/google-signin",
-      "expo-notifications"
+      "expo-notifications",
+      "@react-native-firebase/app"
     ],
     "experiments": {
       "typedRoutes": true

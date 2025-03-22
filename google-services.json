@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344827725651",
+    "project_id": "challengeer-b486c",
+    "storage_bucket": "challengeer-b486c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344827725651:android:64a92376284cec4ac3c3a6",
+        "android_client_info": {
+          "package_name": "com.challengeer.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUgLJ6ocdn8eCYKSxWHb6x4gMgF1FkwBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
