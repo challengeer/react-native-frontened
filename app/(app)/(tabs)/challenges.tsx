@@ -79,9 +79,9 @@ export default function ChallengesPage() {
 
                     {data.challenges?.map((challenge, index) => (
                         <ChallengeItem
+                            key={challenge.challenge_id}
                             index={index}
                             challengeId={challenge.challenge_id}
-                            key={challenge.title}
                             title={challenge.title}
                             emoji={challenge.emoji}
                             category={challenge.category}
@@ -96,9 +96,9 @@ export default function ChallengesPage() {
 
                             {data.invitations.map((invite, index) => (
                                 <ChallengeItem
+                                    key={invite.challenge_id}
                                     index={index}
                                     challengeId={invite.challenge_id}
-                                    key={invite.title}
                                     title={invite.title}
                                     emoji={invite.emoji}
                                     category={invite.category}
