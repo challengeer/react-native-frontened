@@ -72,6 +72,12 @@
             "description": "Life's more exciting with goals! Set up a new challenge and start making progress today.",
             "button": "Create Challenge"
         },
+        "owned": {
+            "title": "Owned by me"
+        },
+        "participating": {
+            "title": "Participating in"
+        },
         "invitations": {
             "title": "Invitations",
             "description": "{{display_name}} invited you to join this challenge"

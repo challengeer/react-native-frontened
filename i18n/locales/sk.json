@@ -68,6 +68,12 @@
             "description": "Život je zábavnejší s cieľmi! Nastavte novú výzvu a začnite robiť pokrok dnes.",
             "button": "Vytvoriť výzvu"
         },
+        "owned": {
+            "title": "Vlastnené mnou"
+        },
+        "participating": {
+            "title": "Som účastníkom"
+        },
         "invitations": {
             "title": "Pozvánky",
             "description": "{{display_name}} vás pozval do tejto výzvy"

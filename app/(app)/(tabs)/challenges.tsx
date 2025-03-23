@@ -20,7 +20,8 @@ interface Invitation extends ChallengeSimple {
 }
 
 interface ChallengesResponse {
-    challenges: ChallengeSimple[];
+    owned_challenges: ChallengeSimple[];
+    participating_challenges: ChallengeSimple[];
     invitations: Invitation[];
 }
 
@@ -57,7 +58,7 @@ export default function ChallengesPage() {
                         />
                     }
                 >
-                    {data.challenges?.length === 0 && (
+                    {data.owned_challenges.length === 0 && data.participating_challenges.length === 0 && (
                         <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl">
                             <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noChallenges.title")}</Text>
                             <Text type="secondary" className="text-base mb-6">
@@ -77,18 +78,42 @@ export default function ChallengesPage() {
                         </View>
                     )}
 
-                    {data.challenges?.map((challenge, index) => (
-                        <ChallengeItem
-                            key={challenge.challenge_id}
-                            index={index}
-                            challengeId={challenge.challenge_id}
-                            title={challenge.title}
-                            emoji={challenge.emoji}
-                            category={challenge.category}
-                            endDate={challenge.end_date}
-                            hasNewSubmissions={challenge.has_new_submissions}
-                        />
-                    ))}
+                    {data.owned_challenges.length > 0 && (
+                        <View>
+                            <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.owned.title")}</Text>
+
+                            {data.owned_challenges.map((challenge, index) => (
+                                <ChallengeItem
+                                    key={challenge.challenge_id}
+                                    index={index}
+                                    challengeId={challenge.challenge_id}
+                                    title={challenge.title}
+                                    emoji={challenge.emoji}
+                                    category={challenge.category}
+                                    endDate={challenge.end_date}
+                                    hasNewSubmissions={challenge.has_new_submissions}
+                                />
+                            ))}
+                        </View>
+                    )}
+
+                    {data.participating_challenges.length > 0 && (
+                        <View>
+                            <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.participating.title")}</Text>
+
+                            {data.participating_challenges.map((challenge, index) => (
+                                <ChallengeItem
+                                    key={challenge.challenge_id}
+                                    index={index}
+                                    challengeId={challenge.challenge_id}
+                                    title={challenge.title}
+                                    emoji={challenge.emoji}
+                                    category={challenge.category}
+                                    endDate={challenge.end_date}
+                                />
+                            ))}
+                        </View>
+                    )}
 
                     {data.invitations?.length > 0 && (
                         <View>
