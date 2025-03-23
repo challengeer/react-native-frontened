@@ -1,11 +1,12 @@
 import i18n from "@/i18n";
-import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { InputBar } from "@/components/common/InputBar";
 import { useQuery } from "@tanstack/react-query";
 import { Challenge } from "@/types/Challenge";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "@/components/common/Button";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";

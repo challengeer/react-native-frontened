@@ -1,7 +1,7 @@
 import React from "react";
 import i18n from "@/i18n";
 import api from "@/lib/api";
-import { View, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { View, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router, Redirect } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";

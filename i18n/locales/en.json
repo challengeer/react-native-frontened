@@ -92,6 +92,9 @@
         "participants": {
             "title": "Participants",
             "header": "Participants"
+        },
+        "delete": {
+            "title": "Delete challenge"
         }
     },
     "user": {

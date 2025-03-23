@@ -88,6 +88,9 @@
         "participants": {
             "title": "Účastníci",
             "header": "Účastníci"
+        },
+        "delete": {
+            "title": "Vymazať výzvu"
         }
     },
     "buttons": {

@@ -50,7 +50,7 @@ export default function ChallengeAvatar({
             className={`items-center justify-center ${sizeClasses[size].gapPadding} rounded-full bg-white dark:bg-neutral-900`}
             onPress={handlePress}
         >
-            <View className={`${sizeClasses[size].container} items-center justify-center rounded-full bg-white dark:bg-neutral-800`}>
+            <View className={`${sizeClasses[size].container} items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800`}>
                 <Text className={`text-white font-medium leading-loose ${sizeClasses[size].text}`}>{emoji}</Text>
             </View>
         </Pressable>

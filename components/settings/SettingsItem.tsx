@@ -27,11 +27,11 @@ export default function SettingsItem({
             onPress={onPress}
             className={`
                 ${className}
-                ${itemIndex === 0 ? "rounded-t-lg" : ""}
-                ${itemIndex === totalItems - 1 ? "rounded-b-lg border-b-0" : "border-b"}
+                ${itemIndex === 0 ? "rounded-t-lg" : "border-t"}
+                ${itemIndex === totalItems - 1 && "rounded-b-lg"}
                 bg-neutral-100 dark:bg-neutral-800
                 items-center flex-row justify-between p-4
-                border-neutral-200 dark:border-neutral-700
+                border-white dark:border-neutral-900
             `.trim()}
         >
             {typeof title === "string" ? <Text className="font-medium">{title}</Text> : title}

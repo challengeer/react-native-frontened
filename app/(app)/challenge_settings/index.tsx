@@ -1,9 +1,10 @@
 import i18n from "@/i18n";
 import { router, useLocalSearchParams } from "expo-router";
-import { View, ScrollView, SafeAreaView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
 import { Challenge } from "@/types/Challenge";
+import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/api";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
@@ -51,6 +52,14 @@ export default function ChallengeSettings() {
                         />
                     ))}
                 </View>
+
+                <SettingsItem
+                    itemIndex={0}
+                    totalItems={1}
+                    title={i18n.t("challenge_settings.delete.title")}
+                    onPress={() => {}}
+                    showArrow
+                />
             </ScrollView>
         </SafeAreaView>
     )
