@@ -88,6 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const logout = async () => {
         try {
             await GoogleSignin.signOut();
+            const fcmToken = await getFCMToken();
+            await api.post('/auth/logout', { fcm_token: fcmToken });
             await SecureStore.deleteItemAsync('access_token');
             await SecureStore.deleteItemAsync('refresh_token');
             setUser(null);
