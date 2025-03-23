@@ -5,6 +5,7 @@ import { AppearanceContext } from "@/components/context/AppearanceProvider";
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from "nativewind";
 import { setupNotificationHandlers } from "@/lib/notifications";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Keep the splash screen visible while we fetch the resources
 SplashScreen.preventAutoHideAsync();
@@ -15,10 +16,11 @@ export default function AppLayout() {
     const backgroundColor = colorScheme === "dark" ? "#171717" : "white";
     // used to re-render the app when the language changes
     const { language } = useContext(AppearanceContext);
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (isAuthenticated) {
-            setupNotificationHandlers();
+            setupNotificationHandlers(queryClient);
         }
     }, [isAuthenticated]);
 
