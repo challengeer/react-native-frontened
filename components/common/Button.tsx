@@ -31,17 +31,17 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
 
     const sizeStyles = {
         sm: {
-            container: "py-1.5 px-2.5",
+            container: "py-1.5 px-2.5 gap-1.5",
             text: "font-medium text-base",
             activityIndicator: "small",
         },
         md: {
-            container: "py-3 px-4",
+            container: "py-3 px-4 gap-2",
             text: "font-bold text-lg",
             activityIndicator: 28,
         },
         lg: {
-            container: "py-5 px-8",
+            container: "py-5 px-8 gap-3",
             text: "font-bold text-xl",
             activityIndicator: "large",
         }
@@ -54,7 +54,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
                 ${disabled && "opacity-20"}
                 ${sizeStyles[size].container}
                 ${variantStyles[variant].button}
-                flex-row items-center gap-1.5 justify-center rounded-full
+                flex-row items-center justify-center rounded-full
                 ${className}
             `}
             {...props}
