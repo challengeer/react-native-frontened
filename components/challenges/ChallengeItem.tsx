@@ -3,7 +3,6 @@ import { View, Pressable } from "react-native";
 import { router } from "expo-router";
 import { getTimeLeft } from "@/utils/timeUtils";
 import Text from "@/components/common/Text";
-import ChallengeActionButton from "@/components/challenges/ChallengeActionButton";
 import Avatar from "@/components/common/Avatar";
 import ChallengeAvatar from "@/components/challenges/ChallengeAvatar";
 import UserInterface from "@/types/UserInterface";
@@ -17,7 +16,7 @@ interface ChallengesItemProps {
     endDate: string;
     hasNewSubmissions?: boolean;
     sender?: UserInterface;
-    invitationId?: string;
+    rightSection?: React.ReactNode;
 }
 
 export default function ChallengeItem({
@@ -29,12 +28,10 @@ export default function ChallengeItem({
     endDate,
     hasNewSubmissions = false,
     sender,
-    invitationId
+    rightSection
 }: ChallengesItemProps) {
-    const formattedEndDate = `${Math.ceil((new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60))} hours left`
-
     return (
-        <View className={`px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
+        <View className={`px-4 py-2 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
             {sender && (
                 <Pressable className="flex-row items-center gap-2 mb-2" onPress={() => router.push(`/(app)/user/${sender.user_id}`)}>
                     <Avatar
@@ -57,7 +54,6 @@ export default function ChallengeItem({
                     challengeId={challengeId}
                     emoji={emoji}
                     hasNewSubmissions={hasNewSubmissions}
-                    isInvitation={invitationId !== undefined}
                     size="md"
                 />
 
@@ -66,7 +62,7 @@ export default function ChallengeItem({
                     <Text type="secondary" className="text-base">{category} &middot; {getTimeLeft(endDate)}</Text>
                 </View>
 
-                {invitationId && <ChallengeActionButton invitationId={invitationId} />}
+                {rightSection}
             </Pressable>
         </View>
     )

@@ -8,7 +8,7 @@ export default function ChallengeActionButton({ invitationId }: { invitationId: 
     const { acceptInvite, rejectInvite } = useChallengeActions();
 
     return (
-        <View className="flex-row items-center gap-2">
+        <View className="flex-row items-center gap-3">
             <Button
                 size="sm"
                 variant="primary"
@@ -17,7 +17,8 @@ export default function ChallengeActionButton({ invitationId }: { invitationId: 
             />
             <Icon
                 icon={XMarkIcon}
-                onPress={() => invitationId && rejectInvite.mutate(invitationId)}
+                variant="secondary"
+                onPress={() => console.log("reject invite")}
             />
         </View>
     )

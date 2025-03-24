@@ -13,6 +13,8 @@ import UserInterface from "@/types/UserInterface";
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
+import ChallengeRightSection from "@/components/challenges/ChallengeRightSection";
+import ChallengeInviteRightSection from "@/components/challenges/ChallengeInviteRightSection";
 
 interface Invitation extends ChallengeSimple {
     sender: UserInterface;
@@ -92,6 +94,9 @@ export default function ChallengesPage() {
                                     category={challenge.category}
                                     endDate={challenge.end_date}
                                     hasNewSubmissions={challenge.has_new_submissions}
+                                    rightSection={
+                                        <ChallengeRightSection challengeId={challenge.challenge_id} />
+                                    }
                                 />
                             ))}
                         </View>
@@ -110,6 +115,9 @@ export default function ChallengesPage() {
                                     emoji={challenge.emoji}
                                     category={challenge.category}
                                     endDate={challenge.end_date}
+                                    rightSection={
+                                        <ChallengeRightSection challengeId={challenge.challenge_id} />
+                                    }
                                 />
                             ))}
                         </View>
@@ -129,7 +137,9 @@ export default function ChallengesPage() {
                                     category={invite.category}
                                     endDate={invite.end_date}
                                     sender={invite.sender}
-                                    invitationId={invite.invitation_id}
+                                    rightSection={
+                                        <ChallengeInviteRightSection invitationId={invite.invitation_id} />
+                                    }
                                 />
                             ))}
                         </View>
