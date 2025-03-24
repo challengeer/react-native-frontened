@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
 import { useState } from "react";
-import { View } from "react-native";
+import { Platform, KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { TextAreaInputBar } from "@/components/common/InputBar";
@@ -28,32 +28,37 @@ export default function Description() {
 
     return (
         <SafeAreaView className="flex-1">
-            <Header
-                title={i18n.t("challenge_settings.description.header")}
-                leftSection={
-                    <IconCircle
-                        icon={ArrowLeftIcon}
-                        onPress={() => router.back()}
-                    />
-                }
-            />
+            <KeyboardAvoidingView
+                behavior="padding"
+                className="flex-1"
+            >
+                <Header
+                    title={i18n.t("challenge_settings.description.header")}
+                    leftSection={
+                        <IconCircle
+                            icon={ArrowLeftIcon}
+                            onPress={() => router.back()}
+                        />
+                    }
+                />
 
-            <View className="flex-1 px-4 pb-4 justify-between">
-                <TextAreaInputBar
-                    value={description}
-                    onChangeText={setDescription}
-                    description={i18n.t("challenge_settings.description.description")}
-                    maxLength={500}
-                    autoFocus
-                />
-                <Button
-                    title={i18n.t("buttons.save")}
-                    size="lg"
-                    disabled={!isValidDescription || isLoading}
-                    loading={isLoading}
-                    onPress={handleSubmit}
-                />
-            </View>
+                <View className="flex-1 px-4 pb-4 justify-between">
+                    <TextAreaInputBar
+                        value={description}
+                        onChangeText={setDescription}
+                        description={i18n.t("challenge_settings.description.description")}
+                        maxLength={500}
+                        autoFocus
+                    />
+                    <Button
+                        title={i18n.t("buttons.save")}
+                        size="lg"
+                        disabled={!isValidDescription || isLoading}
+                        loading={isLoading}
+                        onPress={handleSubmit}
+                    />
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
