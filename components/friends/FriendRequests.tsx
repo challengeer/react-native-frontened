@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View, ActivityIndicator } from 'react-native'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
 import { useQuery } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ import IconCircle from '@/components/common/IconCircle';
 import Header from '@/components/common/Header';
 import Text from '@/components/common/Text';
 import UserItem from '@/components/common/UserItem';
-import FriendActionButton from '../common/FriendActionButton';
+import FriendActionButton from '@/components/common/FriendActionButton';
 
 interface FriendRequest extends UserInterface {
     request_id: string;
@@ -21,6 +22,7 @@ interface FriendRequest extends UserInterface {
 export default function FriendRequests() {
     const { colorScheme } = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
+    const insets = useSafeAreaInsets();
 
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ["100%"], []);
@@ -67,6 +69,7 @@ export default function FriendRequests() {
                 handleComponent={() => (
                     <Header
                         title={i18n.t("friends.friendRequests")}
+                        style={{ marginTop: insets.top }}
                         leftSection={
                             <IconCircle
                                 icon={XMarkIcon}
@@ -80,6 +83,7 @@ export default function FriendRequests() {
                     className="flex-1"
                     overScrollMode="never"
                     showsVerticalScrollIndicator={false}
+                    style={{ paddingBottom: insets.bottom }}
                 >
                     {isPending ? (
                         <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
@@ -92,8 +96,9 @@ export default function FriendRequests() {
                                     key={friendRequest.request_id}
                                     index={index}
                                     userId={friendRequest.user_id}
-                                    displayName={friendRequest.display_name}
-                                    username={friendRequest.username}
+                                    title={friendRequest.display_name}
+                                    subtitle={`@${friendRequest.username}`}
+                                    name={friendRequest.display_name}
                                     profilePicture={friendRequest.profile_picture}
                                     rightSection={
                                         <FriendActionButton
