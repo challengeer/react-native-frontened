@@ -39,7 +39,7 @@ export default function AppLayout() {
             key={language}
             screenOptions={{
                 headerShown: false,
-                animation: "none",
+                animation: "ios_from_right",
                 contentStyle: { backgroundColor }
             }}
         />

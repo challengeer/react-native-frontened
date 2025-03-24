@@ -88,7 +88,8 @@ export default function SubmissionLayout() {
                     presentation: "transparentModal",
                     contentStyle: {
                         backgroundColor: "transparent",
-                    }
+                    },
+                    animation: "none",
                 }}
             />
             <GestureDetector gesture={panGesture}>
