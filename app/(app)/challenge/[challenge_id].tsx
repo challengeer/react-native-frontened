@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import React, { ActivityIndicator, RefreshControl, ScrollView, View, Text as RNText } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, XCircleIcon } from "react-native-heroicons/outline";
+import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, CameraIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
@@ -131,6 +131,7 @@ export default function ChallengePage() {
                         {challenge?.user_status === "participant" ? (
                             <Button
                                 title="Add submission"
+                                leftSection={<Icon icon={CameraIcon} />}
                                 onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
                             />
                         ) : challenge?.user_status === "invited" ? (
