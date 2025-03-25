@@ -7,7 +7,7 @@ import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, X
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
-import { getTimeLeft } from "@/utils/timeUtils";
+import { getDetailedTimeLeft } from "@/utils/timeUtils";
 import { useAuth } from "@/components/context/AuthProvider";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
@@ -17,6 +17,7 @@ import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserItem from "@/components/common/UserItem";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
+import { useEffect, useState } from "react";
 
 interface ChallengeDetail extends Challenge {
     user_status: "participant" | "invited" | "submitted";
@@ -27,6 +28,7 @@ export default function ChallengePage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
     const { acceptInvite, rejectInvite } = useChallengeActions();
     const { user } = useAuth();
+    const [countdown, setCountdown] = useState("00:00:00");
 
     const { data: challenge, isPending, isError, refetch } = useQuery<ChallengeDetail>({
         queryKey: ["challenge", challenge_id],
@@ -35,6 +37,18 @@ export default function ChallengePage() {
             return response.data;
         }
     });
+
+    useEffect(() => {
+        if (!challenge?.end_date) return;
+
+        const timer = setInterval(() => {
+            setCountdown(getDetailedTimeLeft(challenge.end_date));
+        }, 1000);
+
+        setCountdown(getDetailedTimeLeft(challenge.end_date));
+
+        return () => clearInterval(timer);
+    }, [challenge?.end_date]);
 
     return (
         <SafeAreaView className="flex-1">
@@ -82,11 +96,11 @@ export default function ChallengePage() {
 
                             <Text className="mt-2 text-2xl font-bold">{challenge?.title}</Text>
                             {challenge?.description &&
-                                <Text type="secondary" className="mt-1">{challenge?.description}</Text>
+                                <Text type="secondary" className="mt-1 text-base text-center">{challenge?.description}</Text>
                             }
                         </View>
 
-                        <View className="gap-2">
+                        {/* <View className="gap-2">
                             <View className="flex-row items-center gap-2">
                                 <Icon icon={TrophyIcon} lightColor="#737373" darkColor="#a3a3a3" />
                                 <Text type="secondary" className="text-base">{challenge?.category}</Text>
@@ -94,6 +108,23 @@ export default function ChallengePage() {
                             <View className="flex-row items-center gap-2">
                                 <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" />
                                 <Text type="secondary" className="text-base">{getTimeLeft(challenge?.end_date)}</Text>
+                            </View>
+                        </View> */}
+
+                        <View className="items-center gap-2">
+                            <View className="w-full flex-row items-center gap-4 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
+                                <Icon icon={TrophyIcon} />
+                                <View className="flex-col">
+                                    <Text className="font-medium">{challenge?.category}</Text>
+                                    <Text type="secondary" className="text-base">Category</Text>
+                                </View>
+                            </View>
+                            <View className="w-full flex-row items-center gap-4 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
+                                <Icon icon={ClockIcon} />
+                                <View className="flex-col">
+                                    <Text className="font-medium">{countdown}</Text>
+                                    <Text type="secondary" className="text-base">Time left</Text>
+                                </View>
                             </View>
                         </View>
 

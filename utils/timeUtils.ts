@@ -51,3 +51,25 @@ export const getTimeAgo = (timestamp: string): string => {
   return `${days}d`;
 };
 
+export const getDetailedTimeLeft = (timestamp: string): string => {
+  const now = new Date().getTime();
+  const future = new Date(timestamp).getTime();
+  const diff = future - now;
+
+  // If time has passed, return "00:00:00"
+  if (diff < 0) {
+    return "00:00:00";
+  }
+
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+
+  // Pad with zeros to maintain consistent format
+  const paddedHours = hours.toString().padStart(2, '0');
+  const paddedMinutes = minutes.toString().padStart(2, '0');
+  const paddedSeconds = seconds.toString().padStart(2, '0');
+
+  return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+};
+
