@@ -12,7 +12,7 @@ export default function CreateChallenge() {
   const [currentStep, setCurrentStep] = useState(1);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<{name: string, emoji: string} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,8 +39,8 @@ export default function CreateChallenge() {
       const response = await api.post("/challenges/create", {
         title,
         description,
-        emoji: "🏃‍♂️",
-        category: selectedCategory,
+        emoji: selectedCategory?.emoji,
+        category: selectedCategory?.name,
       });
       return response.data.challenge_id;
     } catch (err) {
@@ -55,7 +55,7 @@ export default function CreateChallenge() {
   return (
     <SafeAreaView className="flex-1">
       <CreateChallengeHeader currentStep={currentStep} onBack={handleBack} />
-      <View className="flex-1 px-4">
+      <View className="flex-1">
         {currentStep === 1 && (
           <Step1
             selectedCategory={selectedCategory}

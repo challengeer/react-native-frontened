@@ -1,55 +1,60 @@
-import { View, TouchableOpacity, ScrollView } from "react-native";
+import React, { View, ScrollView, Pressable } from "react-native";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
 import RadioButton from "@/components/settings/RadioButton";
 
-import { useState } from "react";
-
 interface Step1Props {
-    selectedCategory: string | null;
-    setSelectedCategory: (category: string | null) => void;
+    selectedCategory: { name: string, emoji: string } | null;
+    setSelectedCategory: (category: { name: string, emoji: string }) => void;
     onNext: () => void;
 }
 
 export default function Step1({ selectedCategory, setSelectedCategory, onNext }: Step1Props) {
     const categories = [
-        { id: "1", name: "Bodyweight Workouts", emoji: "💪" },
-        { id: "2", name: "HIIT (High-Intensity Interval Training)", emoji: "🔥" },
-        { id: "3", name: "Core & Abs", emoji: "🏋️‍♂️" },
+        { name: "Bodyweight Workouts", emoji: "💪" },
+        { name: "HIIT (High-Intensity Interval Training)", emoji: "🔥" },
+        { name: "Core & Abs", emoji: "🏋️‍♂️" },
+        { name: "Yoga", emoji: "🧘‍♂️" },
+        { name: "Strength Training", emoji: "💪" },
+        { name: "Endurance", emoji: "🏃‍♂️" },
+        { name: "Cardio", emoji: "🏃‍♂️" },
+        { name: "Flexibility", emoji: "🤸‍♂️" },
+        { name: "Balance", emoji: "🧠" },
     ];
 
     return (
-        <View className="flex-1 mt-6">
-            <Text className="text-2xl font-bold mb-2">Select sports category</Text>
+        <>
+            <Text className="text-2xl font-bold px-4 mb-4 mt-6">Select sports category</Text>
+
             <ScrollView className="flex-1">
-                {categories.map((category) => (
-                    <TouchableOpacity
-                        key={category.id}
-                        className="border-b border-neutral-200 dark:border-neutral-700 py-4 items-center flex-row gap-2"
-                        onPress={() => setSelectedCategory(category.id)}
+                {categories.map((category, index) => (
+                    <Pressable
+                        key={category.name}
+                        className={`border-b border-neutral-100 dark:border-neutral-800 py-4 px-4 items-center flex-row gap-4 ${index === 0 && "border-t"}`}
+                        onPress={() => setSelectedCategory(category)}
                     >
-                        <View className="flex-row items-center justify-between w-full">
-                            <View className="flex-row items-center gap-2">
-                                <Text>{category.emoji}</Text>
-                                <Text>{category.name}</Text>
-                            </View>
-                            <RadioButton
-                                selected={selectedCategory === category.id}
-                                onPress={() => setSelectedCategory(category.id)}
-                            />
+                        <View className="flex-1 flex-row items-center gap-2">
+                            <Text className="text-2xl">{category.emoji}</Text>
+                            <Text className="text-lg text-ellipsis">{category.name}</Text>
                         </View>
-                    </TouchableOpacity>
+                        <RadioButton
+                            selected={selectedCategory?.name === category.name}
+                            onPress={() => setSelectedCategory(category)}
+                        />
+                    </Pressable>
                 ))}
             </ScrollView>
 
 
-            <Button
-                title="Continue"
-                onPress={onNext}
-                disabled={!selectedCategory}
-                className="mb-4"
-            />
-        </View>
+            <View className="p-4">
+                <Button
+                    size="lg"
+                    title="Continue"
+                    onPress={onNext}
+                    disabled={!selectedCategory}
+                />
+            </View>
+        </>
     );
 }
 

@@ -66,11 +66,8 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
     };
 
     return (
-        <View className="flex-1 mt-6">
-            <Text className="text-2xl font-bold mb-2">Invite friends</Text>
-            <Text className="text-base text-neutral-500 mb-6">
-                Choose friends to join your challenge
-            </Text>
+        <View className="flex-1">
+            <Text className="text-2xl font-bold px-4 mb-4 mt-6">Invite friends</Text>
 
             {(error || localError) && (
                 <Text className="text-red-500 mb-4">{error || localError}</Text>
@@ -80,9 +77,10 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
                 {isPending ? (
                     <Text>Loading friends...</Text>
                 ) : (
-                    friends?.map((friend: any) => (
+                    friends?.map((friend: any, index: number) => (
                         <UserItem
                             key={friend.user_id}
+                            index={index}
                             userId={friend.user_id}
                             title={friend.display_name}
                             subtitle={`@${friend.username}`}
@@ -101,12 +99,12 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
                 )}
             </ScrollView>
 
-            <View className="flex-row gap-4 mt-4">
+            <View className="p-4">
                 <Button
+                    size="lg"
                     title={isLoading || inviting ? "Creating..." : "Create Challenge"}
                     onPress={handleSubmit}
                     disabled={isLoading || inviting || selectedFriends.length === 0}
-                    className="flex-1 mb-4"
                 />
             </View>
         </View>
