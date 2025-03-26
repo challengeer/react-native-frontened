@@ -18,7 +18,7 @@ export default function ChallengeActionButton({ invitationId }: { invitationId: 
             <Icon
                 icon={XMarkIcon}
                 variant="secondary"
-                onPress={() => console.log("reject invite")}
+                onPress={() => invitationId && rejectInvite.mutate(invitationId)}
             />
         </View>
     )
