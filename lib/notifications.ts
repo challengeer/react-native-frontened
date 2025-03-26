@@ -45,6 +45,11 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
                 queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
                 break;
 
+            case 'challenge_accept':
+                queryClient.invalidateQueries({ queryKey: ['challenges'] });
+                queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
+                break;
+
             case 'challenge_submission':
                 queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
                 queryClient.invalidateQueries({ queryKey: ['submissions', data.challenge_id] });
@@ -56,11 +61,7 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
                 break;
 
             case 'friend_request':
-                try {
-                    queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
-                } catch (error) {
-                    console.log('Error invalidating friend requests:', error);
-                }
+                queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
                 break;
 
             case 'friend_accept':
@@ -76,6 +77,10 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
         const data = remoteMessage.data;
         switch (data?.type) {
             case 'challenge_invite':
+                router.push(`/(app)/challenge/${data.challenge_id}`);
+                break;
+
+            case 'challenge_accept':
                 router.push(`/(app)/challenge/${data.challenge_id}`);
                 break;
 
