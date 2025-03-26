@@ -10,7 +10,7 @@ export default function ChallengeRightSection({ challengeId }: { challengeId: st
             <Icon
                 icon={CameraIcon}
                 variant="secondary"
-                onPress={() => router.push(`/(app)/camera?challengeId=${challengeId}`)}
+                onPress={() => router.push(`/(app)/camera?challenge_id=${challengeId}`)}
             />
         </View>
     )
