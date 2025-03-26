@@ -2,8 +2,7 @@ import i18n from "@/i18n";
 import { router, useLocalSearchParams } from "expo-router";
 import { View, ScrollView } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { useQuery } from "@tanstack/react-query";
-import { Challenge } from "@/types/Challenge";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/api";
 import Header from "@/components/common/Header";
@@ -12,14 +11,7 @@ import SettingsItem from "@/components/settings/SettingsItem";
 
 export default function ChallengeSettings() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
-
-    const { data: challenge } = useQuery<Challenge>({
-        queryKey: ["challenge", challenge_id],
-        queryFn: async () => {
-            const response = await api.get(`/challenges/${challenge_id}`);
-            return response.data;
-        }
-    });
+    const queryClient = useQueryClient();
 
     const settingsItems = [
         {
@@ -35,6 +27,19 @@ export default function ChallengeSettings() {
             onPress: () => router.push(`/challenge_settings/participants?challenge_id=${challenge_id}`),
         },
     ]
+
+    const deleteChallenge = useMutation({
+        mutationFn: async () => {
+            await api.delete(`/challenges/${challenge_id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['challenges'] });
+            router.replace("/(app)/(tabs)/challenges");
+        },
+        onError: (error) => {
+            console.error(error);
+        },
+    });
 
     return (
         <SafeAreaView className="flex-1">
@@ -57,7 +62,7 @@ export default function ChallengeSettings() {
                     itemIndex={0}
                     totalItems={1}
                     title={i18n.t("challenge_settings.delete.title")}
-                    onPress={() => {}}
+                    onPress={() => deleteChallenge.mutate()}
                     showArrow
                 />
             </ScrollView>

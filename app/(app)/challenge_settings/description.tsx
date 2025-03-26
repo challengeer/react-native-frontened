@@ -1,10 +1,11 @@
+import api from "@/lib/api";
 import i18n from "@/i18n";
 import { useState } from "react";
-import { Platform, KeyboardAvoidingView, View } from "react-native";
+import { KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { TextAreaInputBar } from "@/components/common/InputBar";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Challenge } from "@/types/Challenge";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/common/Header";
@@ -13,18 +14,24 @@ import Button from "@/components/common/Button";
 
 export default function Description() {
     const { challenge_id } = useLocalSearchParams();
-
-    const { data: challenge } = useQuery<Challenge>({
-        queryKey: ['challenge', challenge_id],
-    });
-
+    const queryClient = useQueryClient();
+    const challenge = queryClient.getQueryData<Challenge>(['challenge', challenge_id]);
     const [description, setDescription] = useState(challenge?.description ?? "");
-    const [isValidDescription, setIsValidDescription] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleSubmit = async () => {
-        setIsLoading(true);
-    }
+    
+    const mutation = useMutation({
+        mutationFn: async () => {
+            await api.put(`/challenges/${challenge_id}/description`, {
+                description: description,
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['challenge', challenge_id] });
+            router.back();
+        },
+        onError: (error) => {
+            console.error(error);
+        },
+    });
 
     return (
         <SafeAreaView className="flex-1">
@@ -53,9 +60,9 @@ export default function Description() {
                     <Button
                         title={i18n.t("buttons.save")}
                         size="lg"
-                        disabled={!isValidDescription || isLoading}
-                        loading={isLoading}
-                        onPress={handleSubmit}
+                        disabled={challenge?.description === description || mutation.isPending}
+                        loading={mutation.isPending}
+                        onPress={() => mutation.mutate()}
                     />
                 </View>
             </KeyboardAvoidingView>

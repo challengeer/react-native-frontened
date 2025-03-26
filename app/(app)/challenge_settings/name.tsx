@@ -4,27 +4,35 @@ import { KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { InputBar } from "@/components/common/InputBar";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Challenge } from "@/types/Challenge";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "@/components/common/Button";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
+import api from "@/lib/api";
 
 export default function Name() {
     const { challenge_id } = useLocalSearchParams();
+    const queryClient = useQueryClient();
+    const challenge = queryClient.getQueryData<Challenge>(['challenge', challenge_id]);
+    const [name, setName] = useState(challenge?.title ?? "");
 
-    const { data: challenge } = useQuery<Challenge>({
-        queryKey: ['challenge', challenge_id],
+    const handleSubmit = useMutation({
+        mutationFn: async () => {
+            await api.put(`/challenges/${challenge_id}/title`, {
+                title: name,
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['challenge', challenge_id] });
+            queryClient.invalidateQueries({ queryKey: ['challenges'] });
+            router.back();
+        },
+        onError: (error) => {
+            console.error(error);
+        },
     });
-
-    const initialName = challenge?.title ?? "";
-    const [name, setName] = useState(initialName);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleSubmit = async () => {
-        setIsLoading(true);
-    }
 
     return (
         <SafeAreaView className="flex-1">
@@ -52,9 +60,9 @@ export default function Name() {
                     <Button
                         title={i18n.t("buttons.save")}
                         size="lg"
-                        disabled={name === initialName || isLoading}
-                        loading={isLoading}
-                        onPress={handleSubmit}
+                        disabled={name === challenge?.title || handleSubmit.isPending}
+                        loading={handleSubmit.isPending}
+                        onPress={() => handleSubmit.mutate()}
                     />
                 </View>
             </KeyboardAvoidingView>
