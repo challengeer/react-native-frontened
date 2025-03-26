@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useQueryClient } from "@tanstack/react-query";
 import CreateChallengeHeader from "@/components/create_challenge/CreateChallengeHeader";
 import Step1 from "./step1";
 import Step2 from "./step2";
@@ -15,7 +16,7 @@ export default function CreateChallenge() {
   const [selectedCategory, setSelectedCategory] = useState<{name: string, emoji: string} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const queryClient = useQueryClient();
 
   const handleNext = () => {
     if (currentStep < 3) {
@@ -42,6 +43,7 @@ export default function CreateChallenge() {
         emoji: selectedCategory?.emoji,
         category: selectedCategory?.name,
       });
+      queryClient.invalidateQueries({ queryKey: ['challenges'] });
       return response.data.challenge_id;
     } catch (err) {
       setError("Failed to create challenge. Please try again.");
