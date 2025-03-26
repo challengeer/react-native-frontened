@@ -115,6 +115,7 @@ export default function ChallengesPage() {
                                     emoji={challenge.emoji}
                                     category={challenge.category}
                                     endDate={challenge.end_date}
+                                    hasNewSubmissions={challenge.has_new_submissions}
                                     rightSection={
                                         <ChallengeRightSection challengeId={challenge.challenge_id} />
                                     }
@@ -137,6 +138,7 @@ export default function ChallengesPage() {
                                     category={invite.category}
                                     endDate={invite.end_date}
                                     sender={invite.sender}
+                                    hasNewSubmissions={invite.has_new_submissions}
                                     rightSection={
                                         <ChallengeInviteRightSection invitationId={invite.invitation_id} />
                                     }
