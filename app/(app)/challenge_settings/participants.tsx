@@ -11,13 +11,15 @@ import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import UserItem from "@/components/common/UserItem";
-import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import { useAuth } from "@/components/context/AuthProvider";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRef, useCallback } from "react";
 import Button from "@/components/common/Button";
 import { useColorScheme } from "nativewind";
 import ParticipantItem from "@/components/challenge_settings/ParticipantItem";
+import UserInterface from "@/types/UserInterface";
+import Checkbox from "@/components/common/Checkbox";
+import Icon from "@/components/common/Icon";
 
 export default function Participants() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
@@ -28,20 +30,14 @@ export default function Participants() {
     const insets = useSafeAreaInsets();
     const queryClient = useQueryClient();
 
-    const { data: challenge, isPending, isError, refetch } = useQuery<Challenge>({
+    const { data: challenge } = useQuery<Challenge>({
         queryKey: ["challenge", challenge_id],
-        queryFn: async () => {
-            const response = await api.get(`/challenges/${challenge_id}`);
-            return response.data;
-        }
+        enabled: !!challenge_id
     });
 
-    const { data: friends, isPending: isFriendsPending } = useQuery({
+    const { data: friends } = useQuery<UserInterface[]>({
         queryKey: ["friends"],
-        queryFn: async () => {
-            const response = await api.get("/friends/list");
-            return response.data;
-        },
+        queryFn: () => api.get("/friends/list").then(res => res.data)
     });
 
     const inviteMutation = useMutation({
@@ -56,7 +52,6 @@ export default function Participants() {
             bottomSheetRef.current?.dismiss();
         },
     });
-
 
     const [selectedFriends, setSelectedFriends] = React.useState<string[]>([]);
 
@@ -78,7 +73,7 @@ export default function Participants() {
     };
 
     const handleRemoveParticipant = (participantId: string) => {
-
+        console.log(participantId);
     };
 
     // If the current user is not the creator, redirect back
@@ -99,29 +94,21 @@ export default function Participants() {
                 rightSection={<IconCircle icon={PlusIcon} onPress={handleModalOpen} />}
             />
 
-            {isPending ? (
-                <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
-            ) : isError ? (
-                <NetworkErrorContainer onRetry={refetch} />
-            ) : (
+            {challenge ? (
                 <ScrollView className="flex-1">
                     {challenge?.participants && challenge.participants.length > 0 ? (
                         challenge.participants.map((participant, index) => (
-                            <ParticipantItem
+                            <UserItem
                                 key={participant.user_id}
                                 index={index}
                                 userId={participant.user_id}
                                 title={participant.display_name}
-                                subtitle={
-                                    <View className="flex-row items-center gap-1">
-                                        <Text type="secondary" className="text-sm">
-                                            @{participant.username}
-                                        </Text>
-                                    </View>
-                                }
+                                subtitle={`@${participant.username}`}
                                 name={participant.display_name}
                                 profilePicture={participant.profile_picture}
-                                onRemove={() => handleRemoveParticipant(participant.user_id)}
+                                rightSection={
+                                    <Icon icon={XMarkIcon} variant="secondary" onPress={() => handleRemoveParticipant(participant.user_id)} />
+                                }
                             />
                         ))
                     ) : (
@@ -130,6 +117,8 @@ export default function Participants() {
                         </View>
                     )}
                 </ScrollView>
+            ) : (
+                <ActivityIndicator className="items-center justify-center py-12" size="large" color="#a855f7" />
             )}
 
             <BottomSheetModal
@@ -151,16 +140,15 @@ export default function Participants() {
                     />
                 )}
             >
-                <BottomSheetScrollView
-                    className="flex-1"
-                    overScrollMode="never"
-                    showsVerticalScrollIndicator={false}
-                >
-                    {isFriendsPending ? (
-                        <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
-                    ) : (
-                        <>
-                            {friends?.map((friend: any, index: number) => (
+                {friends ? (
+                    <BottomSheetScrollView
+                        className="flex-1"
+                        overScrollMode="never"
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {friends
+                            ?.filter((friend) => !challenge?.participants.some(p => p.user_id === friend.user_id))
+                            .map((friend: UserInterface, index: number) => (
                                 <UserItem
                                     key={friend.user_id}
                                     index={index}
@@ -169,19 +157,18 @@ export default function Participants() {
                                     subtitle={`@${friend.username}`}
                                     name={friend.display_name}
                                     profilePicture={friend.profile_picture}
+                                    onPress={() => toggleFriendSelection(friend.user_id)}
                                     rightSection={
-                                        <Button
-                                            size="sm"
-                                            variant={selectedFriends.includes(friend.user_id) ? "primary" : "secondary"}
-                                            title={selectedFriends.includes(friend.user_id) ? "Selected" : "Select"}
-                                            onPress={() => toggleFriendSelection(friend.user_id)}
+                                        <Checkbox
+                                            checked={selectedFriends.includes(friend.user_id)}
                                         />
                                     }
                                 />
                             ))}
-                        </>
-                    )}
-                </BottomSheetScrollView>
+                    </BottomSheetScrollView>
+                ) : (
+                    <ActivityIndicator className="flex-1 items-center justify-center py-12" size="large" color="#a855f7" />
+                )}
 
                 <View className="p-4" style={{ marginBottom: insets.bottom }}>
                     <Button
