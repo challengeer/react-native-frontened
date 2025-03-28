@@ -1,11 +1,12 @@
+import api from "@/lib/api";
+import { useState } from "react";
 import { View, ScrollView } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api";
 import UserItem from "@/components/common/UserItem";
-import { useState } from "react";
-import { router } from "expo-router";
+import Checkbox from "@/components/common/Checkbox";
 
 interface Step3Props {
     onCreateChallenge: () => Promise<string | null>;
@@ -86,12 +87,10 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
                             subtitle={`@${friend.username}`}
                             name={friend.display_name}
                             profilePicture={friend.profile_picture}
+                            onPress={() => toggleFriendSelection(friend.user_id)}
                             rightSection={
-                                <Button
-                                    size="sm"
-                                    variant={selectedFriends.includes(friend.user_id) ? "primary" : "secondary"}
-                                    title={selectedFriends.includes(friend.user_id) ? "Selected" : "Select"}
-                                    onPress={() => toggleFriendSelection(friend.user_id)}
+                                <Checkbox
+                                    checked={selectedFriends.includes(friend.user_id)}
                                 />
                             }
                         />
