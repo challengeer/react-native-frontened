@@ -14,9 +14,8 @@ import UserItem from "@/components/common/UserItem";
 import { useAuth } from "@/components/context/AuthProvider";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRef, useCallback } from "react";
-import Button from "@/components/common/Button";
 import { useColorScheme } from "nativewind";
-import ParticipantItem from "@/components/challenge_settings/ParticipantItem";
+import Button from "@/components/common/Button";
 import UserInterface from "@/types/UserInterface";
 import Checkbox from "@/components/common/Checkbox";
 import Icon from "@/components/common/Icon";
@@ -53,6 +52,35 @@ export default function Participants() {
         },
     });
 
+    const removeParticipantMutation = useMutation({
+        mutationFn: async (participantId: string) => {
+            await api.post(`/challenges/remove-participant`, {
+                challenge_id: challenge_id,
+                participant_id: participantId,
+            });
+        },
+        onMutate: async (participantId) => {
+            await queryClient.cancelQueries({ queryKey: ["challenge", challenge_id] });
+            const previousChallenge = queryClient.getQueryData<Challenge>(["challenge", challenge_id]);
+            
+            queryClient.setQueryData<Challenge>(["challenge", challenge_id], (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    participants: old.participants.filter((p: any) => p.user_id !== participantId),
+                };
+            });
+            
+            return previousChallenge;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["challenge", challenge_id] });
+        },
+        onError: (error, participantId, context) => {
+            queryClient.setQueryData<Challenge>(["challenge", challenge_id], context);
+        },
+    });
+
     const [selectedFriends, setSelectedFriends] = React.useState<string[]>([]);
 
     const handleModalOpen = useCallback(() => {
@@ -70,10 +98,6 @@ export default function Participants() {
                 ? prev.filter(id => id !== userId)
                 : [...prev, userId]
         );
-    };
-
-    const handleRemoveParticipant = (participantId: string) => {
-        console.log(participantId);
     };
 
     // If the current user is not the creator, redirect back
@@ -107,7 +131,11 @@ export default function Participants() {
                                 name={participant.display_name}
                                 profilePicture={participant.profile_picture}
                                 rightSection={
-                                    <Icon icon={XMarkIcon} variant="secondary" onPress={() => handleRemoveParticipant(participant.user_id)} />
+                                    <Icon
+                                        icon={XMarkIcon}
+                                        variant="secondary"
+                                        onPress={() => removeParticipantMutation.mutate(participant.user_id)}
+                                    />
                                 }
                             />
                         ))
