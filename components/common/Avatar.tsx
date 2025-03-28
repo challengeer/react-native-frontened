@@ -1,4 +1,5 @@
-import { Image, View } from "react-native";
+import { View } from "react-native";
+import { Image } from "expo-image";
 import Text from "@/components/common/Text";
 
 interface AvatarProps {
@@ -13,15 +14,15 @@ export default function Avatar({ source, name, size = "md" }: AvatarProps) {
     const sizeClasses = {
         xs: {
             container: "w-8 h-8",
-            text: "text-sm",
+            text: "text-base",
         },
         sm: {
             container: "w-12 h-12",
-            text: "text-base",
+            text: "text-xl",
         },
         md: {
             container: "w-14 h-14",
-            text: "text-lg",
+            text: "text-2xl",
         },
         lg: {
             container: "w-32 h-32",
@@ -38,7 +39,7 @@ export default function Avatar({ source, name, size = "md" }: AvatarProps) {
             .slice(0, 2);
     };
 
-    function colorFromText(text: string) {
+    const colorFromText = (text: string) => {
         let charSum = 0;
         for (let i = 0; i < text.length; i++) {
             charSum += text.charCodeAt(i);
@@ -46,15 +47,22 @@ export default function Avatar({ source, name, size = "md" }: AvatarProps) {
         return colors[charSum % colors.length];
     }
 
+    if (source) {
+        return (
+            <View className={`${sizeClasses.container} rounded-full overflow-hidden`}>
+                <View className="bg-neutral-100 dark:bg-neutral-800 absolute inset-0"></View>
+                <Image
+                    style={{ width: "100%", height: "100%", borderRadius: 9999 }}
+                    contentFit="cover"
+                    source={{ uri: source }}
+                />
+            </View>
+        )
+    }
+
     return (
-        <>
-            {source ? (
-                <Image className={`${sizeClasses.container} rounded-full`} source={{ uri: source }} />
-            ) : (
-                <View className={`${sizeClasses.container} ${colorFromText(name)} rounded-full items-center justify-center`}>
-                    <Text className={`${sizeClasses.text} text-white font-medium`}>{getInitials(name)}</Text>
-                </View>
-            )}
-        </>
+        <View className={`${sizeClasses.container} ${colorFromText(name)} rounded-full items-center justify-center`}>
+            <Text className={`${sizeClasses.text} leading-normal text-white font-medium`}>{getInitials(name)}</Text>
+        </View>
     )
 }
