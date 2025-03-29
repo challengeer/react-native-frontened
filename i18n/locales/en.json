@@ -10,7 +10,8 @@
     },
     "time": {
         "left": "{{time}} left",
-        "ago": "{{time}} ago"
+        "ago": "{{time}} ago",
+        "ended": "Ended"
     },
     "friendActionButton": {
         "add": "Add",

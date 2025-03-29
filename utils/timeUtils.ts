@@ -6,6 +6,10 @@ export const getTimeLeft = (timestamp: string): string => {
   
   const seconds = Math.floor((future - now) / 1000);
 
+  if (seconds < 0) {
+    return i18n.t("time.ended");
+  }
+
   // Less than a minute
   if (seconds < 60) {
     return i18n.t("time.left", { time: `${seconds}s` });
@@ -58,7 +62,7 @@ export const getDetailedTimeLeft = (timestamp: string): string => {
 
   // If time has passed, return "00:00:00"
   if (diff < 0) {
-    return "00:00:00";
+    return i18n.t("time.ended");
   }
 
   const seconds = Math.floor((diff / 1000) % 60);

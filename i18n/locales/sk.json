@@ -5,8 +5,9 @@
         "friends": "Priatelia"
     },
     "time": {
-        "left": "zostáva {{time}}",
-        "ago": "pred {{time}}"
+        "left": "Zostáva {{time}}",
+        "ago": "Pred {{time}}",
+        "ended": "Koniec"
     },
     "register": {
         "header": "Vytvoriť účet",
