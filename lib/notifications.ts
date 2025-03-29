@@ -1,16 +1,23 @@
 import { router } from 'expo-router';
-import { getMessaging, getToken, onMessage, onNotificationOpenedApp, AuthorizationStatus } from '@react-native-firebase/messaging';
+import { getMessaging, getToken, onMessage, onNotificationOpenedApp } from '@react-native-firebase/messaging';
 import { QueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 
 const requestUserPermission = async () => {
-    const messaging = getMessaging();
-    const authStatus = await messaging.requestPermission();
-    const enabled =
-        authStatus === AuthorizationStatus.AUTHORIZED ||
-        authStatus === AuthorizationStatus.PROVISIONAL;
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
 
-    return enabled;
+    if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+        alert('Failed to get push notification permissions');
+        return;
+    }
+
+    return finalStatus === 'granted';
 };
 
 export async function getFCMToken() {
@@ -37,7 +44,14 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
     const messaging = getMessaging();
 
     onMessage(messaging, async (remoteMessage) => {
-        // Handle query invalidation based on notification type
+        Notifications.scheduleNotificationAsync({
+            content: {
+                title: remoteMessage.notification?.title,
+                body: remoteMessage.notification?.body,
+            },
+            trigger: null,
+        });
+        
         const data = remoteMessage.data;
         switch (data?.type) {
             case 'challenge_invite':
