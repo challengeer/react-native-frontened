@@ -23,6 +23,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "notification": {
+        "icon": "./assets/images/notification-icon.png",
+        "color": "#ffffff"
       }
     },
     "web": {
@@ -48,13 +52,7 @@
         }
       ],
       "@react-native-google-signin/google-signin",
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/images/notification-icon.png",
-          "color": "#ffffff"
-        }
-      ],
+      "expo-notifications",
       "@react-native-firebase/app",
       "@react-native-firebase/messaging"
     ],
