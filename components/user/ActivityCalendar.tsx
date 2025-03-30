@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
-import { View } from "react-native";
+import { View, PanResponder, Animated, ScrollView, Dimensions } from "react-native";
 import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Text from "@/components/common/Text";
 import IconCircle from "@/components/common/IconCircle";
 
@@ -24,6 +24,14 @@ const TRANSLATIONS = {
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
+    const scrollViewRef = useRef<ScrollView>(null);
+    const { width } = Dimensions.get('window');
+
+    const getAdjacentMonth = (date: Date, offset: number) => {
+        const newDate = new Date(date);
+        newDate.setMonth(newDate.getMonth() + offset);
+        return newDate;
+    };
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -58,11 +66,63 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return weeks;
     };
 
-    const changeMonth = (increment: number) => {
-        const newDate = new Date(currentDate);
-        newDate.setMonth(newDate.getMonth() + increment);
-        setCurrentDate(newDate);
-        onMonthChange?.(newDate);
+    const renderMonth = (date: Date) => {
+        const weeks = getDaysInMonth(date);
+        return (
+            <View style={{ width }}>
+                <View className="mb-2 flex-row justify-between">
+                    {currentTranslation.weekdays.map(day => (
+                        <View key={day} className="w-9 items-center">
+                            <Text className="text-base text-neutral-500">{day}</Text>
+                        </View>
+                    ))}
+                </View>
+
+                {weeks.map((week, weekIndex) => (
+                    <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
+                        {week.map((day, dayIndex) => (
+                            <View
+                                key={dayIndex}
+                                className={`aspect-square flex-1 rounded-lg items-center justify-center relative
+                                    ${isSelected(day) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                                    ${day === null ? 'opacity-0' : ''}`}
+                            >
+                                {isToday(day) && (
+                                    <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                                )}
+                                {day !== null && (
+                                    <Text className={`text-lg ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
+                                        {day}
+                                    </Text>
+                                )}
+                            </View>
+                        ))}
+                    </View>
+                ))}
+            </View>
+        );
+    };
+
+    const handleScroll = (event: any) => {
+        const offsetX = event.nativeEvent.contentOffset.x;
+        const page = Math.round(offsetX / width);
+        
+        if (page === 1) {
+            // We're on the current month, do nothing
+            return;
+        }
+
+        if (page === 0) {
+            // Scrolled to previous month
+            setCurrentDate(getAdjacentMonth(currentDate, -1));
+            onMonthChange?.(getAdjacentMonth(currentDate, -1));
+            scrollViewRef.current?.scrollTo({ x: width, animated: false });
+        } else if (page === 2) {
+            // Scrolled to next month
+            setCurrentDate(getAdjacentMonth(currentDate, 1));
+            onMonthChange?.(getAdjacentMonth(currentDate, 1));
+            scrollViewRef.current?.scrollTo({ x: width, animated: false });
+        }
     };
 
     const formatMonthYear = (date: Date) => {
@@ -92,47 +152,36 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         );
     };
 
-    const weeks = getDaysInMonth(currentDate);
-
     return (
         <View className="mt-6">
             <View className="flex-row justify-between items-center mb-4">
                 <Text className="font-medium">{formatMonthYear(currentDate)}</Text>
                 <View className="flex-row gap-3">
-                    <IconCircle icon={ChevronLeftIcon} onPress={() => changeMonth(-1)} />
-                    <IconCircle icon={ChevronRightIcon} onPress={() => changeMonth(1)} />
+                    <IconCircle icon={ChevronLeftIcon} onPress={() => {
+                        setCurrentDate(getAdjacentMonth(currentDate, -1));
+                        onMonthChange?.(getAdjacentMonth(currentDate, -1));
+                        scrollViewRef.current?.scrollTo({ x: width, animated: true });
+                    }} />
+                    <IconCircle icon={ChevronRightIcon} onPress={() => {
+                        setCurrentDate(getAdjacentMonth(currentDate, 1));
+                        onMonthChange?.(getAdjacentMonth(currentDate, 1));
+                        scrollViewRef.current?.scrollTo({ x: width, animated: true });
+                    }} />
                 </View>
             </View>
 
-            <View className="mb-2 flex-row justify-between">
-                {currentTranslation.weekdays.map(day => (
-                    <View key={day} className="w-9 items-center">
-                        <Text className="text-base text-neutral-500">{day}</Text>
-                    </View>
-                ))}
-            </View>
-
-            {weeks.map((week, weekIndex) => (
-                <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
-                    {week.map((day, dayIndex) => (
-                        <View
-                            key={dayIndex}
-                            className={`aspect-square flex-1 rounded-lg items-center justify-center relative
-                                ${isSelected(day) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                                ${day === null ? 'opacity-0' : ''}`}
-                        >
-                            {isToday(day) && (
-                                <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                            )}
-                            {day !== null && (
-                                <Text className={`text-lg ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
-                                    {day}
-                                </Text>
-                            )}
-                        </View>
-                    ))}
-                </View>
-            ))}
+            <ScrollView
+                ref={scrollViewRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={handleScroll}
+                scrollEventThrottle={16}
+            >
+                {renderMonth(getAdjacentMonth(currentDate, -1))}
+                {renderMonth(currentDate)}
+                {renderMonth(getAdjacentMonth(currentDate, 1))}
+            </ScrollView>
         </View>
     );
 }
