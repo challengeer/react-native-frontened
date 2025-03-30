@@ -37,7 +37,7 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
 
     const messaging = getMessaging();
 
-    onMessage(messaging, async (remoteMessage) => {
+    const messageUnsubscribe = onMessage(messaging, async (remoteMessage) => {
         Notifications.scheduleNotificationAsync({
             content: {
                 title: remoteMessage.notification?.title,
@@ -59,6 +59,7 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
                 break;
 
             case 'challenge_submission':
+                queryClient.invalidateQueries({ queryKey: ['challenges'] });
                 queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
                 queryClient.invalidateQueries({ queryKey: ['submissions', data.challenge_id] });
                 break;
@@ -79,9 +80,7 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
         }
     });
 
-    // Handle initial notification (app opened from killed state)
-    onNotificationOpenedApp(messaging, (remoteMessage) => {
-        // Handle navigation
+    const notificationOpenedUnsubscribe = onNotificationOpenedApp(messaging, (remoteMessage) => {
         const data = remoteMessage.data;
         switch (data?.type) {
             case 'challenge_invite':
@@ -109,4 +108,9 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
                 break;
         }
     });
+
+    return () => {
+        messageUnsubscribe();
+        notificationOpenedUnsubscribe();
+    };
 }

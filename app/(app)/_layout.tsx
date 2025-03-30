@@ -20,7 +20,11 @@ export default function AppLayout() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            setupNotificationHandlers(queryClient);
+            // Clean up previous handlers when component unmounts
+            const cleanup = setupNotificationHandlers(queryClient);
+            return () => {
+                if (cleanup) cleanup();
+            };
         }
     }, [isAuthenticated]);
 
