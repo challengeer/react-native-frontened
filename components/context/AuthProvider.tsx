@@ -90,14 +90,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await GoogleSignin.signOut();
             const fcmToken = await getFCMToken();
             await api.post('/auth/logout', { fcm_token: fcmToken });
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
             await SecureStore.deleteItemAsync('access_token');
             await SecureStore.deleteItemAsync('refresh_token');
             setUser(null);
             setIsAuthenticated(false);
             queryClient.clear();
             router.replace('/auth');
-        } catch (error) {
-            console.error('Logout error:', error);
         }
     };
 
