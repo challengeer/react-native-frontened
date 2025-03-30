@@ -18,11 +18,13 @@ const queryClient = new QueryClient();
 export default function Root() {
     const { colorScheme } = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "white";
+    const buttonStyle = colorScheme === "dark" ? "light" : "dark";
 
     useEffect(() => {
         if (Platform.OS === "android") {
             NavigationBar.setPositionAsync("absolute");
             NavigationBar.setBackgroundColorAsync("transparent");
+            NavigationBar.setButtonStyleAsync(buttonStyle);
         }
     }, []);
 
