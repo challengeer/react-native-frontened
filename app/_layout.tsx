@@ -6,7 +6,7 @@ import { AuthProvider } from "@/components/context/AuthProvider";
 
 import { useEffect } from "react";
 import { useColorScheme } from "nativewind";
-import { StatusBar, Platform } from "react-native";
+import { StatusBar, Platform, View } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,6 +17,7 @@ const queryClient = new QueryClient();
 
 export default function Root() {
     const { colorScheme } = useColorScheme();
+    const backgroundColor = colorScheme === "dark" ? "#171717" : "white";
 
     useEffect(() => {
         if (Platform.OS === "android") {
@@ -36,7 +37,9 @@ export default function Root() {
                                 backgroundColor="transparent"
                             />
 
-                            <Slot />
+                            <View style={{ flex: 1, backgroundColor }}>
+                                <Slot />
+                            </View>
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
                 </AuthProvider>
