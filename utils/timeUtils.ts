@@ -1,13 +1,13 @@
 import i18n from "@/i18n";
 
 export const getTimeLeft = (timestamp: string): string => {
-  const now = new Date().getTime();
+  const now = Date.now();
   const future = new Date(timestamp).getTime();
   
   const seconds = Math.floor((future - now) / 1000);
 
   if (seconds < 0) {
-    return i18n.t("time.ended");
+    return getTimeAgo(timestamp);
   }
 
   // Less than a minute
@@ -33,7 +33,7 @@ export const getTimeLeft = (timestamp: string): string => {
 };
 
 export const getTimeAgo = (timestamp: string): string => {
-  const now = new Date().getTime();
+  const now = Date.now();
   const past = new Date(timestamp).getTime();
   const seconds = Math.floor((now - past) / 1000);
 
@@ -56,7 +56,7 @@ export const getTimeAgo = (timestamp: string): string => {
 };
 
 export const getDetailedTimeLeft = (timestamp: string): string => {
-  const now = new Date().getTime();
+  const now = Date.now();
   const future = new Date(timestamp).getTime();
   const diff = future - now;
 
@@ -76,4 +76,3 @@ export const getDetailedTimeLeft = (timestamp: string): string => {
 
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 };
-
