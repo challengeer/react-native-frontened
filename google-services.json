@@ -12,7 +12,20 @@
           "package_name": "com.challengeer.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "344827725651-350tkn919644ap0bq8lo73l9ummc0032.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.challengeer.app",
+            "certificate_hash": "77144310b4d57ab529fb0d80f6972ff53482e650"
+          }
+        },
+        {
+          "client_id": "344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAUgLJ6ocdn8eCYKSxWHb6x4gMgF1FkwBU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "344827725651-p2qku4g6m0p62pt4aao6bcj55igva6bj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.challengeer.app"
+              }
+            }
+          ]
         }
       }
     }

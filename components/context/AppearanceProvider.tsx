@@ -2,7 +2,6 @@ import i18n from "@/i18n";
 import React, { createContext, useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { reloadAppAsync } from "expo";
 
 interface AppearanceContextType {
   language: string;

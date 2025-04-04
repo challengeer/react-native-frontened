@@ -1,18 +1,12 @@
 import api from '@/lib/api';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { UserPrivateInterface } from '@/types/UserInterface';
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { getFCMToken } from '@/lib/notifications';
 import * as SecureStore from 'expo-secure-store';
-
-// Configure GoogleSignin
-GoogleSignin.configure({
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    // Add this for IOS:
-    // iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-});
+import auth from '@react-native-firebase/auth';
 
 interface AuthContextType {
     user: UserPrivateInterface | null;
@@ -31,6 +25,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
+    useEffect(() => {
+        // Initialize Google Sign-In
+        GoogleSignin.configure({
+            webClientId: '344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com', // from google-services.json
+        });
+    }, []);
+
     const fetchUserProfile = async () => {
         try {
             const response = await api.get('/user/me');
@@ -45,20 +46,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const signInWithGoogle = async () => {
         try {
+            // Get the users ID token
             await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            const idToken = userInfo.data?.idToken;
+            await GoogleSignin.signIn();
+            const idToken = await GoogleSignin.getTokens();
 
-            if (!idToken) {
-                throw new Error('No ID token received');
+            if (!idToken.accessToken) {
+                throw new Error('No access token received');
             }
+
+            // Create a Google credential with the token
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken.accessToken);
+
+            // Sign-in the user with the credential
+            const userCredential = await auth().signInWithCredential(googleCredential);
+            const firebaseUser = userCredential.user;
 
             // Get FCM token
             const fcmToken = await getFCMToken();
 
             // Send both tokens to the backend
             const result = await api.post('/auth/google', { 
-                token: idToken,
+                token: await firebaseUser.getIdToken(),
                 fcm_token: fcmToken
             });
 
@@ -74,20 +83,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             router.replace('/');
         } catch (error: any) {
             console.error('Authentication error:', error);
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                // User cancelled the sign-in flow
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                // Sign-in operation already in progress
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                // Play services not available
-            }
             throw error;
         }
     };
 
     const logout = async () => {
         try {
-            await GoogleSignin.signOut();
+            await auth().signOut();
             const fcmToken = await getFCMToken();
             await api.post('/auth/logout', { fcm_token: fcmToken });
         } catch (error) {
