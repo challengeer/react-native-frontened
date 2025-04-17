@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Send both tokens to the backend
             const result = await api.post('/auth/google', { 
-                token: await firebaseUser.getIdToken(),
+                id_token: await firebaseUser.getIdToken(),
                 fcm_token: fcmToken
             });
 
