@@ -19,7 +19,7 @@
     "@gorhom/bottom-sheet": "5",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "^8.2.0",
-    "@react-native-firebase/app": "^21J.12.1",
+    "@react-native-firebase/app": "^21.12.1",
     "@react-native-firebase/auth": "^21.13.0",
     "@react-native-firebase/messaging": "^21.12.1",
     "@react-native-google-signin/google-signin": "^13.2.0",
