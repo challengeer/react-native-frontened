@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { getFCMToken } from '@/lib/notifications';
 import * as SecureStore from 'expo-secure-store';
+import * as Device from 'expo-device';
 import auth from '@react-native-firebase/auth';
 
 interface AuthContextType {
@@ -65,10 +66,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Get FCM token
             const fcmToken = await getFCMToken();
 
-            // Send both tokens to the backend
+            // Get device information
+            const deviceInfo = {
+                brand: Device.brand,
+                model_name: Device.modelName,
+                os_name: Device.osName,
+                os_version: Device.osVersion,
+            };
+
+            // Send both tokens and device info to the backend
             const result = await api.post('/auth/google', { 
                 id_token: await firebaseUser.getIdToken(),
-                fcm_token: fcmToken
+                fcm_token: fcmToken,
+                ...deviceInfo
             });
 
             if (result.status !== 200) {
