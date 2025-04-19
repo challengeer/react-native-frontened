@@ -43,8 +43,8 @@ export function useChallengeActions() {
             queryClient.setQueryData(['challenge'], context?.previousChallenge);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['challenges'] });
-            queryClient.invalidateQueries({ queryKey: ['challenge'] });
+            queryClient.refetchQueries({ queryKey: ['challenges'] });
+            queryClient.refetchQueries({ queryKey: ['challenge'] });
         },
     });
 
@@ -70,7 +70,7 @@ export function useChallengeActions() {
             queryClient.setQueryData(['challenges'], context?.previousChallenges);
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['challenges'] });
+            queryClient.refetchQueries({ queryKey: ['challenges'] });
         },
     });
 

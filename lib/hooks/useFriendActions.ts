@@ -29,12 +29,12 @@ export function useFriendActions() {
         },
         onError: (err, userId) => {
             // Only invalidate affected queries
-            queryClient.invalidateQueries({ queryKey: ["user", userId] });
-            queryClient.invalidateQueries({ queryKey: ["user-search"] });
+            queryClient.refetchQueries({ queryKey: ["user", userId] });
+            queryClient.refetchQueries({ queryKey: ["user-search"] });
         },
         // Only invalidate user-related queries since friend lists aren't affected yet
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["user-search"] });
+            queryClient.refetchQueries({ queryKey: ["user-search"] });
         },
     });
 
@@ -57,8 +57,8 @@ export function useFriendActions() {
         },
         // Only invalidate friend-related queries since the request was accepted
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
-            queryClient.invalidateQueries({ queryKey: ['friends'] });
+            queryClient.refetchQueries({ queryKey: ['friend-requests'] });
+            queryClient.refetchQueries({ queryKey: ['friends'] });
         },
     });
 
@@ -81,7 +81,7 @@ export function useFriendActions() {
         },
         // Only invalidate friend requests since we're just removing one
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
+            queryClient.refetchQueries({ queryKey: ['friend-requests'] });
         },
     });
 
