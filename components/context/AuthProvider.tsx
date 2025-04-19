@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 import { getFCMToken } from '@/lib/notifications';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
-import auth from '@react-native-firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from '@react-native-firebase/auth';
 
 interface AuthContextType {
     user: UserPrivateInterface | null;
@@ -25,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const queryClient = useQueryClient();
+    const auth = getAuth();
 
     useEffect(() => {
         // Initialize Google Sign-In
@@ -50,18 +51,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Get the users ID token
             await GoogleSignin.hasPlayServices();
             await GoogleSignin.signIn();
-            const idToken = await GoogleSignin.getTokens();
+            const { idToken } = await GoogleSignin.getTokens();
 
-            if (!idToken.accessToken) {
-                throw new Error('No access token received');
+            if (!idToken) {
+                throw new Error('No ID token received');
             }
 
-            // Create a Google credential with the token
-            const googleCredential = auth.GoogleAuthProvider.credential(idToken.accessToken);
-
-            // Sign-in the user with the credential
-            const userCredential = await auth().signInWithCredential(googleCredential);
-            const firebaseUser = userCredential.user;
+            // Sign in with Google
+            const credential = GoogleAuthProvider.credential(idToken);
+            const userCredential = await signInWithCredential(auth, credential);
+            const firebaseToken = await userCredential.user?.getIdToken();
 
             // Get FCM token
             const fcmToken = await getFCMToken();
@@ -74,9 +73,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 os_version: Device.osVersion,
             };
 
-            // Send both tokens and device info to the backend
+            // Send Firebase token and device info to the backend
             const result = await api.post('/auth/google', { 
-                id_token: await firebaseUser.getIdToken(),
+                id_token: firebaseToken,
                 fcm_token: fcmToken,
                 ...deviceInfo
             });
@@ -99,7 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logout = async () => {
         try {
-            await auth().signOut();
+            await auth.signOut();
+            await GoogleSignin.signOut();
             const fcmToken = await getFCMToken();
             await api.post('/auth/logout', { fcm_token: fcmToken });
         } catch (error) {
