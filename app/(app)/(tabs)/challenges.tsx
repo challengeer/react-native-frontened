@@ -5,7 +5,7 @@ import { View, ScrollView, RefreshControl, ActivityIndicator } from "react-nativ
 import { router } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { ChallengeSimple } from "@/types/Challenge";
-import { PlusIcon } from "react-native-heroicons/outline";
+import { PlusIcon, UserGroupIcon } from "react-native-heroicons/outline";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import Text from "@/components/common/Text";
 import ChallengesHeader from "@/components/challenges/ChallengesHeader";
@@ -27,11 +27,24 @@ interface ChallengesResponse {
     invitations: Invitation[];
 }
 
+interface Friend extends UserInterface {
+    mutual_streak: number;
+}
+
 export default function ChallengesPage() {
     const { data, isPending, isError, refetch } = useQuery<ChallengesResponse>({
         queryKey: ["challenges"],
         queryFn: async () => {
             const response = await api.get("/challenges/list");
+            return response.data;
+        },
+        staleTime: 1000 * 60 * 5,
+    });
+
+    const { data: friends, isPending: isFriendsPending } = useQuery<Friend[]>({
+        queryKey: ["friends"],
+        queryFn: async () => {
+            const response = await api.get("/friends/list");
             return response.data;
         },
         staleTime: 1000 * 60 * 5,
@@ -45,7 +58,7 @@ export default function ChallengesPage() {
         <>
             <ChallengesHeader />
 
-            {isPending ? (
+            {isPending || isFriendsPending ? (
                 <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
             ) : isError ? (
                 <NetworkErrorContainer onRetry={refetch} />
@@ -60,7 +73,25 @@ export default function ChallengesPage() {
                         />
                     }
                 >
-                    {data.owned_challenges.length === 0 && data.participating_challenges.length === 0 && (
+                    {friends && friends.length === 0 ? (
+                        <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl mb-4">
+                            <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noFriends.title") || "No Friends Yet"}</Text>
+                            <Text type="secondary" className="text-base mb-6">
+                                {i18n.t("challenges.noFriends.description") || "Add friends to participate in challenges together!"}
+                            </Text>
+                            <Button
+                                title={i18n.t("challenges.noFriends.button") || "Go to Friends"}
+                                onPress={() => router.push("/(app)/(tabs)/friends")}
+                                leftSection={
+                                    <Icon
+                                        icon={UserGroupIcon}
+                                        lightColor="#fff"
+                                        darkColor="#fff"
+                                    />
+                                }
+                            />
+                        </View>
+                    ) : data.owned_challenges.length === 0 && data.participating_challenges.length === 0 && (
                         <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl">
                             <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noChallenges.title")}</Text>
                             <Text type="secondary" className="text-base mb-6">

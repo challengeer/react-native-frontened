@@ -68,6 +68,11 @@
             "join": "Join",
             "ignore": "Ignore"
         },
+        "noFriends": {
+            "title": "No Friends Yet",
+            "description": "Add friends to participate in challenges together!",
+            "button": "Go to Friends"
+        },
         "noChallenges": {
             "title": "✨ Ready for a New Challenge?",
             "description": "Life's more exciting with goals! Set up a new challenge and start making progress today.",

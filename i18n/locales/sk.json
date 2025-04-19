@@ -64,6 +64,11 @@
             "join": "Pridať sa",
             "ignore": "Ignorovať"
         },
+        "noFriends": {
+            "title": "Zatiaľ žiadni priatelia",
+            "description": "Pridajte priateľov, aby ste mohli spolupracovať na výzvach!",
+            "button": "Prejsť na priateľov"
+        },
         "noChallenges": {
             "title": "✨ Pripravený na novú výzvu?",
             "description": "Život je zábavnejší s cieľmi! Nastavte novú výzvu a začnite robiť pokrok dnes.",
