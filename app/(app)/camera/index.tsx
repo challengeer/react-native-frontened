@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useQueryClient } from "@tanstack/react-query";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import api from "@/lib/api";
@@ -18,6 +19,7 @@ export default function CameraPage() {
     const [facing, setFacing] = useState<CameraType>("back");
     const [flash, setFlash] = useState<FlashMode>("off");
     const [isUploading, setIsUploading] = useState(false);
+    const queryClient = useQueryClient();
 
     if (!permission) {
         return null;
@@ -66,6 +68,7 @@ export default function CameraPage() {
             });
 
             if (response.status === 200) {
+                queryClient.refetchQueries({ queryKey: ['submissions', challenge_id] });
                 router.push(`/(app)/(tabs)/challenges`);
             }
         } catch (error) {
