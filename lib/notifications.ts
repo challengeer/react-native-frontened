@@ -49,33 +49,33 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
         const data = remoteMessage.data;
         switch (data?.type) {
             case 'challenge_invite':
-                queryClient.invalidateQueries({ queryKey: ['challenges'] });
-                queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
+                queryClient.refetchQueries({ queryKey: ['challenges'] });
+                queryClient.refetchQueries({ queryKey: ['challenge', data.challenge_id] });
                 break;
 
             case 'challenge_accept':
-                queryClient.invalidateQueries({ queryKey: ['challenges'] });
-                queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
+                queryClient.refetchQueries({ queryKey: ['challenges'] });
+                queryClient.refetchQueries({ queryKey: ['challenge', data.challenge_id] });
                 break;
 
             case 'challenge_submission':
-                queryClient.invalidateQueries({ queryKey: ['challenges'] });
-                queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
-                queryClient.invalidateQueries({ queryKey: ['submissions', data.challenge_id] });
+                queryClient.refetchQueries({ queryKey: ['challenges'] });
+                queryClient.refetchQueries({ queryKey: ['challenge', data.challenge_id] });
+                queryClient.refetchQueries({ queryKey: ['submissions', data.challenge_id] });
                 break;
 
             case 'challenge_ending':
-                queryClient.invalidateQueries({ queryKey: ['challenges'] });
-                queryClient.invalidateQueries({ queryKey: ['challenge', data.challenge_id] });
+                queryClient.refetchQueries({ queryKey: ['challenges'] });
+                queryClient.refetchQueries({ queryKey: ['challenge', data.challenge_id] });
                 break;
 
             case 'friend_request':
-                queryClient.invalidateQueries({ queryKey: ['friend-requests'] });
+                queryClient.refetchQueries({ queryKey: ['friend-requests'] });
                 break;
 
             case 'friend_accept':
-                queryClient.invalidateQueries({ queryKey: ['friends'] });
-                queryClient.invalidateQueries({ queryKey: ['user', data.user_id] });
+                queryClient.refetchQueries({ queryKey: ['friends'] });
+                queryClient.refetchQueries({ queryKey: ['user', data.user_id] });
                 break;
         }
     });
