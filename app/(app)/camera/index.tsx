@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Pressable, Text, View, StatusBar } from "react-native";
+import { Pressable, Text, View, StatusBar, TextInput, TouchableOpacity, PanResponder, Keyboard, KeyboardAvoidingView, Platform, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon } from "react-native-heroicons/outline";
+import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon, PencilIcon, CheckIcon } from "react-native-heroicons/outline";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,7 +19,45 @@ export default function CameraPage() {
     const [facing, setFacing] = useState<CameraType>("back");
     const [flash, setFlash] = useState<FlashMode>("off");
     const [isUploading, setIsUploading] = useState(false);
+    const [text, setText] = useState("");
+    const [isAddingText, setIsAddingText] = useState(false);
+    const [textPosition, setTextPosition] = useState(0.5);
+    const [startY, setStartY] = useState(0);
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
     const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const keyboardWillShow = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            (e) => {
+                setKeyboardHeight(e.endCoordinates.height);
+            }
+        );
+
+        const keyboardWillHide = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            () => {
+                setKeyboardHeight(0);
+            }
+        );
+
+        return () => {
+            keyboardWillShow.remove();
+            keyboardWillHide.remove();
+        };
+    }, []);
+
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => true,
+            onPanResponderMove: (_, gestureState) => {
+                const screenHeight = Dimensions.get('window').height;
+                const newPosition = Math.max(0, Math.min(1, gestureState.moveY / screenHeight));
+                setTextPosition(newPosition);
+            }
+        })
+    ).current;
 
     if (!permission) {
         return null;
@@ -60,6 +98,8 @@ export default function CameraPage() {
                 type: 'image/jpeg',
                 name: 'photo.jpg',
             } as any);
+            formData.append('text', text);
+            formData.append('textPosition', textPosition.toString()); 
 
             const response = await api.post(`/challenges/${challenge_id}/submit`, formData, {
                 headers: {
@@ -81,42 +121,113 @@ export default function CameraPage() {
 
     const renderPicture = () => {
         return (
-            <View className="flex-1 relative">
-                <Image
-                    source={{ uri: uri || "" }}
-                    style={{ width: "100%", height: "100%", borderRadius: 24 }}
-                    contentFit="cover"
-                />
+            <KeyboardAvoidingView 
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                className="flex-1"
+            >
+                <View className="flex-1 relative">
+                    <Image
+                        source={{ uri: uri || "" }}
+                        style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                        contentFit="cover"
+                    />
 
-                <LinearGradient
-                    colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
-                    style={{ position: "absolute", top: 0, left: 0, right: 0 }}
-                >
-                    <View className="p-6">
-                        <Icon
-                            icon={XMarkIcon}
-                            lightColor="#fff"
-                            darkColor="#fff"
-                            onPress={() => setUri(null)}
-                        />
-                    </View>
-                </LinearGradient>
+                    {isAddingText && (
+                        <View className="absolute top-0 left-0 right-0">
+                            <View className="bg-black/50 w-full">
+                                <TextInput
+                                    value={text}
+                                    onChangeText={(newText) => {
+                                        const cleanText = newText.replace(/\n/g, '').slice(0, 30);
+                                        setText(cleanText);
+                                    }}
+                                    placeholder="Add text..."
+                                    placeholderTextColor="#999"
+                                    className="text-white text-2xl font-bold text-center px-4 py-4"
+                                    autoFocus
+                                    maxLength={30}
+                                    blurOnSubmit={true}
+                                    onSubmitEditing={() => {
+                                        setIsAddingText(false);
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    )}
 
-                <LinearGradient
-                    colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.25)"]}
-                    style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-                >
-                    <View className="justify-center items-center p-6">
-                        <Button
-                            title="Submit photo"
-                            size="lg"
-                            loading={isUploading}
-                            disabled={isUploading}
-                            onPress={handleSubmit}
-                        />
-                    </View>
-                </LinearGradient>
-            </View>
+                    {!isAddingText && text && (
+                        <View 
+                            className="absolute left-0 right-0"
+                            style={{ top: `${textPosition * 100}%` }}
+                            {...panResponder.panHandlers}
+                        >
+                            <View className="bg-black/50 w-full">
+                                <Text className="text-white text-2xl font-bold text-center px-4 py-4">
+                                    {text}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
+                    <LinearGradient
+                        colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
+                        style={{ position: "absolute", top: 0, left: 0, right: 0 }}
+                    >
+                        <View className="p-6 flex-row items-center justify-between">
+                            <Icon
+                                icon={XMarkIcon}
+                                lightColor="#fff"
+                                darkColor="#fff"
+                                onPress={() => {
+                                    setUri(null);
+                                    setText("");
+                                    setIsAddingText(false);
+                                    setTextPosition(0.5);
+                                }}
+                            />
+                            <View className="flex-row gap-4">
+                                {!isAddingText && (
+                                    <Icon
+                                        icon={PencilIcon}
+                                        lightColor="#fff"
+                                        darkColor="#fff"
+                                        onPress={() => {
+                                            setIsAddingText(true);
+                                        }}
+                                    />
+                                )}
+                                {isAddingText && (
+                                    <Icon
+                                        icon={CheckIcon}
+                                        lightColor="#fff"
+                                        darkColor="#fff"
+                                        onPress={() => {
+                                            setIsAddingText(false);
+                                        }}
+                                    />
+                                )}
+                            </View>
+                        </View>
+                    </LinearGradient>
+
+                    {!isAddingText && (
+                        <LinearGradient
+                            colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.25)"]}
+                            style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+                        >
+                            <View className="justify-center items-center p-6">
+                                <Button
+                                    title="Submit photo"
+                                    size="lg"
+                                    loading={isUploading}
+                                    disabled={isUploading}
+                                    onPress={handleSubmit}
+                                />
+                            </View>
+                        </LinearGradient>
+                    )}
+                </View>
+            </KeyboardAvoidingView>
         );
     };
 
