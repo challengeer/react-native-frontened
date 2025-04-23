@@ -37,7 +37,7 @@ export default function CameraPage() {
     }
 
     const takePicture = async () => {
-        const photo = await cameraRef.current?.takePictureAsync({ skipProcessing: true });
+        const photo = await cameraRef.current?.takePictureAsync();
         setUri(photo?.uri || null);
     };
 
@@ -135,7 +135,7 @@ export default function CameraPage() {
 
                             <View className="flex-row gap-6">
                                 <Icon icon={flash === "off" ? BoltSlashIcon : BoltIcon} lightColor="#fff" darkColor="#fff" onPress={toggleFlash} />
-                                <Icon icon={ArrowPathIcon} lightColor="#fff" darkColor="#fff" onPress={() => toggleFacing()} />
+                                <Icon icon={ArrowPathIcon} lightColor="#fff" darkColor="#fff" onPress={toggleFacing} />
                             </View>
                         </View>
                     </LinearGradient>
