@@ -23,7 +23,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const debouncedSearch = onSearch ? useCallback(debounce(onSearch, 500), []) : undefined;
 
     return (
-        <View className="relative flex-1 flex-row items-center">
+        <View className="relative w-full flex-row items-center">
             <View className="absolute top-3 left-4 z-10">
                 <Icon
                     icon={MagnifyingGlassIcon}

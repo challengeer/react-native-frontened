@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Modal, View, TouchableOpacity, FlatList } from 'react-native'
-import Text from '@/components/common/Text';
 import i18n from '@/i18n';
+import React, { useEffect, useState } from 'react';
+import { Modal, View, FlatList, Pressable } from 'react-native'
+import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
+import Text from '@/components/common/Text';
 import SearchBar from '@/components/common/SearchBar';
 import CountryItem from '@/components/common/CountryItem';
 import CountryInterface from '@/types/CountryInterface';
 import Header from '@/components/common/Header';
 import IconCircle from '@/components/common/IconCircle';
-import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
 import Icon from '@/components/common/Icon';
 
 interface CountryPickerProps {
@@ -31,16 +31,24 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
         setIsModalVisible(false);
     };
 
+    useEffect(() => {
+        const locale = i18n.locale;
+        const country = countries.find((country: CountryInterface) => country.code.toLowerCase() === locale.toLowerCase());
+        if (country) {
+            onSelect(country.dial_code);
+        }
+    }, []);
+
     return (
         <>
             {/* Prefix Selector Button */}
-            <TouchableOpacity
+            <Pressable
                 onPress={() => setIsModalVisible(true)}
-                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-row items-center justify-center gap-2 py-3 px-4 ${className}`}
+                className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-row items-center justify-center gap-2 p-4 ${className}`}
             >
                 <Text className="text-lg text-center">{selectedPrefix}</Text>
                 <Icon icon={ChevronDownIcon} size={16} />
-            </TouchableOpacity>
+            </Pressable>
 
             {/* Modal to select country prefix */}
             <Modal
@@ -65,8 +73,6 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                         {/* Search Bar */}
                         <SearchBar
                             onSearch={setSearchQuery}
-                            onCancel={() => setSearchQuery("")}
-                            withCancel
                         />
 
                         {/* Country List */}
