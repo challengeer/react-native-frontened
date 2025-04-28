@@ -37,7 +37,7 @@
         "phoneNumberLabel": "Phone number",
         "phoneNumberDescription": "We will send SMS code for verification",
         "verificationCodeLabel": "Enter code",
-        "verificationCodeDescription": "Verification code sent to",
+        "verificationCodeDescription": "Verification code sent to {{phone_number}}",
         "usernameLabel": "Username",
         "usernameAvailable": "Username is available",
         "usernameTaken": "This username is already taken",

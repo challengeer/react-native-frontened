@@ -13,7 +13,7 @@ import {
     GoogleAuthProvider,
     signInWithCredential,
     PhoneAuthProvider,
-    verifyPhoneNumber,
+    signInWithPhoneNumber,
 } from '@react-native-firebase/auth';
 
 interface AuthContextType {
@@ -33,7 +33,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserPrivateInterface | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [tmpToken, setTmpToken] = useState<string | null>(null);
     const queryClient = useQueryClient();
     const auth = getAuth();
 
@@ -58,8 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const submitPhoneNumber = async (phoneNumber: string): Promise<string> => {
         try {
-            const confirmation = await verifyPhoneNumber(auth, phoneNumber, true);
-            return confirmation.verificationId;
+            const confirmation = await signInWithPhoneNumber(auth, phoneNumber);
+            return confirmation.verificationId || '';
         } catch (error) {
             console.error('Phone verification error:', error);
             throw error;
@@ -78,9 +77,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             const fcmToken = await getFCMToken();
 
-            const result = await api.post('/auth/phone-register', { 
-                id_token: tmpToken,
-                id_phone_token: firebaseToken,
+            const result = await api.post('/auth/google', { 
+                id_token: firebaseToken,
                 fcm_token: fcmToken,
             });
 
@@ -91,7 +89,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
 
-            setTmpToken(null);
             setIsAuthenticated(true);
             await fetchUserProfile();
         } catch (error) {
@@ -113,9 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Sign in with Google
             const credential = GoogleAuthProvider.credential(idToken);
-            const userCredential = await signInWithCredential(auth, credential);
-            const firebaseToken = await userCredential.user?.getIdToken();
-            setTmpToken(firebaseToken);
+            await signInWithCredential(auth, credential);
+            const firebaseToken = await auth.currentUser?.getIdToken();
 
             if (!firebaseToken) {
                 throw new Error('No Firebase token received');
@@ -133,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             };
 
             // Send Firebase token and device info to the backend
-            const result = await api.post('/auth/google-login', { 
+            const result = await api.post('/auth/google', { 
                 id_token: firebaseToken,
                 fcm_token: fcmToken,
                 ...deviceInfo
@@ -146,7 +142,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
             
-            setTmpToken(null);
             setIsAuthenticated(true);
             await fetchUserProfile();
         } catch (error: any) {

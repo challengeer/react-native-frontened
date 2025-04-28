@@ -6,9 +6,11 @@ import Text from "@/components/common/Text";
 interface VerificationInputProps {
     value: string;
     onChange: (text: string) => void;
+    onComplete: () => void;
+    phoneNumber: string;
 }
 
-export default function VerificationInput({ value, onChange }: VerificationInputProps) {
+export default function VerificationInput({ value, onChange, onComplete, phoneNumber }: VerificationInputProps) {
     const inputRefs = Array(6).fill(0).map(() => useRef<TextInput>(null));
 
     const handleChange = (text: string, index: number) => {
@@ -30,6 +32,10 @@ export default function VerificationInput({ value, onChange }: VerificationInput
         // Move to next input if we typed a number
         if (text && index < 5) {
             inputRefs[index + 1].current?.focus();
+        }
+
+        if (text && index === 5) {
+            onComplete();
         }
     };
 
@@ -65,7 +71,7 @@ export default function VerificationInput({ value, onChange }: VerificationInput
                 ))}
             </View>
 
-            <Text type="secondary" className="text-sm">{i18n.t("register.verificationCodeDescription")}</Text>
+            <Text type="secondary" className="text-sm">{i18n.t("register.verificationCodeDescription", { phone_number: phoneNumber })}</Text>
         </View>
     );
 }
