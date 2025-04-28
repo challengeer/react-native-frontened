@@ -1,7 +1,10 @@
 import i18n from '@/i18n';
-import React, { useEffect, useState } from 'react';
-import { Modal, View, FlatList, Pressable } from 'react-native'
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { View, Pressable } from 'react-native'
 import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
+import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useColorScheme } from 'nativewind';
 import Text from '@/components/common/Text';
 import SearchBar from '@/components/common/SearchBar';
 import CountryItem from '@/components/common/CountryItem';
@@ -17,9 +20,13 @@ interface CountryPickerProps {
 }
 
 export default function CountryPicker({ selectedPrefix, onSelect, className }: CountryPickerProps) {
+    const { colorScheme } = useColorScheme();
+    const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
+    const insets = useSafeAreaInsets();
     const countries = require("@/assets/data/countries.json");
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const snapPoints = useMemo(() => ["100%"], []);
 
     const filteredCountries = countries.filter((country: CountryInterface) =>
         country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -28,8 +35,17 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
 
     const handleSelectPrefix = (dialCode: string) => {
         onSelect(dialCode);
-        setIsModalVisible(false);
+        bottomSheetRef.current?.dismiss();
     };
+
+    const handleModalOpen = useCallback(() => {
+        bottomSheetRef.current?.present();
+    }, []);
+
+    const handleModalClose = useCallback(() => {
+        bottomSheetRef.current?.dismiss();
+        setSearchQuery("");
+    }, []);
 
     useEffect(() => {
         const locale = i18n.locale;
@@ -43,56 +59,59 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
         <>
             {/* Prefix Selector Button */}
             <Pressable
-                onPress={() => setIsModalVisible(true)}
+                onPress={handleModalOpen}
                 className={`bg-neutral-100 dark:bg-neutral-800 rounded-lg flex-row items-center justify-center gap-2 p-4 ${className}`}
             >
                 <Text className="text-lg text-center">{selectedPrefix}</Text>
                 <Icon icon={ChevronDownIcon} size={16} />
             </Pressable>
 
-            {/* Modal to select country prefix */}
-            <Modal
-                visible={isModalVisible}
-                animationType="slide"
-                presentationStyle="pageSheet"
-                onShow={() => setSearchQuery("")}
-            >
-                <View className="flex-1 bg-white dark:bg-neutral-900">
-                    {/* Header */}
+            {/* Bottom Sheet Modal to select country prefix */}
+            <BottomSheetModal
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                index={0}
+                backgroundStyle={{ backgroundColor }}
+                enableDynamicSizing={false}
+                onDismiss={handleModalClose}
+                handleComponent={() => (
                     <Header
                         title={i18n.t("countryPrefix.header")}
-                        rightSection={
+                        style={{ marginTop: insets.top }}
+                        leftSection={
                             <IconCircle
                                 icon={XMarkIcon}
-                                onPress={() => setIsModalVisible(false)}
+                                onPress={handleModalClose}
                             />
                         }
                     />
+                )}
+            >
+                <View className="flex-1 px-4 gap-2">
+                    {/* Search Bar */}
+                    <SearchBar
+                        onSearch={setSearchQuery}
+                    />
 
-                    <View className="px-4 gap-3 flex-1">
-                        {/* Search Bar */}
-                        <SearchBar
-                            onSearch={setSearchQuery}
-                        />
-
-                        {/* Country List */}
-                        <FlatList
-                            overScrollMode="never"
-                            showsVerticalScrollIndicator={false}
-                            data={filteredCountries}
-                            keyExtractor={(item: CountryInterface) => item.code}
-                            renderItem={({ item }) => (
-                                <CountryItem
-                                    flag={item.flag}
-                                    name={item.name}
-                                    dial_code={item.dial_code}
-                                    onPress={() => handleSelectPrefix(item.dial_code)}
-                                />
-                            )}
-                        />
-                    </View>
+                    {/* Country List */}
+                    <BottomSheetFlatList
+                        className="flex-1"
+                        overScrollMode="never"
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: insets.bottom }}
+                        data={filteredCountries}
+                        keyExtractor={(item: CountryInterface) => item.code}
+                        renderItem={({ item }: { item: CountryInterface }) => (
+                            <CountryItem
+                                flag={item.flag}
+                                name={item.name}
+                                dial_code={item.dial_code}
+                                onPress={() => handleSelectPrefix(item.dial_code)}
+                            />
+                        )}
+                    />
                 </View>
-            </Modal>
+            </BottomSheetModal>
         </>
     );
 }
