@@ -63,7 +63,7 @@ export default function PhoneVerificationPage() {
             />
 
             {error && (
-              <Text className="text-red-500">{error}</Text>
+              <Text type="error" className="text-base">{error}</Text>
             )}
           </View>
 
