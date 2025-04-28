@@ -1,6 +1,6 @@
 import { TextInput, TextInputProps, View } from "react-native";
+import { useColorScheme } from "nativewind";
 import Text from "@/components/common/Text";
-import { useState } from "react";
 
 export interface InputBarProps extends TextInputProps {
     label?: string;
@@ -16,12 +16,17 @@ export function InputBar({
     value,
     ...props
 }: InputBarProps) {
+    const { colorScheme } = useColorScheme();
+    
     return (
         <View className={`gap-2 ${className}`}>
             {label && <Text className="font-medium">{label}</Text>}
             <View className="relative">
                 <TextInput
                     className="p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
+                    cursorColor="#a855f7"
+                    selectionColor={colorScheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.25)"}
+                    selectionHandleColor="#a855f7"
                     numberOfLines={1}
                     value={value}
                     {...props}
@@ -45,6 +50,8 @@ export function TextAreaInputBar({
     value,
     ...props
 }: InputBarProps) {
+    const { colorScheme } = useColorScheme();
+
     return (
         <View className={`gap-2 ${className}`}>
             {label && <Text className="font-medium">{label}</Text>}
@@ -52,6 +59,9 @@ export function TextAreaInputBar({
                 <TextInput
                     className="p-4 min-h-32 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                     multiline
+                    cursorColor="#a855f7"
+                    selectionColor={colorScheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.25)"}
+                    selectionHandleColor="#a855f7"
                     numberOfLines={4}
                     textAlignVertical="top"
                     value={value}
