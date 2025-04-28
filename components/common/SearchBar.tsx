@@ -36,6 +36,9 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
                 className="px-14 py-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                 placeholderTextColor={placeholderColor}
                 placeholder={i18n.t("searchBar.placeholder")}
+                cursorColor="#a855f7"
+                selectionColor={colorScheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.25)"}
+                selectionHandleColor="#a855f7"
                 value={value}
                 onChangeText={(text) => {
                     setValue(text);

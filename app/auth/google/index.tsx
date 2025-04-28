@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, KeyboardAvoidingView } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,10 +16,23 @@ export default function PhoneVerificationPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isValidPhone, setIsValidPhone] = useState(false);
+
+  const handleChange = (text: string) => {
+    setPhoneNumber(text);
+    const digitsOnly = text.replace(/\D/g, '');
+    const isValid = digitsOnly.length >= 10;
+    setIsValidPhone(isValid);
+  }
 
   const handleContinue = async () => {
     if (!phoneNumber) {
       setError("Please enter your phone number");
+      return;
+    }
+
+    if (!isValidPhone) {
+      setError("Please enter a valid phone number");
       return;
     }
 
@@ -59,7 +72,7 @@ export default function PhoneVerificationPage() {
           <View className="gap-4">
             <PhoneInput
               value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              onChangeText={handleChange}
             />
 
             {error && (
@@ -71,7 +84,7 @@ export default function PhoneVerificationPage() {
             title="Continue"
             size="lg"
             onPress={handleContinue}
-            disabled={!phoneNumber || isLoading}
+            disabled={!phoneNumber || !isValidPhone || isLoading}
             loading={isLoading}
           />
         </View>

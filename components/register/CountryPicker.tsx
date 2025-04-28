@@ -1,6 +1,6 @@
 import i18n from '@/i18n';
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { View, Pressable } from 'react-native'
+import { View, Pressable, Keyboard } from 'react-native'
 import { ChevronDownIcon, XMarkIcon } from 'react-native-heroicons/outline';
 import { BottomSheetModal, BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,11 +40,14 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
 
     const handleModalOpen = useCallback(() => {
         bottomSheetRef.current?.present();
+        setSearchQuery("");
+        Keyboard.dismiss();
     }, []);
 
     const handleModalClose = useCallback(() => {
         bottomSheetRef.current?.dismiss();
         setSearchQuery("");
+        Keyboard.dismiss();
     }, []);
 
     useEffect(() => {
@@ -101,6 +104,7 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                         contentContainerStyle={{ paddingBottom: insets.bottom }}
                         data={filteredCountries}
                         keyExtractor={(item: CountryInterface) => item.code}
+                        keyboardShouldPersistTaps="always"
                         renderItem={({ item }: { item: CountryInterface }) => (
                             <CountryItem
                                 flag={item.flag}
