@@ -65,7 +65,6 @@ export default function VerificationCodePage() {
             <VerificationInput
               value={code}
               onChange={setCode}
-              onComplete={handleVerify}
               phoneNumber={phoneNumber}
             />
 

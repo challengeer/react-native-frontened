@@ -56,7 +56,7 @@
         "phoneNumberLabel": "Telefónne číslo",
         "phoneNumberDescription": "Pošleme vám SMS kód na overenie",
         "verificationCodeLabel": "Zadajte kód",
-        "verificationCodeDescription": "Overovací kód bol odoslaný na {{phone_number}}",
+        "verificationCodeDescription": "Overovací kód bol odoslaný na +{{phone_number}}",
         "usernameLabel": "Používateľské meno",
         "usernameAvailable": "Používateľské meno je dostupné",
         "usernameTaken": "Toto používateľské meno je už obsadené",

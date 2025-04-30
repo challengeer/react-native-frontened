@@ -12,23 +12,15 @@ interface VerificationInputProps {
     cellCount?: number;
     value: string;
     onChange: (text: string) => void;
-    onComplete: () => void;
     phoneNumber: string;
 }
 
-export default function VerificationInput({ cellCount = 6, value, onChange, onComplete, phoneNumber }: VerificationInputProps) {
+export default function VerificationInput({ cellCount = 6, value, onChange, phoneNumber }: VerificationInputProps) {
     const ref = useBlurOnFulfill({ value, cellCount });
     const [props, getCellOnLayoutHandler] = useClearByFocusCell({
         value,
         setValue: onChange,
     });
-
-    const handleChange = (text: string) => {
-        onChange(text);
-        if (text.length === cellCount) {
-            onComplete();
-        }
-    };
 
     return (
         <View className="gap-2">
@@ -38,7 +30,7 @@ export default function VerificationInput({ cellCount = 6, value, onChange, onCo
                 ref={ref}
                 {...props}
                 value={value}
-                onChangeText={handleChange}
+                onChangeText={onChange}
                 cellCount={cellCount}
                 rootStyle={{ gap: 8 }}
                 keyboardType="number-pad"

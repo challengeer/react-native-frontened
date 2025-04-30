@@ -70,7 +70,6 @@ export default function PhoneVerificationPage() {
 
         <View className="flex-1 px-4 py-4 justify-between">
           <View className="gap-4">
-            <Text className="text-base">{i18n.t('auth.google.verification.description')}</Text>
             <PhoneInput
               value={phoneNumber}
               onChangeText={handleChange}
