@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, KeyboardAvoidingView } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,12 +27,12 @@ export default function PhoneVerificationPage() {
 
   const handleContinue = async () => {
     if (!phoneNumber) {
-      setError("Please enter your phone number");
+      setError(i18n.t('auth.google.verification.error.required'));
       return;
     }
 
     if (!isValidPhone) {
-      setError("Please enter a valid phone number");
+      setError(i18n.t('auth.google.verification.error.invalidPhone'));
       return;
     }
 
@@ -46,7 +46,7 @@ export default function PhoneVerificationPage() {
       // Store the verification ID in the route params
       router.push(`/auth/google/code?verificationId=${verificationId}&phoneNumber=${phoneNumber}`);
     } catch (err: any) {
-      setError(err.message || "Failed to send verification code");
+      setError(i18n.t('auth.google.verification.error.verificationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +59,7 @@ export default function PhoneVerificationPage() {
         className="flex-1"
       >
         <Header
-          title={i18n.t("register.header")}
+          title={i18n.t('auth.google.verification.header')}
           leftSection={
             <IconCircle
               icon={ArrowLeftIcon}
@@ -70,6 +70,7 @@ export default function PhoneVerificationPage() {
 
         <View className="flex-1 px-4 py-4 justify-between">
           <View className="gap-4">
+            <Text className="text-base">{i18n.t('auth.google.verification.description')}</Text>
             <PhoneInput
               value={phoneNumber}
               onChangeText={handleChange}

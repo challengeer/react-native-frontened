@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import React, { useState } from 'react';
 import { useAuth } from '@/components/context/AuthProvider';
 import { SvgXml } from 'react-native-svg';
@@ -33,7 +34,7 @@ export default function GoogleSignInButton() {
     <Button
       size="lg"
       variant="secondary"
-      title="Sign in with Google"
+      title={i18n.t('auth.google.signIn')}
       onPress={handleGoogleSignIn}
       leftSection={<SvgXml xml={googleIconXml} width={24} height={24} />}
       loading={isLoading}

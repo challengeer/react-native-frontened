@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { useState } from "react";
 import { ScrollView, View, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,15 +13,15 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const onboardingData = [
     {
         image: require("@/assets/images/onboarding/images-stack.png"),
-        title: "Create interactive challenges with friends",
+        title: i18n.t('auth.onboarding.slides.0.title'),
     },
     {
         image: require("@/assets/images/onboarding/images-stack.png"),
-        title: "Create interactive challenges with friends",
+        title: i18n.t('auth.onboarding.slides.1.title'),
     },
     {
         image: require("@/assets/images/onboarding/images-stack.png"),
-        title: "Create interactive challenges with friends",
+        title: i18n.t('auth.onboarding.slides.2.title'),
     },
 ];
 
@@ -35,7 +36,7 @@ export default function AuthPage() {
 
     return (
         <SafeAreaView className="flex-1">
-            <Header title="Challengeer" />
+            <Header title={i18n.t('auth.onboarding.title')} />
 
             <StepIndicatorBar
                 currentPosition={currentPosition}

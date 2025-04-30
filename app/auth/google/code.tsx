@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import React, { useState } from "react";
 import { KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -23,7 +24,7 @@ export default function VerificationCodePage() {
 
   const handleVerify = async () => {
     if (!verificationId || !code) {
-      setError("Please enter the verification code");
+      setError(i18n.t('auth.google.verification.code.error.required'));
       return;
     }
 
@@ -37,7 +38,7 @@ export default function VerificationCodePage() {
       // Navigate to the friends page
       router.replace("/auth/google/friends");
     } catch (err: any) {
-      setError(err.message || "Failed to verify code");
+      setError(i18n.t('auth.google.verification.code.error.verificationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +51,7 @@ export default function VerificationCodePage() {
         className="flex-1"
       >
         <Header
-          title="Verification Code"
+          title={i18n.t('auth.google.verification.code.header')}
           leftSection={
             <IconCircle
               icon={ArrowLeftIcon}
@@ -74,7 +75,7 @@ export default function VerificationCodePage() {
           </View>
 
           <Button
-            title="Verify"
+            title={i18n.t('auth.google.verification.code.verify')}
             size="lg"
             onPress={handleVerify}
             disabled={code.length !== 6 || isLoading}
