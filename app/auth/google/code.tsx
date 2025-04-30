@@ -69,7 +69,7 @@ export default function VerificationCodePage() {
             />
 
             {error && (
-              <Text type="error">{error}</Text>
+              <Text type="error" className="text-base">{error}</Text>
             )}
           </View>
 
