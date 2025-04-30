@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Alert, FlatList } from "react-native";
+import { View, FlatList, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Contacts from 'expo-contacts';
 import Header from "@/components/common/Header";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
+import UserItem from "@/components/common/UserItem";
 
 interface Contact {
   id: string;
+  image: Contacts.Image | undefined;
   name: string;
-  phoneNumber: string;
+  phoneNumber: string | undefined;
 }
 
 export default function FriendsPage() {
@@ -31,8 +33,9 @@ export default function FriendsPage() {
         if (data.length > 0) {
           const formattedContacts = data
             .filter(contact => contact.phoneNumbers && contact.phoneNumbers.length > 0)
-            .map(contact => ({
-              id: contact.id,
+            .map((contact, index) => ({
+              id: contact.id || index.toString(),
+              image: contact.image,
               name: contact.name,
               phoneNumber: contact.phoneNumbers![0].number,
             }));
@@ -63,10 +66,12 @@ export default function FriendsPage() {
   };
 
   const renderContact = ({ item }: { item: Contact }) => (
-    <View className="p-4 border-b border-gray-200">
-      <Text className="font-semibold">{item.name}</Text>
-      <Text className="text-gray-600">{item.phoneNumber}</Text>
-    </View>
+    <UserItem
+      name={item.name}
+      title={item.name}
+      subtitle={item.phoneNumber}
+      profilePicture={item.image?.uri}
+    />
   );
 
   useEffect(() => {
@@ -75,9 +80,9 @@ export default function FriendsPage() {
 
   return (
     <SafeAreaView className="flex-1">
-      <Header title="Find Friends" />
+      <Header title="Invite Friends" />
       
-      <View className="flex-1 px-4">
+      <View className="flex-1">
         <Text className="text-xl font-bold mb-4">Connect with Friends</Text>
         <Text className="text-base text-neutral-500 mb-6">
           Find friends who are already using the app
@@ -87,6 +92,8 @@ export default function FriendsPage() {
           <View className="items-center justify-center flex-1">
             <Text className="text-red-500 text-center">{error}</Text>
           </View>
+        ) : isLoading ? (
+          <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
         ) : (
           <FlatList
             data={contacts}
@@ -103,12 +110,11 @@ export default function FriendsPage() {
         )}
       </View>
 
-      <View className="px-4 pb-4">
+      <View className="p-4">
         <Button
           title="Continue"
           size="lg"
           onPress={handleContinue}
-          loading={isLoading}
         />
       </View>
     </SafeAreaView>
