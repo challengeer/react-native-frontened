@@ -4,6 +4,7 @@ import { View, KeyboardAvoidingView } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useAuth } from "@/components/context/AuthProvider";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
@@ -52,6 +53,11 @@ export default function PhoneVerificationPage() {
     }
   };
 
+  const handleBack = async () => {
+    await GoogleSignin.signOut();
+    router.back();
+  };
+
   return (
     <SafeAreaView className="flex-1">
       <KeyboardAvoidingView
@@ -63,7 +69,7 @@ export default function PhoneVerificationPage() {
           leftSection={
             <IconCircle
               icon={ArrowLeftIcon}
-              onPress={() => router.back()}
+              onPress={handleBack}
             />
           }
         />
