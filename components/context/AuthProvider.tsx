@@ -143,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             router.push('/(app)/(tabs)/challenges');
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
-                router.push('/auth/google');
+                return router.push('/auth/google');
             }
             throw error;
         }
