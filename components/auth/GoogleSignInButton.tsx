@@ -2,7 +2,6 @@ import i18n from '@/i18n';
 import React, { useState } from 'react';
 import { useAuth } from '@/components/context/AuthProvider';
 import { SvgXml } from 'react-native-svg';
-import { router } from 'expo-router';
 import Button from '@/components/common/Button';
 
 const googleIconXml = `
@@ -22,9 +21,8 @@ export default function GoogleSignInButton() {
     try {
       setIsLoading(true);
       await signInWithGoogle();
-      router.push('/(app)/(tabs)/challenges');
     } catch (error) {
-      router.push('/auth/google');
+      console.error('Google sign in error:', error);
     } finally {
       setIsLoading(false);
     }

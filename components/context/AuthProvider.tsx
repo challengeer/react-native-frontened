@@ -135,16 +135,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...deviceInfo
             });
 
-            if (result.status !== 200) {
-                throw new Error(result.data.detail || 'Authentication failed');
-            }
-
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
             
             setIsAuthenticated(true);
             await fetchUserProfile();
+            router.push('/(app)/(tabs)/challenges');
         } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                router.push('/auth/google');
+            }
             throw error;
         }
     };
