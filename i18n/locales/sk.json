@@ -35,6 +35,10 @@
                     "verify": "Overiť"
                 }
             }
+        },
+        "contacts": {
+            "header": "Pridaj priateľov",
+            "skip": "Preskočiť"
         }
     },
     "tabs": {

@@ -35,6 +35,10 @@
                     "verify": "Verify"
                 }
             }
+        },
+        "contacts": {
+            "header": "Add friends",
+            "skip": "Skip"
         }
     },
     "tabs": {

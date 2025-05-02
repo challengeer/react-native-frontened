@@ -35,8 +35,8 @@ export default function VerificationCodePage() {
       // Verify the phone number with Firebase
       await confirmPhoneVerification(verificationId, code);
 
-      // Navigate to the friends page
-      router.replace("/auth/google/friends");
+      // Navigate to the contacts page
+      router.replace("/auth/contacts");
     } catch (err: any) {
       setError(i18n.t('auth.google.verification.code.error.verificationFailed'));
     } finally {
