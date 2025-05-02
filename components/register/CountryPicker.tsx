@@ -19,6 +19,16 @@ interface CountryPickerProps {
     className?: string;
 }
 
+// Memoized CountryItem component
+const MemoizedCountryItem = React.memo(({ item, onSelect }: { item: CountryInterface; onSelect: (dialCode: string) => void }) => (
+    <CountryItem
+        flag={item.flag}
+        name={item.name}
+        dial_code={item.dial_code}
+        onPress={() => onSelect(item.dial_code)}
+    />
+));
+
 export default function CountryPicker({ selectedPrefix, onSelect, className }: CountryPickerProps) {
     const { colorScheme } = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
@@ -28,15 +38,19 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ["100%"], []);
 
-    const filteredCountries = countries.filter((country: CountryInterface) =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        country.dial_code.includes(searchQuery)
+    // Memoize filtered countries
+    const filteredCountries = useMemo(() => 
+        countries.filter((country: CountryInterface) =>
+            country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            country.dial_code.includes(searchQuery)
+        ),
+        [countries, searchQuery]
     );
 
-    const handleSelectPrefix = (dialCode: string) => {
+    const handleSelectPrefix = useCallback((dialCode: string) => {
         onSelect(dialCode);
         bottomSheetRef.current?.dismiss();
-    };
+    }, [onSelect]);
 
     const handleModalOpen = useCallback(() => {
         bottomSheetRef.current?.present();
@@ -49,6 +63,11 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
         setSearchQuery("");
         Keyboard.dismiss();
     }, []);
+
+    // Memoize renderItem function
+    const renderItem = useCallback(({ item }: { item: CountryInterface }) => (
+        <MemoizedCountryItem item={item} onSelect={handleSelectPrefix} />
+    ), [handleSelectPrefix]);
 
     useEffect(() => {
         const locale = i18n.locale;
@@ -105,14 +124,15 @@ export default function CountryPicker({ selectedPrefix, onSelect, className }: C
                         data={filteredCountries}
                         keyExtractor={(item: CountryInterface) => item.code}
                         keyboardShouldPersistTaps="always"
-                        renderItem={({ item }: { item: CountryInterface }) => (
-                            <CountryItem
-                                flag={item.flag}
-                                name={item.name}
-                                dial_code={item.dial_code}
-                                onPress={() => handleSelectPrefix(item.dial_code)}
-                            />
-                        )}
+                        renderItem={renderItem}
+                        getItemLayout={(data, index) => ({
+                            length: 60, // Approximate height of each item
+                            offset: 60 * index,
+                            index,
+                        })}
+                        initialNumToRender={10}
+                        maxToRenderPerBatch={10}
+                        windowSize={5}
                     />
                 </View>
             </BottomSheetModal>
