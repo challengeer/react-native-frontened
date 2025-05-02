@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, KeyboardAvoidingView } from "react-native";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -18,6 +18,7 @@ export default function PhoneVerificationPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isValidPhone, setIsValidPhone] = useState(false);
+  const navigation = useNavigation();
 
   const handleChange = (text: string) => {
     setPhoneNumber(text);
@@ -42,8 +43,6 @@ export default function PhoneVerificationPage() {
       setError(null);
       const verificationId = await submitPhoneNumber(phoneNumber);
 
-      console.log("Verification ID:", verificationId);
-
       // Store the verification ID in the route params
       router.push(`/auth/google/code?verificationId=${verificationId}&phoneNumber=${phoneNumber}`);
     } catch (err: any) {
@@ -57,6 +56,14 @@ export default function PhoneVerificationPage() {
     await GoogleSignin.signOut();
     router.back();
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', async () => {
+      await GoogleSignin.signOut();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <SafeAreaView className="flex-1">
