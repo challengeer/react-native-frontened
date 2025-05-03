@@ -38,7 +38,12 @@
         },
         "contacts": {
             "header": "Add friends",
-            "skip": "Skip"
+            "skip": "Skip",
+            "recommended": "Recommended",
+            "contacts": "Contacts",
+            "button": "Continue",
+            "invite": "Invite",
+            "inviteMessage": "Join me on Challengeer: https://challengeer.app"
         }
     },
     "tabs": {

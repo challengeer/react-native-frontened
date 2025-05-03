@@ -38,7 +38,12 @@
         },
         "contacts": {
             "header": "Pridaj priateľov",
-            "skip": "Preskočiť"
+            "skip": "Preskočiť",
+            "recommended": "Odporúčané",
+            "contacts": "Kontakty",
+            "button": "Pokračovať",
+            "invite": "Pozvať",
+            "inviteMessage": "Pridaj sa na Challengeer: https://challengeer.app"
         }
     },
     "tabs": {
