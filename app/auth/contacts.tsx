@@ -1,14 +1,10 @@
 import api from "@/lib/api";
 import i18n from "@/i18n";
-import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
+import React, { useState, useCallback, memo, useMemo } from "react";
 import { View, ActivityIndicator, Pressable, SectionList, Linking } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 import { useQuery, useMutation } from "@tanstack/react-query";
-import * as Contacts from 'expo-contacts';
-import * as Localization from 'expo-localization';
-import * as SMS from 'expo-sms';
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
 import Header from "@/components/common/Header";
@@ -16,126 +12,93 @@ import UserItem from "@/components/common/UserItem";
 import UserInterface from "@/types/UserInterface";
 import Checkbox from "@/components/common/Checkbox";
 import SearchBar from "@/components/common/SearchBar";
+import { useContacts } from "@/hooks/useContacts";
+
+interface Contact {
+  contact_id: string;
+  contact_name: string;
+  phone_number: string;
+}
 
 interface Section {
   title: string;
-  data: UserInterface[];
+  data: (UserInterface | Contact)[];
 }
 
 const UserItemMemo = memo(UserItem);
 
-export default function ContactsPage() {
-  const [contacts, setContacts] = useState<UserInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const { data: recommendations, isLoading: isRecommendationsLoading, isError: isRecommendationsError } = useQuery({
-    queryKey: ["contact-recommendations"],
-    queryFn: () => api.get("/contacts/recommendations"),
+// Custom hook for fetching contacts sorted by interest
+const useContactsByInterest = (isContactsSynced: boolean) => {
+  return useQuery<Contact[]>({
+    queryKey: ["contacts-by-interest"],
+    queryFn: async () => {
+      const response = await api.get("/contacts/sorted-by-interest");
+      return response.data;
+    },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    enabled: isContactsSynced,
   });
+};
 
-  const sendFriendRequestsMutation = useMutation({
-    mutationFn: (userIds: string[]) =>
-      api.post("/friends/add/batch", { receiver_ids: userIds }),
+// Custom hook for fetching recommendations
+const useContactRecommendations = (isContactsSynced: boolean) => {
+  return useQuery<UserInterface[]>({
+    queryKey: ["contact-recommendations"],
+    queryFn: async () => {
+      const response = await api.get("/contacts/recommendations");
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    enabled: isContactsSynced,
+  });
+};
+
+// Custom hook for sending friend requests
+const useSendFriendRequests = () => {
+  return useMutation({
+    mutationFn: async (userIds: string[]) =>
+      await api.post("/friends/add/batch", { receiver_ids: userIds }),
     onSuccess: () => {
       router.replace("/(app)/(tabs)/challenges");
     },
-    onError: (error: any) => {
-      setError(error.message || "Failed to send friend requests");
-    }
   });
+};
 
-  const getContacts = async () => {
-    try {
-      setIsLoading(true);
-      const { status } = await Contacts.requestPermissionsAsync();
+export default function ContactsPage() {
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
 
-      if (status === 'granted') {
-        const { data } = await Contacts.getContactsAsync({
-          fields: [
-            Contacts.Fields.ID,
-            Contacts.Fields.PhoneNumbers,
-            Contacts.Fields.Name,
-            Contacts.Fields.Image
-          ],
-        });
-
-        if (data.length > 0) {
-          const formattedContacts = formatContacts(data);
-          setContacts(formattedContacts);
-
-          const apiContacts = formattedContacts.map((contact) => ({
-            contact_name: contact.display_name,
-            phone_number: contact.username,
-          }));
-
-          await api.post("/contacts/upload", {
-            contacts: apiContacts,
-          });
-        }
-      } else {
-        router.replace("/(app)/(tabs)/challenges");
-      }
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch contacts");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  const formatContacts = (contacts: Contacts.Contact[]): UserInterface[] => {
-    const countryCode = (Localization.getLocales()[0].regionCode || 'US') as CountryCode;
-
-    return contacts
-      .map((contact, index) => {
-        if (!contact.phoneNumbers || contact.phoneNumbers.length === 0) return null;
-
-        const phoneNumber = contact.phoneNumbers[0].number;
-        if (!phoneNumber || phoneNumber.length < 8) return null;
-
-        const parsedNumber = parsePhoneNumberFromString(phoneNumber, countryCode);
-        if (!parsedNumber?.isValid()) return null;
-
-        return {
-          user_id: contact.id || index.toString(),
-          display_name: contact.name,
-          username: parsedNumber.format('E.164').replace('+', ''),
-          profile_picture: contact.image?.uri
-        };
-      })
-      .filter((contact) => contact !== null);
-  };
+  const { isLoading: isDeviceContactsLoading, error: deviceContactsError, isContactsSynced } = useContacts();
+  const { data: contacts, isPending: isContactsLoading, isError: isContactsError } = useContactsByInterest(isContactsSynced);
+  const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError } = useContactRecommendations(isContactsSynced);
+  const { mutate: sendFriendRequests, isPending: isSendingRequests } = useSendFriendRequests();
 
   const filteredContacts = useMemo(() => {
-    if (!searchQuery) return contacts;
+    if (!searchQuery || !contacts) return contacts || [];
     const query = searchQuery.toLowerCase();
-    return contacts.filter((contact: UserInterface) => 
-      contact.display_name.toLowerCase().includes(query) ||
-      contact.username.includes(query)
+    return contacts.filter((contact: Contact) => 
+      contact.contact_name.toLowerCase().includes(query) ||
+      contact.phone_number.includes(query)
     );
   }, [contacts, searchQuery]);
 
   const filteredRecommendations = useMemo(() => {
-    if (!searchQuery || !recommendations?.data) return recommendations?.data || [];
+    if (!searchQuery || !recommendations) return recommendations || [];
     const query = searchQuery.toLowerCase();
-    return recommendations.data.filter((user: UserInterface) => 
+    return recommendations.filter((user: UserInterface) => 
       user.display_name.toLowerCase().includes(query) ||
       user.username.includes(query)
     );
-  }, [recommendations?.data, searchQuery]);
+  }, [recommendations, searchQuery]);
 
   const handleSkip = () => {
-    // TODO: Add confirmation modal
     router.replace("/(app)/(tabs)/challenges");
   };
 
   const handleContinue = () => {
     const userIds = Array.from(selectedUsers);
     if (userIds.length > 0) {
-      sendFriendRequestsMutation.mutate(userIds);
+      sendFriendRequests(userIds);
     } else {
       router.replace("/(app)/(tabs)/challenges");
     }
@@ -155,18 +118,8 @@ export default function ContactsPage() {
 
   const handleInvite = async (phoneNumber: string) => {
     const message = i18n.t("auth.contacts.inviteMessage", { phoneNumber });
-    const isAvailable = await SMS.isAvailableAsync();
-
-    if (isAvailable) {
-      const { result } = await SMS.sendSMSAsync(
-        [phoneNumber],
-        message
-      );
-    } else {
-      // Fallback to regular SMS link
-      const smsUrl = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-      Linking.openURL(smsUrl);
-    }
+    const smsUrl = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+    Linking.openURL(smsUrl);
   };
 
   const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
@@ -194,32 +147,36 @@ export default function ContactsPage() {
     );
   }, [selectedUsers]);
 
-  const renderContact = useCallback(({ item, index }: { item: UserInterface, index: number }) => (
+  const renderContact = useCallback(({ item, index }: { item: Contact, index: number }) => (
     <UserItemMemo
       index={index}
-      name={item.display_name}
-      title={item.display_name}
-      subtitle={`+${item.username}`}
-      profilePicture={item.profile_picture}
+      disabled
+      name={item.contact_name}
+      title={item.contact_name}
+      subtitle={`+${item.phone_number}`}
       rightSection={
         <Button
           size="sm"
           title={i18n.t("auth.contacts.invite")}
-          onPress={() => handleInvite(item.username)}
+          onPress={() => handleInvite(item.phone_number)}
         />
       }
-      disabled
     />
   ), []);
 
-  const renderItem = useCallback(({ item, section, index }: { item: UserInterface, section: Section, index: number }) => {
-    if (section.title === i18n.t("auth.contacts.recommended")) {
-      return renderRecommendedUser({ item, index });
+  const renderItem = useCallback(({ item, index }: { item: UserInterface | Contact, index: number }) => {
+    if (sections[0].data.includes(item)) {
+      return renderRecommendedUser({ item: item as UserInterface, index });
     }
-    return renderContact({ item, index });
+    return renderContact({ item: item as Contact, index });
   }, [renderRecommendedUser, renderContact]);
 
-  const keyExtractor = useCallback((item: UserInterface) => item.user_id, []);
+  const keyExtractor = useCallback((item: UserInterface | Contact) => {
+    if (sections[0].data.includes(item)) {
+      return (item as UserInterface).user_id;
+    }
+    return (item as Contact).contact_id;
+  }, []);
 
   const sections: Section[] = [
     {
@@ -232,9 +189,8 @@ export default function ContactsPage() {
     },
   ];
 
-  useEffect(() => {
-    getContacts();
-  }, []);
+  const isLoading = isDeviceContactsLoading || isContactsLoading || isRecommendationsLoading;
+  const isError = deviceContactsError || isContactsError || isRecommendationsError;
 
   return (
     <SafeAreaView className="flex-1">
@@ -252,11 +208,11 @@ export default function ContactsPage() {
       </View>
 
       <View className="flex-1">
-        {error ? (
+        {isError ? (
           <View className="items-center justify-center flex-1">
-            <Text className="text-red-500 text-center">{error}</Text>
+            <Text className="text-red-500 text-center">Something went wrong</Text>
           </View>
-        ) : isLoading || isRecommendationsLoading ? (
+        ) : isLoading ? (
           <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
         ) : (
           <SectionList
@@ -268,7 +224,7 @@ export default function ContactsPage() {
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={true}
-            getItemLayout={(data, index) => ({
+            getItemLayout={(_, index) => ({
               length: 72,
               offset: 72 * index,
               index,
@@ -282,7 +238,7 @@ export default function ContactsPage() {
           title={i18n.t("auth.contacts.button")}
           size="lg"
           onPress={handleContinue}
-          loading={sendFriendRequestsMutation.isPending}
+          loading={isSendingRequests}
         />
       </View>
     </SafeAreaView>
