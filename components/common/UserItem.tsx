@@ -30,8 +30,8 @@ export default function UserItem({
         <View className={`px-4 py-3 flex-row items-center gap-3 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
             <Avatar source={profilePicture} name={name} />
             <View className="flex-1">
-                {typeof title === "string" ? <Text className="leading-tight font-medium">{title}</Text> : title}
-                {typeof subtitle === "string" ? <Text type="secondary" className="text-base">{subtitle}</Text> : subtitle}
+                {typeof title === "string" ? <Text numberOfLines={1} ellipsizeMode="tail" className="leading-tight font-medium">{title}</Text> : title}
+                {typeof subtitle === "string" ? <Text type="secondary" numberOfLines={1} ellipsizeMode="tail" className="text-base">{subtitle}</Text> : subtitle}
             </View>
             {rightSection}
         </View>
