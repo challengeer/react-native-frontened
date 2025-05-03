@@ -5,6 +5,7 @@ import { View, ActivityIndicator, Pressable, SectionList, Linking } from "react-
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useContacts } from "@/hooks/useContacts";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
 import Header from "@/components/common/Header";
@@ -12,7 +13,6 @@ import UserItem from "@/components/common/UserItem";
 import UserInterface from "@/types/UserInterface";
 import Checkbox from "@/components/common/Checkbox";
 import SearchBar from "@/components/common/SearchBar";
-import { useContacts } from "@/hooks/useContacts";
 
 interface Contact {
   contact_id: string;
@@ -165,17 +165,17 @@ export default function ContactsPage() {
   ), []);
 
   const renderItem = useCallback(({ item, index }: { item: UserInterface | Contact, index: number }) => {
-    if (sections[0].data.includes(item)) {
-      return renderRecommendedUser({ item: item as UserInterface, index });
+    if ("contact_id" in item) {
+      return renderContact({ item: item as Contact, index });
     }
-    return renderContact({ item: item as Contact, index });
+    return renderRecommendedUser({ item: item as UserInterface, index });
   }, [renderRecommendedUser, renderContact]);
 
   const keyExtractor = useCallback((item: UserInterface | Contact) => {
-    if (sections[0].data.includes(item)) {
-      return (item as UserInterface).user_id;
+    if ("contact_id" in item) {
+      return `contact-${(item as Contact).contact_id}`;
     }
-    return (item as Contact).contact_id;
+    return `recommended-${(item as UserInterface).user_id}`;
   }, []);
 
   const sections: Section[] = [
