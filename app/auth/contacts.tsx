@@ -1,6 +1,6 @@
 import api from "@/lib/api";
 import i18n from "@/i18n";
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { View, ActivityIndicator, Pressable, SectionList, Linking } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +15,7 @@ import Header from "@/components/common/Header";
 import UserItem from "@/components/common/UserItem";
 import UserInterface from "@/types/UserInterface";
 import Checkbox from "@/components/common/Checkbox";
+import SearchBar from "@/components/common/SearchBar";
 
 interface Section {
   title: string;
@@ -28,6 +29,7 @@ export default function ContactsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: recommendations, isLoading: isRecommendationsLoading, isError: isRecommendationsError } = useQuery({
     queryKey: ["contact-recommendations"],
@@ -107,6 +109,24 @@ export default function ContactsPage() {
       .filter((contact) => contact !== null);
   };
 
+  const filteredContacts = useMemo(() => {
+    if (!searchQuery) return contacts;
+    const query = searchQuery.toLowerCase();
+    return contacts.filter((contact: UserInterface) => 
+      contact.display_name.toLowerCase().includes(query) ||
+      contact.username.includes(query)
+    );
+  }, [contacts, searchQuery]);
+
+  const filteredRecommendations = useMemo(() => {
+    if (!searchQuery || !recommendations?.data) return recommendations?.data || [];
+    const query = searchQuery.toLowerCase();
+    return recommendations.data.filter((user: UserInterface) => 
+      user.display_name.toLowerCase().includes(query) ||
+      user.username.includes(query)
+    );
+  }, [recommendations?.data, searchQuery]);
+
   const handleSkip = () => {
     // TODO: Add confirmation modal
     router.replace("/(app)/(tabs)/challenges");
@@ -149,8 +169,9 @@ export default function ContactsPage() {
     }
   };
 
-  useEffect(() => {
-    getContacts();
+  const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
+    if (section.data.length === 0) return null;
+    return <Text className="px-4 pt-4 pb-2 text-lg font-bold">{section.title}</Text>
   }, []);
 
   const renderRecommendedUser = useCallback(({ item, index }: { item: UserInterface, index: number }) => {
@@ -203,17 +224,17 @@ export default function ContactsPage() {
   const sections: Section[] = [
     {
       title: i18n.t("auth.contacts.recommended"),
-      data: recommendations?.data || [],
+      data: filteredRecommendations,
     },
     {
       title: i18n.t("auth.contacts.contacts"),
-      data: contacts,
+      data: filteredContacts,
     },
   ];
 
-  const renderSectionHeader = useCallback(({ section }: { section: Section }) => (
-    <Text className="px-4 pt-4 pb-2 text-lg font-bold">{section.title}</Text>
-  ), []);
+  useEffect(() => {
+    getContacts();
+  }, []);
 
   return (
     <SafeAreaView className="flex-1">
@@ -225,6 +246,10 @@ export default function ContactsPage() {
           </Pressable>
         }
       />
+
+      <View className="px-4 pb-2">
+        <SearchBar onSearch={setSearchQuery} />
+      </View>
 
       <View className="flex-1">
         {error ? (

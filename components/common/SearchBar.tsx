@@ -26,6 +26,8 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
         <View className="relative w-full flex-row items-center">
             <View className="absolute top-3 left-4 z-10">
                 <Icon
+                    lightColor="#737373"
+                    darkColor="#a3a3a3"
                     icon={MagnifyingGlassIcon}
                     onPress={() => inputRef.current?.focus()}
                 />
