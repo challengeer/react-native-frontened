@@ -99,6 +99,7 @@
     "friends": {
         "header": "Friends",
         "contacts": "Contacts",
+        "recommendations": "Recommendations",
         "friendRequests": "Friend requests"
     },
     "userSearch": {

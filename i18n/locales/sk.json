@@ -89,6 +89,7 @@
     "friends": {
         "header": "Priatelia",
         "contacts": "Kontakty",
+        "recommendations": "Odporúčania",
         "friendRequests": "Žiadosti o priateľstvo"
     },
     "friendActionButton": {
