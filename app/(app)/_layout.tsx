@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from "nativewind";
 import { setupNotificationHandlers } from "@/lib/notifications";
 import { useQueryClient } from "@tanstack/react-query";
+import { ContactsProvider } from "@/providers/ContactsProvider";
 
 // Keep the splash screen visible while we fetch the resources
 SplashScreen.preventAutoHideAsync();
@@ -39,13 +40,15 @@ export default function AppLayout() {
     }
 
     return (
-        <Stack
-            key={language}
-            screenOptions={{
-                headerShown: false,
-                animation: "ios_from_right",
-                contentStyle: { backgroundColor }
-            }}
-        />
+        <ContactsProvider>
+            <Stack
+                key={language}
+                screenOptions={{
+                    headerShown: false,
+                    animation: "ios_from_right",
+                    contentStyle: { backgroundColor }
+                }}
+            />
+        </ContactsProvider>
     )
 };
