@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { UserPlusIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { CheckCircleIcon } from "react-native-heroicons/outline";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
-import { useFriendActions } from '@/lib/hooks/useFriendActions';
+import { useFriendActions } from '@/hooks/useFriendActions';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 

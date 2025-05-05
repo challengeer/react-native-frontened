@@ -81,7 +81,7 @@ export default function ChallengesPage() {
                             </Text>
                             <Button
                                 title={i18n.t("challenges.noFriends.button") || "Go to Friends"}
-                                onPress={() => router.push("/(app)/(tabs)/friends")}
+                                onPress={() => router.push("/(app)/contacts")}
                                 leftSection={
                                     <Icon
                                         icon={UserGroupIcon}
@@ -99,7 +99,7 @@ export default function ChallengesPage() {
                             </Text>
                             <Button
                                 title={i18n.t("challenges.noChallenges.button")}
-                                onPress={() => router.push("/create_challenge")}
+                                onPress={() => router.push("/(app)/contacts")}
                                 leftSection={
                                     <Icon
                                         icon={PlusIcon}

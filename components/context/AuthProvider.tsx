@@ -7,13 +7,22 @@ import { router } from 'expo-router';
 import { getFCMToken } from '@/lib/notifications';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
-import { getAuth, GoogleAuthProvider, signInWithCredential } from '@react-native-firebase/auth';
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithCredential,
+    PhoneAuthProvider,
+    signInWithPhoneNumber,
+} from '@react-native-firebase/auth';
 
 interface AuthContextType {
     user: UserPrivateInterface | null;
     isLoading: boolean;
     isAuthenticated: boolean;
     signInWithGoogle: () => Promise<void>;
+    submitPhoneNumber: (phoneNumber: string) => Promise<string>;
+    confirmPhoneVerification: (verificationId: string, code: string) => Promise<void>;
     logout: () => Promise<void>;
     refreshUser: () => Promise<void>;
 }
@@ -30,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         // Initialize Google Sign-In
         GoogleSignin.configure({
-            webClientId: '344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com', // from google-services.json
+            webClientId: '344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com',
         });
     }, []);
 
@@ -43,6 +52,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (error) {
             console.error('Error fetching user profile:', error);
             await logout();
+        }
+    };
+
+    const submitPhoneNumber = async (phoneNumber: string): Promise<string> => {
+        try {
+            const confirmation = await signInWithPhoneNumber(auth, phoneNumber);
+            return confirmation.verificationId || '';
+        } catch (error) {
+            console.error('Phone verification error:', error);
+            throw error;
+        }
+    };
+
+    const confirmPhoneVerification = async (verificationId: string, code: string): Promise<void> => {
+        try {
+            const credential = PhoneAuthProvider.credential(verificationId, code);
+            await auth.currentUser?.linkWithCredential(credential);
+            const firebaseToken = await auth.currentUser?.getIdToken();
+
+            if (!firebaseToken) {
+                throw new Error('No Firebase token received');
+            }
+
+            const fcmToken = await getFCMToken();
+
+            const result = await api.post('/auth/google', { 
+                id_token: firebaseToken,
+                fcm_token: fcmToken,
+            });
+
+            if (result.status !== 200) {
+                throw new Error(result.data.detail || 'Authentication failed');
+            }
+
+            await SecureStore.setItemAsync('access_token', result.data.access_token);
+            await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
+
+            setIsAuthenticated(true);
+            await fetchUserProfile();
+        } catch (error) {
+            console.error('Phone verification confirmation error:', error);
+            throw error;
         }
     };
 
@@ -59,8 +110,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Sign in with Google
             const credential = GoogleAuthProvider.credential(idToken);
-            const userCredential = await signInWithCredential(auth, credential);
-            const firebaseToken = await userCredential.user?.getIdToken();
+            await signInWithCredential(auth, credential);
+            const firebaseToken = await auth.currentUser?.getIdToken();
+
+            if (!firebaseToken) {
+                throw new Error('No Firebase token received');
+            }
 
             // Get FCM token
             const fcmToken = await getFCMToken();
@@ -80,18 +135,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...deviceInfo
             });
 
-            if (result.status !== 200) {
-                throw new Error(result.data.detail || 'Authentication failed');
-            }
-
             await SecureStore.setItemAsync('access_token', result.data.access_token);
             await SecureStore.setItemAsync('refresh_token', result.data.refresh_token);
             
             setIsAuthenticated(true);
             await fetchUserProfile();
-            router.replace('/');
+            router.push('/(app)/(tabs)/challenges');
         } catch (error: any) {
-            console.error('Authentication error:', error);
+            if (error.response && error.response.status === 400) {
+                return router.push('/auth/google');
+            }
             throw error;
         }
     };
@@ -144,6 +197,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             isLoading,
             isAuthenticated,
             signInWithGoogle,
+            submitPhoneNumber,
+            confirmPhoneVerification,
             logout,
             refreshUser
         }}>

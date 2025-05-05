@@ -23,9 +23,11 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const debouncedSearch = onSearch ? useCallback(debounce(onSearch, 500), []) : undefined;
 
     return (
-        <View className="relative flex-1 flex-row items-center">
+        <View className="relative w-full flex-row items-center">
             <View className="absolute top-3 left-4 z-10">
                 <Icon
+                    lightColor="#737373"
+                    darkColor="#a3a3a3"
                     icon={MagnifyingGlassIcon}
                     onPress={() => inputRef.current?.focus()}
                 />
@@ -36,6 +38,9 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
                 className="px-14 py-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                 placeholderTextColor={placeholderColor}
                 placeholder={i18n.t("searchBar.placeholder")}
+                cursorColor="#a855f7"
+                selectionColor={colorScheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.25)"}
+                selectionHandleColor="#a855f7"
                 value={value}
                 onChangeText={(text) => {
                     setValue(text);

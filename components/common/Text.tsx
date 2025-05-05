@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 interface TextElementProps extends RNTextProps {
     children?: ReactNode
-    type?: "primary" | "secondary"
+    type?: "primary" | "secondary" | "error"
     className?: string
 }
 
@@ -17,7 +17,9 @@ export default function Text({ children, type = "primary", className = "", ...pr
               } ${
                 type === "primary" 
                     ? "text-neutral-900 dark:text-neutral-100" 
-                    : "text-neutral-500 dark:text-neutral-400"
+                    : type === "error"
+                        ? "text-red-500"
+                        : "text-neutral-500 dark:text-neutral-400"
             } ${className}`}
             {...props}
         >

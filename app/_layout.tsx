@@ -3,6 +3,7 @@ import "../global.css";
 import "@/i18n";
 import AppearanceProvider from "@/components/context/AppearanceProvider";
 import { AuthProvider } from "@/components/context/AuthProvider";
+import { ContactsProvider } from "@/providers/ContactsProvider";
 
 import { useEffect } from "react";
 import { useColorScheme } from "nativewind";
@@ -32,18 +33,20 @@ export default function Root() {
         <QueryClientProvider client={queryClient}>
             <AppearanceProvider>
                 <AuthProvider>
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                        <BottomSheetModalProvider>
-                            <StatusBar
-                                barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-                                backgroundColor="transparent"
-                            />
+                    <ContactsProvider>
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                            <BottomSheetModalProvider>
+                                <StatusBar
+                                    barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+                                    backgroundColor="transparent"
+                                />
 
-                            <View style={{ flex: 1, backgroundColor }}>
-                                <Slot />
-                            </View>
-                        </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
+                                <View style={{ flex: 1, backgroundColor }}>
+                                    <Slot />
+                                </View>
+                            </BottomSheetModalProvider>
+                        </GestureHandlerRootView>
+                    </ContactsProvider>
                 </AuthProvider>
             </AppearanceProvider>
         </QueryClientProvider>

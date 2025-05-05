@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { XMarkIcon } from "react-native-heroicons/outline";
-import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
+import { useChallengeActions } from "@/hooks/useChallengeActions";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 

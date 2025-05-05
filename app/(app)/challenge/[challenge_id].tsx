@@ -5,7 +5,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, CameraIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
-import { useChallengeActions } from "@/lib/hooks/useChallengeActions";
+import { useChallengeActions } from "@/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
 import { getDetailedTimeLeft } from "@/utils/timeUtils";
 import { useAuth } from "@/components/context/AuthProvider";

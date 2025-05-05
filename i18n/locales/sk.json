@@ -1,4 +1,51 @@
 {
+    "auth": {
+        "onboarding": {
+            "title": "Challengeer",
+            "slides": [
+                {
+                    "title": "Vytvárajte interaktívne výzvy s priateľmi"
+                },
+                {
+                    "title": "Sledujte svoj pokrok a úspechy"
+                },
+                {
+                    "title": "Zostaňte motivovaní s vašou komunitou"
+                }
+            ]
+        },
+        "google": {
+            "signIn": "Prihlásiť sa cez Google",
+            "verification": {
+                "header": "Overenie telefónu",
+                "description": "Prosím, zadajte svoje telefónne číslo pre pokračovanie",
+                "error": {
+                    "invalidPhone": "Prosím, zadajte platné telefónne číslo",
+                    "required": "Prosím, zadajte svoje telefónne číslo",
+                    "verificationFailed": "Nepodarilo sa odoslať overovací kód"
+                },
+                "code": {
+                    "header": "Overovací kód",
+                    "description": "Zadajte kód odoslaný na {{phoneNumber}}",
+                    "error": {
+                        "invalidCode": "Prosím, zadajte platný overovací kód",
+                        "required": "Prosím, zadajte overovací kód",
+                        "verificationFailed": "Nepodarilo sa overiť kód"
+                    },
+                    "verify": "Overiť"
+                }
+            }
+        },
+        "contacts": {
+            "header": "Pridaj priateľov",
+            "skip": "Preskočiť",
+            "recommended": "Odporúčané",
+            "contacts": "Kontakty",
+            "button": "Pokračovať",
+            "invite": "Pozvať",
+            "inviteMessage": "Pridaj sa na Challengeer: https://challengeer.app"
+        }
+    },
     "tabs": {
         "map": "Mapa",
         "challenges": "Výzvy",
@@ -18,7 +65,7 @@
         "phoneNumberLabel": "Telefónne číslo",
         "phoneNumberDescription": "Pošleme vám SMS kód na overenie",
         "verificationCodeLabel": "Zadajte kód",
-        "verificationCodeDescription": "Overovací kód bol odoslaný na",
+        "verificationCodeDescription": "Overovací kód bol odoslaný na +{{phone_number}}",
         "usernameLabel": "Používateľské meno",
         "usernameAvailable": "Používateľské meno je dostupné",
         "usernameTaken": "Toto používateľské meno je už obsadené",
@@ -42,6 +89,7 @@
     "friends": {
         "header": "Priatelia",
         "contacts": "Kontakty",
+        "recommendations": "Odporúčania",
         "friendRequests": "Žiadosti o priateľstvo"
     },
     "friendActionButton": {
@@ -162,5 +210,32 @@
         },
         "version": "Challengeer v{{version}}",
         "location": "Košice, Slovensko"
+    },
+    "calendar": {
+        "months": {
+            "1": "Január",
+            "2": "Február",
+            "3": "Marec",
+            "4": "Apríl",
+            "5": "Máj",
+            "6": "Jún",
+            "7": "Júl",
+            "8": "August",
+            "9": "September",
+            "10": "Október",
+            "11": "November",
+            "12": "December"
+        },
+        "weekdays": {
+            "short": {
+                "mon": "Po",
+                "tue": "Ut",
+                "wed": "St",
+                "thu": "Št",
+                "fri": "Pi",
+                "sat": "So",
+                "sun": "Ne"
+            }
+        }
     }
 }

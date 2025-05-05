@@ -15,23 +15,23 @@ interface UserItemProps {
     disabled?: boolean;
 }
 
-export default function UserItem({ 
-    index, 
-    userId, 
-    title, 
-    subtitle, 
-    name, 
-    profilePicture, 
+export default function UserItem({
+    index,
+    userId,
+    title,
+    subtitle,
+    name,
+    profilePicture,
     rightSection,
     onPress,
-    disabled 
+    disabled
 }: UserItemProps) {
     const content = (
-        <View className="px-4 py-3 flex-row items-center gap-3">
+        <View className={`px-4 py-3 flex-row items-center gap-3 border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
             <Avatar source={profilePicture} name={name} />
             <View className="flex-1">
-                {typeof title === "string" ? <Text className="leading-tight font-medium">{title}</Text> : title}
-                {typeof subtitle === "string" ? <Text type="secondary" className="text-base">{subtitle}</Text> : subtitle}
+                {typeof title === "string" ? <Text numberOfLines={1} ellipsizeMode="tail" className="leading-tight font-medium">{title}</Text> : title}
+                {typeof subtitle === "string" ? <Text type="secondary" numberOfLines={1} ellipsizeMode="tail" className="text-base">{subtitle}</Text> : subtitle}
             </View>
             {rightSection}
         </View>
@@ -39,9 +39,8 @@ export default function UserItem({
 
     if (disabled || onPress) {
         return (
-            <Pressable 
+            <Pressable
                 onPress={!disabled ? onPress : undefined}
-                className={`border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}
                 disabled={disabled}
             >
                 {content}
@@ -49,9 +48,13 @@ export default function UserItem({
         );
     }
 
-    return (
-        <Link href={`/user/${userId}`} className={`border-b border-neutral-100 dark:border-neutral-800 ${index === 0 ? "border-t" : ""}`}>
-            {content}
-        </Link>
-    );
+    if (userId) {
+        return (
+            <Link href={`/user/${userId}`}>
+                {content}
+            </Link>
+        );
+    }
+
+    return content;
 }

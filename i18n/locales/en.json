@@ -1,4 +1,51 @@
 {
+    "auth": {
+        "onboarding": {
+            "title": "Challengeer",
+            "slides": [
+                {
+                    "title": "Create interactive challenges with friends"
+                },
+                {
+                    "title": "Track your progress and achievements"
+                },
+                {
+                    "title": "Stay motivated with your community"
+                }
+            ]
+        },
+        "google": {
+            "signIn": "Sign in with Google",
+            "verification": {
+                "header": "Phone Verification",
+                "description": "Please enter your phone number to continue",
+                "error": {
+                    "invalidPhone": "Please enter a valid phone number",
+                    "required": "Please enter your phone number",
+                    "verificationFailed": "Failed to send verification code"
+                },
+                "code": {
+                    "header": "Verification Code",
+                    "description": "Enter the code sent to {{phoneNumber}}",
+                    "error": {
+                        "invalidCode": "Please enter a valid verification code",
+                        "required": "Please enter the verification code",
+                        "verificationFailed": "Failed to verify code"
+                    },
+                    "verify": "Verify"
+                }
+            }
+        },
+        "contacts": {
+            "header": "Add friends",
+            "skip": "Skip",
+            "recommended": "Recommended",
+            "contacts": "Contacts",
+            "button": "Continue",
+            "invite": "Invite",
+            "inviteMessage": "Join me on Challengeer: https://challengeer.app"
+        }
+    },
     "tabs": {
         "map": "Map",
         "challenges": "Challenges",
@@ -37,7 +84,7 @@
         "phoneNumberLabel": "Phone number",
         "phoneNumberDescription": "We will send SMS code for verification",
         "verificationCodeLabel": "Enter code",
-        "verificationCodeDescription": "Verification code sent to",
+        "verificationCodeDescription": "Verification code sent to +{{phone_number}}",
         "usernameLabel": "Username",
         "usernameAvailable": "Username is available",
         "usernameTaken": "This username is already taken",
@@ -52,6 +99,7 @@
     "friends": {
         "header": "Friends",
         "contacts": "Contacts",
+        "recommendations": "Recommendations",
         "friendRequests": "Friend requests"
     },
     "userSearch": {

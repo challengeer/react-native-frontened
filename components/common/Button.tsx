@@ -21,7 +21,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
         },
         secondary: {
             button: "bg-neutral-100 dark:bg-neutral-800",
-            text: "text-neutral-900"
+            text: "text-black dark:text-white"
         },
         logout: {
             button: "bg-red-500",
@@ -74,7 +74,7 @@ export default function Button({ title, leftSection, rightSection, size = "md", 
             {loading && (
                 <ActivityIndicator
                     size={sizeStyles[size].activityIndicator as "small" | "large"}
-                    className={`${variantStyles[variant].text} absolute`} 
+                    className={`${variantStyles[variant].text} absolute`}
                 />
             )}
             <View className={loading ? 'opacity-0' : ''}>

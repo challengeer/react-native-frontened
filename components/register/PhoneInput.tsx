@@ -1,17 +1,22 @@
 import i18n from "@/i18n";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
-import Text from "@/components/common/Text";
 import { InputBar } from "@/components/common/InputBar";
+import Text from "@/components/common/Text";
 import CountryPicker from "@/components/register/CountryPicker";
 
-export default function PhoneInput() {
-    const [selectedPrefix, setSelectedPrefix] = useState('+1');
-    const [phoneNumber, setPhoneNumber] = useState('');
+interface PhoneInputProps {
+    value?: string;
+    onChangeText?: (text: string) => void;
+}
 
-    const isValidPhoneNumber = (number: string) => {
-        return number.length >= 7 && number.length <= 15;
-    }; /* simple verification*/
+export default function PhoneInput({ value, onChangeText }: PhoneInputProps) {
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [selectedPrefix, setSelectedPrefix] = useState('+1');
+
+    useEffect(() => {
+        onChangeText?.(selectedPrefix + phoneNumber);
+    }, [selectedPrefix, phoneNumber]);
 
     return (
         <View className="gap-2">
