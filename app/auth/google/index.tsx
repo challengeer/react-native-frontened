@@ -5,7 +5,7 @@ import { router, useNavigation } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";

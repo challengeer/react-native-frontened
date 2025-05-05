@@ -4,7 +4,7 @@ import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { AppearanceContext } from "@/components/context/AppearanceProvider";
+import { AppearanceContext } from "@/providers/AppearanceProvider";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import OptionButton from "@/components/settings/SettingsItem";

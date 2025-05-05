@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
 import { Link, router } from "expo-router";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { PlusIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import Avatar from "@/components/common/Avatar";

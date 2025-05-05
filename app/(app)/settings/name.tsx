@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";

@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import * as Application from "expo-application";
 import React, { useCallback } from "react";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

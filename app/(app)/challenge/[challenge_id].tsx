@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/hooks/useChallengeActions";
 import { Challenge } from "@/types/Challenge";
 import { getDetailedTimeLeft } from "@/utils/timeUtils";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";

@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";

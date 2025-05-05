@@ -1,6 +1,6 @@
 import i18n from '@/i18n';
 import React, { useState } from 'react';
-import { useAuth } from '@/components/context/AuthProvider';
+import { useAuth } from '@/providers/AuthProvider';
 import { SvgXml } from 'react-native-svg';
 import Button from '@/components/common/Button';
 

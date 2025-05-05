@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Redirect, Stack } from "expo-router";
-import { useAuth } from "@/components/context/AuthProvider";
-import { AppearanceContext } from "@/components/context/AppearanceProvider";
+import { useAuth } from "@/providers/AuthProvider";
+import { AppearanceContext } from "@/providers/AppearanceProvider";
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from "nativewind";
 import { setupNotificationHandlers } from "@/lib/notifications";

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { AppearanceContext } from "@/components/context/AppearanceProvider";
+import { AppearanceContext } from "@/providers/AppearanceProvider";
 import { useColorScheme } from "nativewind";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";

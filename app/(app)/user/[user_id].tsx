@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckCircleIcon } from "react-native-heroicons/outline";
 import { UserPlusIcon, UserMinusIcon } from "react-native-heroicons/solid";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { useFriendActions } from '@/hooks/useFriendActions';
 import UserInterface from "@/types/UserInterface";
 import Text from "@/components/common/Text";

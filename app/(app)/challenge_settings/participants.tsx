@@ -11,7 +11,7 @@ import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import UserItem from "@/components/common/UserItem";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRef, useCallback } from "react";
 import { useColorScheme } from "nativewind";

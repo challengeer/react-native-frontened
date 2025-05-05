@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import UsernameInput from "@/components/register/UsernameInput";

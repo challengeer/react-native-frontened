@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { View } from "react-native";
 import { Link, router } from "expo-router";
-import { useAuth } from "@/components/context/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import FriendRequests from "@/components/friends/FriendRequests";

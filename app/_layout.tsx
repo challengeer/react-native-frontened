@@ -1,8 +1,8 @@
 import "../global.css";
 
 import "@/i18n";
-import AppearanceProvider from "@/components/context/AppearanceProvider";
-import { AuthProvider } from "@/components/context/AuthProvider";
+import AppearanceProvider from "@/providers/AppearanceProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 import { ContactsProvider } from "@/providers/ContactsProvider";
 
 import { useEffect } from "react";
