@@ -13,7 +13,6 @@ export const useContacts = () => {
     queryKey: ["contacts-by-interest"],
     queryFn: async () => {
       const response = await api.get("/contacts/sorted-by-interest");
-      console.log(response.data);
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
@@ -23,7 +22,6 @@ export const useContacts = () => {
     queryKey: ["contact-recommendations"],
     queryFn: async () => {
       const response = await api.get("/contacts/recommendations");
-      console.log(response.data);
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
