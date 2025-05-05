@@ -23,7 +23,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const debouncedSearch = onSearch ? useCallback(debounce(onSearch, 500), []) : undefined;
 
     return (
-        <View className="relative w-full flex-row items-center">
+        <View className="relative flex-1 flex-row items-center">
             <View className="absolute top-3 left-4 z-10">
                 <Icon
                     lightColor="#737373"
@@ -35,7 +35,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
 
             <TextInput
                 ref={inputRef}
-                className="px-14 py-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
+                className="px-14 py-3 flex-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg text-lg text-neutral-900 dark:text-neutral-100"
                 placeholderTextColor={placeholderColor}
                 placeholder={i18n.t("searchBar.placeholder")}
                 cursorColor="#a855f7"
