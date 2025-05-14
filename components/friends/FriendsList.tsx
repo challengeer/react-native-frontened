@@ -4,8 +4,8 @@ import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { Linking } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import { useContacts } from "@/hooks/useContacts";
+import { useFriends } from "@/hooks/useFriends";
 import Icon from "@/components/common/Icon";
 import Text from "@/components/common/Text";
 import Button from "@/components/common/Button";
@@ -33,15 +33,7 @@ const UserItemMemo = React.memo(UserItem);
 
 export default function FriendsList() {
     const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError } = useContacts();
-
-    const { data: friends, isPending: isFriendsLoading, isError: isFriendsError, refetch: refetchFriends } = useQuery<Friend[]>({
-        queryKey: ["friends"],
-        queryFn: async () => {
-            const response = await api.get("/friends/list");
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5,
-    });
+    const { friends, isFriendsLoading, isFriendsError, refetchFriends } = useFriends();
 
     const handleInvite = async (phoneNumber: string) => {
         const message = i18n.t("auth.contacts.inviteMessage", { phoneNumber });
