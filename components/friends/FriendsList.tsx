@@ -1,5 +1,4 @@
 import i18n from "@/i18n";
-import api from "@/lib/api";
 import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
@@ -32,7 +31,7 @@ interface Section {
 const UserItemMemo = React.memo(UserItem);
 
 export default function FriendsList() {
-    const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError } = useContacts();
+    const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError, refetchContacts, refetchRecommendations } = useContacts();
     const { friends, isFriendsLoading, isFriendsError, refetchFriends } = useFriends();
 
     const handleInvite = async (phoneNumber: string) => {
@@ -43,7 +42,7 @@ export default function FriendsList() {
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0) return null;
-        return <Text className="px-4 pt-4 pb-2 text-lg font-bold">{section.title}</Text>;
+        return <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
     }, []);
 
     const renderFriend = useCallback(({ item, index }: { item: Friend, index: number }) => (
@@ -142,12 +141,18 @@ export default function FriendsList() {
     const isLoading = isFriendsLoading || isContactsLoading || isRecommendationsLoading;
     const isError = isFriendsError || isContactsError || isRecommendationsError;
 
+    const retry = useCallback(() => {
+        refetchFriends();
+        refetchContacts();
+        refetchRecommendations();
+    }, [refetchFriends, refetchContacts, refetchRecommendations]);
+
     if (isLoading) {
         return <ActivityIndicator size="large" color="#a855f7" />;
     }
 
     if (isError) {
-        return <NetworkErrorContainer onRetry={refetchFriends} />;
+        return <NetworkErrorContainer onRetry={retry} />;
     }
 
     return (

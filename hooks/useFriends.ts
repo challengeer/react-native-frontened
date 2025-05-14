@@ -2,11 +2,11 @@ import api from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import UserInterface from "@/types/UserInterface";
 
-interface Friend extends UserInterface {
+export interface Friend extends UserInterface {
     mutual_streak: number;
 }
 
-interface FriendRequest extends UserInterface {
+export interface FriendRequest extends UserInterface {
     request_id: string;
     status: "pending" | "accepted" | "rejected";
 }

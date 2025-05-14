@@ -6,12 +6,13 @@ import * as Contacts from 'expo-contacts';
 import * as Localization from 'expo-localization';
 import UserInterface from '@/types/UserInterface';
 
-interface Contact {
+export interface Contact {
+  contact_id: string;
   contact_name: string;
   phone_number: string;
 }
 
-interface ContactRecommendation {
+export interface ContactRecommendation {
   contact_id: string;
   contact_name: string;
   phone_number: string;
@@ -77,7 +78,7 @@ export const useContacts = () => {
     }
   };
 
-  const { data: contacts, isPending: isContactsLoading, isError: isContactsError } = useQuery<ContactRecommendation[]>({
+  const { data: contacts, isPending: isContactsLoading, isError: isContactsError, refetch: refetchContacts } = useQuery<ContactRecommendation[]>({
     queryKey: ["contacts-by-interest"],
     queryFn: async () => {
       const response = await api.get("/contacts/sorted-by-interest");
@@ -87,7 +88,7 @@ export const useContacts = () => {
     enabled: isContactsSynced,
   });
 
-  const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError } = useQuery<UserInterface[]>({
+  const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<UserInterface[]>({
     queryKey: ["contact-recommendations"],
     queryFn: async () => {
       const response = await api.get("/contacts/recommendations");
@@ -105,5 +106,7 @@ export const useContacts = () => {
     isRecommendationsLoading,
     isContactsError,
     isRecommendationsError,
+    refetchContacts,
+    refetchRecommendations,
   };
 }; 

@@ -1,43 +1,27 @@
 import i18n from '@/i18n';
-import api from '@/lib/api';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useColorScheme } from 'nativewind';
-import { Pressable, View, ActivityIndicator } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
-import { useQuery } from '@tanstack/react-query';
-import UserInterface from '@/types/UserInterface';
+import { useFriends } from '@/hooks/useFriends';
 import IconCircle from '@/components/common/IconCircle';
 import Header from '@/components/common/Header';
 import Text from '@/components/common/Text';
-import UserItem from '@/components/common/UserItem';
-import FriendActionButton from '@/components/common/FriendActionButton';
-
-interface FriendRequest extends UserInterface {
-    request_id: string;
-}
+import FriendRequestsList from '@/components/friends/FriendRequestsList';
+import SearchBar from '@/components/common/SearchBar';
 
 export default function FriendRequests() {
+    const [search, setSearch] = useState<string>("");
     const { colorScheme } = useColorScheme();
+    const { friendRequests } = useFriends();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
     const insets = useSafeAreaInsets();
 
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ["100%"], []);
-
-    const { data: friendRequests, isPending, error, refetch } = useQuery<FriendRequest[]>({
-        queryKey: ["friend-requests"],
-        queryFn: async () => {
-            const response = await api.get("/friends/requests");
-            return response.data;
-        },
-    });
-
-    const handleRefresh = useCallback(() => {
-        refetch();
-    }, [refetch]);
 
     const handleModalOpen = useCallback(() => {
         bottomSheetRef.current?.present();
@@ -79,39 +63,11 @@ export default function FriendRequests() {
                     />
                 )}
             >
-                <BottomSheetScrollView
-                    className="flex-1"
-                    overScrollMode="never"
-                    showsVerticalScrollIndicator={false}
-                    style={{ paddingBottom: insets.bottom }}
-                >
-                    {isPending ? (
-                        <ActivityIndicator className="justify-center py-12" size="large" color="#a855f7" />
-                    ) : error ? (
-                        <Text className="p-4">Error</Text>
-                    ) : (
-                        <>
-                            {friendRequests.map((friendRequest: FriendRequest, index: number) => (
-                                <UserItem
-                                    key={friendRequest.request_id}
-                                    index={index}
-                                    userId={friendRequest.user_id}
-                                    title={friendRequest.display_name}
-                                    subtitle={`@${friendRequest.username}`}
-                                    name={friendRequest.display_name}
-                                    profilePicture={friendRequest.profile_picture}
-                                    rightSection={
-                                        <FriendActionButton
-                                            userId={friendRequest.user_id}
-                                            requestId={friendRequest.request_id}
-                                            friendshipStatus="request_received"
-                                        />
-                                    }
-                                />
-                            ))}
-                        </>
-                    )}
-                </BottomSheetScrollView>
+                <SearchBar
+                    onSearch={setSearch}
+                    className="mx-4 my-2"
+                />
+                <FriendRequestsList search={search} />
             </BottomSheetModal>
         </>
     );

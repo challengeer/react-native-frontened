@@ -10,9 +10,10 @@ import Icon from "@/components/common/Icon";
 interface SearchBarProps {
     onSearch?: (query: string) => void;
     inputRef?: React.RefObject<TextInput>;
+    className?: string;
 }
 
-export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBarProps) {
+export default function SearchBar({ onSearch, inputRef: externalRef, className }: SearchBarProps) {
     const internalRef = useRef<TextInput>(null);
     const inputRef = externalRef || internalRef;
     const [value, setValue] = useState<string>("");
@@ -23,7 +24,7 @@ export default function SearchBar({ onSearch, inputRef: externalRef }: SearchBar
     const debouncedSearch = onSearch ? useCallback(debounce(onSearch, 500), []) : undefined;
 
     return (
-        <View className="relative flex-1 flex-row items-center">
+        <View className={`relative flex-row items-center ${className}`}>
             <View className="absolute top-3 left-4 z-10">
                 <Icon
                     lightColor="#737373"

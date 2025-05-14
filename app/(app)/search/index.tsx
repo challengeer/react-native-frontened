@@ -56,6 +56,7 @@ export default function FriendSearch() {
                 <SearchBar
                     onSearch={handleSearch}
                     inputRef={searchInputRef}
+                    className="flex-1"
                 />
                 <Text
                     className="font-medium"
