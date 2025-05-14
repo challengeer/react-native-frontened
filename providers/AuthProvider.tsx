@@ -140,7 +140,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             
             setIsAuthenticated(true);
             await fetchUserProfile();
-            router.push('/(app)/(tabs)/challenges');
+            router.replace('/(app)/(tabs)/challenges');
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
                 return router.push('/auth/google');
