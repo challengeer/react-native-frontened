@@ -24,7 +24,7 @@ interface Contact {
 }
 
 interface Section {
-    title: string;
+    title: string | null;
     data: (Friend | Contact | UserInterface)[];
 }
 
@@ -41,7 +41,7 @@ export default function FriendsList() {
     };
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
-        if (section.data.length === 0) return null;
+        if (section.data.length === 0 || section.title === null) return null;
         return <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
     }, []);
 
@@ -125,7 +125,7 @@ export default function FriendsList() {
 
     const sections: Section[] = useMemo(() => [
         {
-            title: i18n.t("friends.friends"),
+            title: null,
             data: friends || [],
         },
         {
