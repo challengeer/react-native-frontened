@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
-import { SectionList, ActivityIndicator } from "react-native";
+import { SectionList, ActivityIndicator, View } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { Linking } from "react-native";
 import { useContacts } from "@/hooks/useContacts";
@@ -166,6 +166,7 @@ export default function FriendsList() {
             windowSize={5}
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
+            contentContainerClassName="pb-48"
         />
     );
 } 

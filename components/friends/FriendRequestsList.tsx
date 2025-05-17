@@ -211,6 +211,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
             windowSize={5}
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
+            contentContainerClassName="pb-48"
         />
     );
 }
