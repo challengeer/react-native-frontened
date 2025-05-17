@@ -1,49 +1,51 @@
 import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
-import { SectionList, ActivityIndicator, View } from "react-native";
+import { SectionList, ActivityIndicator } from "react-native";
+import { getSectionTitle } from "@/utils/timeUtils";
 import { useHistory } from "@/hooks/useHistory";
+import { Challenge } from "@/types/Challenge";
 import Text from "@/components/common/Text";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
-import { getSectionTitle, getTimeString } from "@/utils/timeUtils";
-
-interface Challenge {
-    challenge_id: string;
-    title: string;
-    description: string;
-    created_at: string;
-    status: string;
-}
+import ChallengeItem from "@/components/challenges/ChallengeItem";
 
 interface Section {
     title: string | null;
     data: Challenge[];
 }
 
-export default function HistoryList() {
+export default function HistoryList({ search }: { search: string }) {
     const { history, isHistoryLoading, isHistoryError, refetchHistory } = useHistory();
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0 || section.title === null) return null;
-        return <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
+        return (
+            <Text 
+                className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900"
+                style={{
+                    elevation: 4,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                    zIndex: 1,
+                }}
+            >
+                {section.title}
+            </Text>
+        );
     }, []);
 
-    const renderItem = useCallback(({ item }: { item: Challenge }) => (
-        <View className="p-4 border-b border-gray-200 dark:border-gray-800">
-            <Text className="text-lg font-semibold">{item.title}</Text>
-            <Text className="text-gray-600 dark:text-gray-400 mt-1">{item.description}</Text>
-            <View className="flex-row justify-between items-center mt-2">
-                <Text className="text-sm text-gray-500 dark:text-gray-500">
-                    {getTimeString(new Date(item.created_at))}
-                </Text>
-                <Text className={`text-sm font-medium ${
-                    item.status === 'completed' ? 'text-green-500' : 
-                    item.status === 'failed' ? 'text-red-500' : 
-                    'text-yellow-500'
-                }`}>
-                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                </Text>
-            </View>
-        </View>
+    const renderItem = useCallback(({ item, index }: { item: Challenge, index: number }) => (
+        <ChallengeItem
+            key={item.challenge_id}
+            index={index}
+            challengeId={item.challenge_id}
+            title={item.title}
+            emoji={item.emoji}
+            category={item.category}
+            endDate={item.end_date}
+            hasNewSubmissions={item.has_new_submissions}
+        />
     ), []);
 
     const keyExtractor = useCallback((item: Challenge) => `challenge-${item.challenge_id}`, []);
@@ -51,8 +53,13 @@ export default function HistoryList() {
     const sections: Section[] = useMemo(() => {
         if (!history) return [];
 
+        const filteredHistory = history.filter((challenge: Challenge) =>
+            challenge.title.toLowerCase().includes(search.toLowerCase()) ||
+            challenge.category.toLowerCase().includes(search.toLowerCase())
+        );
+
         // Group challenges by date
-        const groupedChallenges: Record<string, Challenge[]> = history.reduce((acc: Record<string, Challenge[]>, challenge: Challenge) => {
+        const groupedChallenges: Record<string, Challenge[]> = filteredHistory.reduce((acc: Record<string, Challenge[]>, challenge: Challenge) => {
             const date = new Date(challenge.created_at);
             const sectionTitle = getSectionTitle(date);
             
@@ -76,7 +83,7 @@ export default function HistoryList() {
                 const dateB = new Date(b.data[0].created_at);
                 return dateB.getTime() - dateA.getTime();
             });
-    }, [history]);
+    }, [history, search]);
 
     if (isHistoryLoading) {
         return <ActivityIndicator className="flex-1 items-center justify-center" size="large" color="#a855f7" />;
@@ -96,6 +103,7 @@ export default function HistoryList() {
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={true}
+            stickySectionHeadersEnabled={true}
         />
     );
 } 

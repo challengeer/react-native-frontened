@@ -2,7 +2,7 @@ import i18n from '@/i18n';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native'
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { UserPlusIcon } from 'react-native-heroicons/solid';
@@ -16,7 +16,7 @@ import SearchBar from '@/components/common/SearchBar';
 export default function FriendRequests() {
     const [search, setSearch] = useState<string>("");
     const { colorScheme } = useColorScheme();
-    const { friendRequests } = useFriends();
+    const {friendRequestsReceived } = useFriends();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "#ffffff";
     const insets = useSafeAreaInsets();
 
@@ -36,9 +36,9 @@ export default function FriendRequests() {
             {/* Friend request button for opening modal */}
             <View className="relative">
                 <IconCircle icon={UserPlusIcon} onPress={handleModalOpen} />
-                {friendRequests && friendRequests.length > 0 &&
+                {friendRequestsReceived && friendRequestsReceived.length > 0 &&
                     <Pressable onPress={handleModalOpen} className="absolute -top-1.5 -right-1.5 w-5 h-5 items-center justify-center bg-red-500 rounded-full">
-                        <Text className="text-white text-xs font-medium">{friendRequests.length}</Text>
+                        <Text className="text-white text-xs font-medium">{friendRequestsReceived.length}</Text>
                     </Pressable>
                 }
             </View>
@@ -65,7 +65,7 @@ export default function FriendRequests() {
             >
                 <SearchBar
                     onSearch={setSearch}
-                    className="mx-4 my-2"
+                    className="mx-4 mt-2"
                 />
                 <FriendRequestsList search={search} />
             </BottomSheetModal>

@@ -85,7 +85,7 @@ export const useContacts = () => {
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
-    enabled: isContactsSynced,
+    // enabled: isContactsSynced,
   });
 
   const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<UserInterface[]>({
@@ -95,7 +95,7 @@ export const useContacts = () => {
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
-    enabled: isContactsSynced,
+    // enabled: isContactsSynced,
   });
 
   return {

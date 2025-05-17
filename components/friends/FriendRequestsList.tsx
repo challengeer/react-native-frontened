@@ -64,7 +64,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0) return null;
-        return <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
+        return <Text className="px-4 pt-3 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
     }, []);
 
     const renderFriendRequest = useCallback(({ item, index }: { item: FriendRequest, index: number }) => (
@@ -210,6 +210,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={true}
+            stickySectionHeadersEnabled={true}
         />
     );
 }

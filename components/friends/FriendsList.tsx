@@ -165,6 +165,7 @@ export default function FriendsList() {
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={true}
+            stickySectionHeadersEnabled={true}
         />
     );
 } 

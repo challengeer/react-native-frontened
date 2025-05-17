@@ -1,4 +1,4 @@
-import { UserInterface } from "@/types/User";
+import UserInterface from "@/types/UserInterface";
 
 export interface Challenge {
     challenge_id: string;
@@ -6,6 +6,7 @@ export interface Challenge {
     description: string;
     emoji: string;
     category: string;
+    created_at: string;
     end_date: string;
     creator: UserInterface;
     participants: UserInterface[];
