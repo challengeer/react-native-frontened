@@ -36,24 +36,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const queryClient = useQueryClient();
     const auth = getAuth();
 
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const fetchUserProfile = async (retryCount = 0, maxRetries = 3) => {
+        try {
+            const response = await api.get('/user/me');
+            if (response.status === 200) {
+                setUser(response.data);
+                return;
+            }
+            throw new Error('Failed to fetch user profile');
+        } catch (error) {
+            console.error(`Error fetching user profile (attempt ${retryCount + 1}/${maxRetries}):`, error);
+            
+            if (retryCount < maxRetries) {
+                const delay = Math.min(1000 * Math.pow(2, retryCount), 30000);
+                console.log(`Retrying in ${delay}ms...`);
+                await sleep(delay);
+                return fetchUserProfile(retryCount + 1, maxRetries);
+            }
+            
+            await logout();
+        }
+    };
+
     useEffect(() => {
         // Initialize Google Sign-In
         GoogleSignin.configure({
             webClientId: '344827725651-ivr0t9hj2mjvrarj6nuq41vjlsfb7ici.apps.googleusercontent.com',
         });
     }, []);
-
-    const fetchUserProfile = async () => {
-        try {
-            const response = await api.get('/user/me');
-            if (response.status === 200) {
-                setUser(response.data);
-            }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-            await logout();
-        }
-    };
 
     const submitPhoneNumber = async (phoneNumber: string): Promise<string> => {
         try {
