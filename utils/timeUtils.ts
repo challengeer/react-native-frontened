@@ -76,3 +76,46 @@ export const getDetailedTimeLeft = (timestamp: string): string => {
 
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 };
+
+export const getSectionTitle = (date: Date): string => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const challengeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    
+    // Check if it's today
+    if (challengeDate.getTime() === today.getTime()) {
+        return "Today";
+    }
+    
+    // Check if it's yesterday
+    if (challengeDate.getTime() === yesterday.getTime()) {
+        return "Yesterday";
+    }
+    
+    // Check if it's within the last 7 days
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    if (challengeDate >= sevenDaysAgo) {
+        return date.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+    
+    // For older dates, show the full date
+    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const day = date.getDate();
+    const year = date.getFullYear();
+    
+    // If it's from a different year, include the year
+    if (date.getFullYear() !== now.getFullYear()) {
+        return `${month} ${day}, ${year}`;
+    }
+    
+    return `${month} ${day}`;
+};
+
+export const getTimeString = (date: Date): string => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};

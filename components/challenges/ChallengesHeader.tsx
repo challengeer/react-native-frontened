@@ -1,7 +1,8 @@
 import i18n from "@/i18n";
+import { View } from "react-native";
 import { Link, router } from "expo-router";
 import { useAuth } from "@/providers/AuthProvider";
-import { PlusIcon } from "react-native-heroicons/outline";
+import { ClockIcon, PlusIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import Avatar from "@/components/common/Avatar";
 import IconCircle from "@/components/common/IconCircle";
@@ -22,7 +23,10 @@ export default function ChallengesHeader() {
                 </Link>
             }
             rightSection={
-                <IconCircle onPress={() => router.push("/(app)/create_challenge")} icon={PlusIcon} />
+                <View className="flex-row gap-2 items-center">
+                    <IconCircle onPress={() => router.push("/(app)/history")} icon={ClockIcon} />
+                    <IconCircle onPress={() => router.push("/(app)/create_challenge")} icon={PlusIcon} />
+                </View>
             }
         />
     )

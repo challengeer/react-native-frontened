@@ -148,7 +148,7 @@ export default function FriendsList() {
     }, [refetchFriends, refetchContacts, refetchRecommendations]);
 
     if (isLoading) {
-        return <ActivityIndicator size="large" color="#a855f7" />;
+        return <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />;
     }
 
     if (isError) {
