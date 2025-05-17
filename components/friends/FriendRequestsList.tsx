@@ -17,22 +17,30 @@ import { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 
 interface Section {
     title: string;
-    data: (FriendRequest | Friend | ContactRecommendation)[];
+    data: (FriendRequest | Friend | ContactRecommendation | UserInterface)[];
 }
 
 const UserItemMemo = React.memo(UserItem);
 
 export default function FriendRequestsList({ search }: { search: string }) {
-    const { friendRequests, isFriendRequestsLoading, isFriendRequestsError, refetchFriendRequests } = useFriends();
+    const { friendRequestsReceived, isFriendRequestsReceivedLoading, isFriendRequestsReceivedError, refetchFriendRequestsReceived } = useFriends();
+    const { friendRequestsSent, isFriendRequestsSentLoading, isFriendRequestsSentError, refetchFriendRequestsSent } = useFriends();
     const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError, refetchContacts, refetchRecommendations } = useContacts();
     const { acceptRequest, rejectRequest } = useFriendActions();
 
-    const filteredFriendRequests = useMemo(() => {
-        return friendRequests?.filter((request) =>
+    const filteredFriendRequestsReceived = useMemo(() => {
+        return friendRequestsReceived?.filter((request) =>
             request.display_name.toLowerCase().includes(search.toLowerCase()) ||
             request.username.toLowerCase().includes(search.toLowerCase())
         );
-    }, [friendRequests, search]);
+    }, [friendRequestsReceived, search]);
+
+    const filteredFriendRequestsSent = useMemo(() => {
+        return friendRequestsSent?.filter((request) =>
+            request.display_name.toLowerCase().includes(search.toLowerCase()) ||
+            request.username.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [friendRequestsSent, search]);
 
     const filteredRecommendations = useMemo(() => {
         return recommendations?.filter((recommendation) =>
@@ -157,11 +165,11 @@ export default function FriendRequestsList({ search }: { search: string }) {
     const sections: Section[] = useMemo(() => [
         {
             title: "Received Requests",
-            data: filteredFriendRequests || [],
+            data: filteredFriendRequestsReceived || [],
         },
         {
             title: "Sent Requests",
-            data: filteredFriendRequests || [],
+            data: filteredFriendRequestsSent || [],
         },
         {
             title: i18n.t("friends.recommendations"),
@@ -171,16 +179,17 @@ export default function FriendRequestsList({ search }: { search: string }) {
             title: i18n.t("friends.contacts"),
             data: filteredContacts || [],
         },
-    ], [filteredFriendRequests, filteredRecommendations, filteredContacts]);
+    ], [filteredFriendRequestsReceived, filteredFriendRequestsSent, filteredRecommendations, filteredContacts]);
 
-    const isLoading = isFriendRequestsLoading || isContactsLoading || isRecommendationsLoading;
-    const isError = isFriendRequestsError || isContactsError || isRecommendationsError;
+    const isLoading = isFriendRequestsReceivedLoading || isFriendRequestsSentLoading || isContactsLoading || isRecommendationsLoading;
+    const isError = isFriendRequestsReceivedError || isFriendRequestsSentError || isContactsError || isRecommendationsError;
 
     const retry = useCallback(() => {
-        refetchFriendRequests();
+        refetchFriendRequestsReceived();
+        refetchFriendRequestsSent();
         refetchRecommendations();
         refetchContacts();
-    }, [refetchFriendRequests, refetchRecommendations, refetchContacts]);
+    }, [refetchFriendRequestsReceived, refetchFriendRequestsSent, refetchRecommendations, refetchContacts]);
 
     if (isLoading) {
         return <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />;
