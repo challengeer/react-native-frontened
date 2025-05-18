@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Pressable, Text, View, StatusBar, TextInput, Keyboard, KeyboardAvoidingView, Platform, Dimensions } from "react-native";
+import { Pressable, Text, View, StatusBar, TextInput, Keyboard, KeyboardAvoidingView, Platform, Dimensions, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon, PencilIcon, CheckIcon } from "react-native-heroicons/outline";
@@ -175,11 +175,13 @@ export default function CameraPage() {
                             onTouchMove={handleTouchMove}
                             onTouchEnd={handleTouchEnd}
                         >
-                            <View className="bg-black/50">
-                                <Text className="text-white text-3xl font-bold text-center px-4 py-4">
-                                    {text}
-                                </Text>
-                            </View>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
+                                <View className="bg-black/50">
+                                    <Text className="text-white text-3xl font-bold text-center px-4 py-4">
+                                        {text}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     )}
 
