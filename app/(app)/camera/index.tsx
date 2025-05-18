@@ -62,7 +62,7 @@ export default function CameraPage() {
         
         const screenHeight = Dimensions.get('window').height;
         const deltaY = e.nativeEvent.pageY - startY;
-        const newPosition = Math.max(0, Math.min(1, startPosition + (deltaY / screenHeight)));
+        const newPosition = Math.max(0.06, Math.min(0.82, startPosition + (deltaY / screenHeight)));
         setTextPosition(newPosition);
     };
 
