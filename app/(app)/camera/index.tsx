@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Pressable, Text, View, StatusBar, TextInput, TouchableOpacity, PanResponder, Keyboard, KeyboardAvoidingView, Platform, Dimensions, Animated } from "react-native";
+import { Pressable, Text, View, StatusBar, TextInput, Keyboard, KeyboardAvoidingView, Platform, Dimensions } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon, PencilIcon, CheckIcon } from "react-native-heroicons/outline";
