@@ -144,7 +144,7 @@ export default function CameraPage() {
                     />
 
                     {isAddingText && (
-                        <View className="absolute top-0 left-0 right-0">
+                        <View className="absolute left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
                             <View className="bg-black/50 w-full">
                                 <TextInput
                                     value={text}
