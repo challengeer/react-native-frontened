@@ -100,7 +100,11 @@
         "header": "Friends",
         "contacts": "Contacts",
         "recommendations": "Recommendations",
-        "friendRequests": "Friend requests"
+        "friendRequests": "Friend requests",
+        "requests": {
+            "received": "Received requests",
+            "sent": "Sent requests"
+        }
     },
     "userSearch": {
         "friends": "Friends",

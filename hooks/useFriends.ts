@@ -48,6 +48,7 @@ export function useFriends() {
         onSettled: () => {
             queryClient.refetchQueries({ queryKey: ["friends"] });
             queryClient.refetchQueries({ queryKey: ["friend-requests-sent"] });
+            queryClient.refetchQueries({ queryKey: ["contact-recommendations"] });
         },
     });
 
@@ -58,6 +59,7 @@ export function useFriends() {
         onSettled: () => {
             queryClient.refetchQueries({ queryKey: ['friends'] });
             queryClient.refetchQueries({ queryKey: ['friend-requests-received'] });
+            queryClient.refetchQueries({ queryKey: ['contact-recommendations'] });
         },
     });
 
@@ -67,6 +69,7 @@ export function useFriends() {
         },
         onSettled: () => {
             queryClient.refetchQueries({ queryKey: ['friend-requests-received'] });
+            queryClient.refetchQueries({ queryKey: ['contact-recommendations'] });
         },
     });
 

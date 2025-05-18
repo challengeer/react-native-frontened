@@ -8,7 +8,7 @@ import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckCircleIcon } from "react-
 import { UserPlusIcon, UserMinusIcon } from "react-native-heroicons/solid";
 import { FriendshipStatus } from "@/types/FriendshipTypes";
 import { useAuth } from "@/providers/AuthProvider";
-import { useFriendActions } from '@/hooks/useFriendActions';
+import { useFriends } from "@/hooks/useFriends";
 import UserInterface from "@/types/UserInterface";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
@@ -30,7 +30,7 @@ interface UserProfile extends UserInterface {
 export default function UserPage() {
     const { user_id } = useLocalSearchParams<{ user_id: string }>();
     const { user } = useAuth();
-    const { addFriend, acceptRequest, rejectRequest } = useFriendActions();
+    const { addFriend, isAddingFriend, acceptRequest, isAcceptingRequest, rejectRequest, isRejectingRequest } = useFriends();
 
     const { data, isPending, isError, refetch } = useQuery<UserProfile>({
         queryKey: ["user", user_id],
@@ -84,7 +84,8 @@ export default function UserPage() {
                             size="md"
                             className="mt-6 w-full"
                             title={i18n.t("friendActionButton.add")}
-                            onPress={() => addFriend.mutate(user_id)}
+                            onPress={() => addFriend(user_id)}
+                            loading={isAddingFriend}
                             leftSection={
                                 <Icon
                                     icon={UserPlusIcon}
@@ -118,7 +119,8 @@ export default function UserPage() {
                                 size="md"
                                 className="flex-1"
                                 title={i18n.t("friendActionButton.accept")}
-                                onPress={() => data.request_id && acceptRequest.mutate(data.request_id)}
+                                onPress={() => data.request_id && acceptRequest(data.request_id)}
+                                loading={isAcceptingRequest}
                                 leftSection={
                                     <Icon
                                         icon={UserPlusIcon}
@@ -132,7 +134,8 @@ export default function UserPage() {
                                 className="flex-1"
                                 variant="secondary"
                                 title={i18n.t("friendActionButton.ignore")}
-                                onPress={() => data.request_id && rejectRequest.mutate(data.request_id)}
+                                onPress={() => data.request_id && rejectRequest(data.request_id)}
+                                loading={isRejectingRequest}
                                 leftSection={
                                     <Icon
                                         icon={UserMinusIcon}

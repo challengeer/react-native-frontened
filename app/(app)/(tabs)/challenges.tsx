@@ -15,6 +15,7 @@ import Icon from "@/components/common/Icon";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeRightSection from "@/components/challenges/ChallengeRightSection";
 import ChallengeInviteRightSection from "@/components/challenges/ChallengeInviteRightSection";
+import ChallengesList from "@/components/challenges/ChallengesList";
 
 interface Invitation extends ChallengeSimple {
     sender: UserInterface;
@@ -32,153 +33,12 @@ interface Friend extends UserInterface {
 }
 
 export default function ChallengesPage() {
-    const { data, isPending, isError, refetch } = useQuery<ChallengesResponse>({
-        queryKey: ["challenges"],
-        queryFn: async () => {
-            const response = await api.get("/challenges/list");
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5,
-    });
-
-    const { data: friends, isPending: isFriendsPending } = useQuery<Friend[]>({
-        queryKey: ["friends"],
-        queryFn: async () => {
-            const response = await api.get("/friends/list");
-            return response.data;
-        },
-        staleTime: 1000 * 60 * 5,
-    });
-
-    const refresh = useCallback(() => {
-        refetch();
-    }, [refetch]);
 
     return (
         <>
             <ChallengesHeader />
 
-            {isPending || isFriendsPending ? (
-                <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
-            ) : isError ? (
-                <NetworkErrorContainer onRetry={refetch} />
-            ) : (
-                <ScrollView
-                    overScrollMode="never"
-                    showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={isPending}
-                            onRefresh={refresh}
-                        />
-                    }
-                >
-                    {friends && friends.length === 0 ? (
-                        <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl mb-4">
-                            <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noFriends.title") || "No Friends Yet"}</Text>
-                            <Text type="secondary" className="text-base mb-6">
-                                {i18n.t("challenges.noFriends.description") || "Add friends to participate in challenges together!"}
-                            </Text>
-                            <Button
-                                title={i18n.t("challenges.noFriends.button") || "Go to Friends"}
-                                onPress={() => router.push("/(app)/contacts")}
-                                leftSection={
-                                    <Icon
-                                        icon={UserGroupIcon}
-                                        lightColor="#fff"
-                                        darkColor="#fff"
-                                    />
-                                }
-                            />
-                        </View>
-                    ) : data.owned_challenges.length === 0 && data.participating_challenges.length === 0 && (
-                        <View className="mx-4 p-6 bg-neutral-100 dark:bg-neutral-800 rounded-2xl">
-                            <Text className="text-lg font-bold mb-2">{i18n.t("challenges.noChallenges.title")}</Text>
-                            <Text type="secondary" className="text-base mb-6">
-                                {i18n.t("challenges.noChallenges.description")}
-                            </Text>
-                            <Button
-                                title={i18n.t("challenges.noChallenges.button")}
-                                onPress={() => router.push("/(app)/contacts")}
-                                leftSection={
-                                    <Icon
-                                        icon={PlusIcon}
-                                        lightColor="#fff"
-                                        darkColor="#fff"
-                                    />
-                                }
-                            />
-                        </View>
-                    )}
-
-                    {data.owned_challenges.length > 0 && (
-                        <View>
-                            <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.owned.title")}</Text>
-
-                            {data.owned_challenges.map((challenge, index) => (
-                                <ChallengeItem
-                                    key={challenge.challenge_id}
-                                    index={index}
-                                    challengeId={challenge.challenge_id}
-                                    title={challenge.title}
-                                    emoji={challenge.emoji}
-                                    category={challenge.category}
-                                    endDate={challenge.end_date}
-                                    hasNewSubmissions={challenge.has_new_submissions}
-                                    rightSection={
-                                        <ChallengeRightSection challengeId={challenge.challenge_id} />
-                                    }
-                                />
-                            ))}
-                        </View>
-                    )}
-
-                    {data.participating_challenges.length > 0 && (
-                        <View>
-                            <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.participating.title")}</Text>
-
-                            {data.participating_challenges.map((challenge, index) => (
-                                <ChallengeItem
-                                    key={challenge.challenge_id}
-                                    index={index}
-                                    challengeId={challenge.challenge_id}
-                                    title={challenge.title}
-                                    emoji={challenge.emoji}
-                                    category={challenge.category}
-                                    endDate={challenge.end_date}
-                                    hasNewSubmissions={challenge.has_new_submissions}
-                                    rightSection={
-                                        <ChallengeRightSection challengeId={challenge.challenge_id} />
-                                    }
-                                />
-                            ))}
-                        </View>
-                    )}
-
-                    {data.invitations?.length > 0 && (
-                        <View>
-                            <Text className="px-4 pt-4 pb-2 text-lg font-bold">{i18n.t("challenges.invitations.title")}</Text>
-
-                            {data.invitations.map((invite, index) => (
-                                <ChallengeItem
-                                    key={invite.challenge_id}
-                                    index={index}
-                                    challengeId={invite.challenge_id}
-                                    title={invite.title}
-                                    emoji={invite.emoji}
-                                    category={invite.category}
-                                    endDate={invite.end_date}
-                                    sender={invite.sender}
-                                    hasNewSubmissions={invite.has_new_submissions}
-                                    rightSection={
-                                        <ChallengeInviteRightSection invitationId={invite.invitation_id} />
-                                    }
-                                />
-                            ))}
-                        </View>
-                    )}
-                </ScrollView>
-            )}
+            <ChallengesList />
         </>
     )
 }

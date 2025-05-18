@@ -90,7 +90,11 @@
         "header": "Priatelia",
         "contacts": "Kontakty",
         "recommendations": "Odporúčania",
-        "friendRequests": "Žiadosti o priateľstvo"
+        "friendRequests": "Žiadosti o priateľstvo",
+        "requests": {
+            "received": "Prijaté žiadosti",
+            "sent": "Odoslané žiadosti"
+        }
     },
     "friendActionButton": {
         "add": "Pridať",

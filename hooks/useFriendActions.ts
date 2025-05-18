@@ -37,6 +37,7 @@ export function useFriendActions() {
             return { previousUserData, previousSearchData, userId };
         },
         onError: (err, userId, context) => {
+            console.log(err.response.data);
             // Rollback on error
             if (context?.previousUserData) {
                 queryClient.setQueryData(["user", userId], context.previousUserData);

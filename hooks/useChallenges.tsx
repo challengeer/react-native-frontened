@@ -4,7 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 export function useChallenges() {
     const { data: challenges, isLoading: isChallengesLoading, isError: isChallengesError, refetch: refetchChallenges } = useQuery({
         queryKey: ["challenges"],
-        queryFn: () => api.get("/challenges/list"),
+        queryFn: async () => {
+            const response = await api.get("/challenges/list");
+            return response.data;
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    const { data: challengeInvites, isLoading: isChallengeInvitesLoading, isError: isChallengeInvitesError, refetch: refetchChallengeInvites } = useQuery({
+        queryKey: ["challenge-invites"],
+        queryFn: async () => {
+            const response = await api.get("/challenges/invites");
+            return response.data;
+        },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
@@ -13,13 +25,20 @@ export function useChallenges() {
         isChallengesLoading,
         isChallengesError,
         refetchChallenges,
+        challengeInvites,
+        isChallengeInvitesLoading,
+        isChallengeInvitesError,
+        refetchChallengeInvites,
     };
 }
 
 export function useChallenge(challengeId: string) {
     const { data: challenge, isLoading: isChallengeLoading, isError: isChallengeError, refetch: refetchChallenge } = useQuery({
         queryKey: ["challenge", challengeId],
-        queryFn: () => api.get(`/challenges/${challengeId}`),
+        queryFn: async () => {
+            const response = await api.get(`/challenges/${challengeId}`);
+            return response.data;
+        },
         staleTime: 1000 * 60 * 5, // 5 minutes
         enabled: !!challengeId, // Only run the query if challengeId is provided
     });

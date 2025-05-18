@@ -1,19 +1,14 @@
-import { SectionList, View } from "react-native";
-import { UserPlusIcon, XMarkIcon } from "react-native-heroicons/solid";
+import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
-import { ActivityIndicator, Linking } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { ContactRecommendation, useContacts } from "@/hooks/useContacts";
 import { FriendRequest, Friend, useFriends } from "@/hooks/useFriends";
-import i18n from "@/i18n";
+import { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 import UserItem from "@/components/common/UserItem";
 import Text from "@/components/common/Text";
-import Button from "@/components/common/Button";
-import Icon from "@/components/common/Icon";
 import UserInterface from "@/types/UserInterface";
-import FriendActionButton from "@/components/common/FriendActionButton";
+import FriendActionButton from "@/components/friends/FriendActionButton";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
-import { useFriendActions } from "@/hooks/useFriendActions";
-import { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 
 interface Section {
     title: string;
@@ -26,7 +21,6 @@ export default function FriendRequestsList({ search }: { search: string }) {
     const { friendRequestsReceived, isFriendRequestsReceivedLoading, isFriendRequestsReceivedError, refetchFriendRequestsReceived } = useFriends();
     const { friendRequestsSent, isFriendRequestsSentLoading, isFriendRequestsSentError, refetchFriendRequestsSent } = useFriends();
     const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError, refetchContacts, refetchRecommendations } = useContacts();
-    const { acceptRequest, rejectRequest } = useFriendActions();
 
     const filteredFriendRequestsReceived = useMemo(() => {
         return friendRequestsReceived?.filter((request) =>
@@ -56,48 +50,33 @@ export default function FriendRequestsList({ search }: { search: string }) {
         ).slice(0, 20);
     }, [contacts, search]);
 
-    const handleInvite = async (phoneNumber: string) => {
-        const message = i18n.t("auth.contacts.inviteMessage", { phoneNumber });
-        const smsUrl = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-        Linking.openURL(smsUrl);
-    };
-
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0) return null;
         return <Text className="px-4 pt-3 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
     }, []);
 
-    const renderFriendRequest = useCallback(({ item, index }: { item: FriendRequest, index: number }) => (
-        <UserItemMemo
-            key={item.user_id}
-            index={index}
-            userId={item.user_id}
-            title={item.display_name}
-            subtitle={`@${item.username}`}
-            name={item.display_name}
-            profilePicture={item.profile_picture}
-            rightSection={
-                <View className="flex-row items-center gap-2">
-                    <Button
-                        size="sm"
-                        title={i18n.t("friendActionButton.accept")}
-                        onPress={() => item.request_id && acceptRequest.mutate(item.request_id)}
-                        leftSection={
-                            <Icon
-                                icon={UserPlusIcon}
-                                lightColor="white"
-                                darkColor="white"
-                            />
-                        }
+    const renderFriendRequest = useCallback(({ item, index, section }: { item: FriendRequest, index: number, section: Section }) => {
+        const isReceivedRequest = section.title === i18n.t("friends.requests.received");
+        
+        return (
+            <UserItemMemo
+                key={item.user_id}
+                index={index}
+                userId={item.user_id}
+                title={item.display_name}
+                subtitle={`@${item.username}`}
+                name={item.display_name}
+                profilePicture={item.profile_picture}
+                rightSection={
+                    <FriendActionButton
+                        userId={item.user_id}
+                        requestId={item.request_id}
+                        friendshipStatus={isReceivedRequest ? "request_received" : "request_sent"}
                     />
-                    <Icon
-                        icon={XMarkIcon}
-                        onPress={() => item.request_id && rejectRequest.mutate(item.request_id)}
-                    />
-                </View>
-            }
-        />
-    ), []);
+                }
+            />
+        );
+    }, []);
 
     const renderContact = useCallback(({ item, index }: { item: ContactRecommendation, index: number }) => (
         <UserItemMemo
@@ -108,17 +87,10 @@ export default function FriendRequestsList({ search }: { search: string }) {
             title={item.contact_name}
             subtitle={`+${item.phone_number}`}
             rightSection={
-                <Button
-                    size="sm"
-                    title={i18n.t("auth.contacts.invite")}
-                    onPress={() => handleInvite(item.phone_number)}
-                    leftSection={
-                        <Icon
-                            icon={UserPlusIcon}
-                            lightColor="white"
-                            darkColor="white"
-                        />
-                    }
+                <FriendActionButton
+                    userId={item.contact_id}
+                    phoneNumber={item.phone_number}
+                    friendshipStatus="contact"
                 />
             }
         />
@@ -142,9 +114,9 @@ export default function FriendRequestsList({ search }: { search: string }) {
         />
     ), []);
 
-    const renderItem = useCallback(({ item, index }: { item: FriendRequest | ContactRecommendation | UserInterface, index: number }) => {
-        if ("mutual_streak" in item) {
-            return renderFriendRequest({ item: item as FriendRequest, index });
+    const renderItem = useCallback(({ item, index, section }: { item: FriendRequest | ContactRecommendation | UserInterface, index: number, section: Section }) => {
+        if ("request_id" in item) {
+            return renderFriendRequest({ item: item as FriendRequest, index, section });
         } else if ("contact_id" in item) {
             return renderContact({ item: item as ContactRecommendation, index });
         } else {
@@ -153,8 +125,8 @@ export default function FriendRequestsList({ search }: { search: string }) {
     }, [renderFriendRequest, renderContact, renderRecommendation]);
 
     const keyExtractor = useCallback((item: FriendRequest | ContactRecommendation | UserInterface) => {
-        if ("mutual_streak" in item) {
-            return `friend-${(item as FriendRequest).user_id}`;
+        if ("request_id" in item) {
+            return `friend-request-${(item as FriendRequest).user_id}`;
         } else if ("contact_id" in item) {
             return `contact-${(item as ContactRecommendation).contact_id}`;
         } else {
@@ -164,11 +136,11 @@ export default function FriendRequestsList({ search }: { search: string }) {
 
     const sections: Section[] = useMemo(() => [
         {
-            title: "Received Requests",
+            title: i18n.t("friends.requests.received"),
             data: filteredFriendRequestsReceived || [],
         },
         {
-            title: "Sent Requests",
+            title: i18n.t("friends.requests.sent"),
             data: filteredFriendRequestsSent || [],
         },
         {

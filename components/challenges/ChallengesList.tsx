@@ -1,0 +1,111 @@
+import i18n from "@/i18n";
+import React, { useCallback, useMemo } from "react";
+import { SectionList, ActivityIndicator } from "react-native";
+import { getSectionTitle } from "@/utils/timeUtils";
+import { useHistory } from "@/hooks/useHistory";
+import { Challenge } from "@/types/Challenge";
+import Text from "@/components/common/Text";
+import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
+import ChallengeItem from "@/components/challenges/ChallengeItem";
+import { useChallenges } from "@/hooks/useChallenges";
+import ChallengeInviteRightSection from "./ChallengeInviteRightSection";
+
+interface Section {
+    title: string | null;
+    data: (Challenge | ChallengeInvite)[];
+}
+
+const ChallengeItemMemo = React.memo(ChallengeItem);
+
+export default function ChallengesList() {
+    const { challenges, isChallengesLoading, isChallengesError, refetchChallenges, challengeInvites, isChallengeInvitesLoading, isChallengeInvitesError, refetchChallengeInvites } = useChallenges();
+
+    const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
+        if (section.data.length === 0 || section.title === null) return null;
+        return (
+            <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">
+                {section.title}
+            </Text>
+        );
+    }, []);
+
+    const renderChallenge = useCallback(({ item, index }: { item: Challenge, index: number }) => (
+        <ChallengeItemMemo
+            key={item.challenge_id}
+            index={index}
+            challengeId={item.challenge_id}
+            title={item.title}
+            emoji={item.emoji}
+            category={item.category}
+            endDate={item.end_date}
+            hasNewSubmissions={item.has_new_submissions}
+        />
+    ), []);
+
+    const renderChallengeInvite = useCallback(({ item, index }: { item: Challenge, index: number }) => (
+        <ChallengeItemMemo
+            key={item.challenge_id}
+            index={index}
+            challengeId={item.challenge_id}
+            title={item.title}
+            emoji={item.emoji}
+            category={item.category}
+            endDate={item.end_date}
+            hasNewSubmissions={item.has_new_submissions}
+            sender={item.sender}
+            rightSection={
+                <ChallengeInviteRightSection
+                    invitationId={item.invitation_id}
+                />
+            }
+        />
+    ), []);
+
+    const renderItem = useCallback(({ item, index }: { item: Challenge, index: number }) => {
+        if (item.sender) {
+            return renderChallenge({ item, index });
+        } else {
+            return renderChallengeInvite({ item, index });
+        }
+    }, [renderChallenge, renderChallengeInvite]);
+
+    const keyExtractor = useCallback((item: Challenge) => `challenge-${item.challenge_id}`, []);
+
+    const sections = useMemo(() => {
+        return [
+            { title: "Challenges", data: challenges || [] },
+            { title: "Invites", data: challengeInvites || [] },
+        ];
+    }, [challenges, challengeInvites]);
+    
+    const refetch = useCallback(() => {
+        refetchChallenges();
+        refetchChallengeInvites();
+    }, [refetchChallenges, refetchChallengeInvites]);
+
+    const isLoading = isChallengesLoading || isChallengeInvitesLoading;
+    const isError = isChallengesError || isChallengeInvitesError;
+
+    if (isLoading) {
+        return <ActivityIndicator className="flex-1 items-center justify-center" size="large" color="#a855f7" />;
+    }
+
+    if (isError) {
+        return <NetworkErrorContainer onRetry={refetch} />;
+    }
+
+    return (
+        <SectionList
+            sections={sections}
+            renderItem={renderItem}
+            renderSectionHeader={renderSectionHeader}
+            keyExtractor={keyExtractor}
+            overScrollMode="never"
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            removeClippedSubviews={true}
+            stickySectionHeadersEnabled={true}
+            contentContainerClassName="pb-48"
+        />
+    );
+} 
