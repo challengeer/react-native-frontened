@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Pressable, Text, View, StatusBar, TextInput, TouchableOpacity, PanResponder, Keyboard, KeyboardAvoidingView, Platform, Dimensions } from "react-native";
+import { Pressable, Text, View, StatusBar, TextInput, TouchableOpacity, PanResponder, Keyboard, KeyboardAvoidingView, Platform, Dimensions, Animated } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon, PencilIcon, CheckIcon } from "react-native-heroicons/outline";
@@ -22,7 +22,11 @@ export default function CameraPage() {
     const [text, setText] = useState("");
     const [isAddingText, setIsAddingText] = useState(false);
     const [textPosition, setTextPosition] = useState(0.5);
+    const [isDragging, setIsDragging] = useState(false);
     const [startY, setStartY] = useState(0);
+    const [startPosition, setStartPosition] = useState(0.5);
+    const [hasMoved, setHasMoved] = useState(false);
+    const [initialTouchY, setInitialTouchY] = useState(0);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
     const queryClient = useQueryClient();
 
@@ -47,17 +51,24 @@ export default function CameraPage() {
         };
     }, []);
 
-    const panResponder = useRef(
-        PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponder: () => true,
-            onPanResponderMove: (_, gestureState) => {
-                const screenHeight = Dimensions.get('window').height;
-                const newPosition = Math.max(0, Math.min(1, gestureState.moveY / screenHeight));
-                setTextPosition(newPosition);
-            }
-        })
-    ).current;
+    const handleTouchStart = (e: any) => {
+        setIsDragging(true);
+        setStartY(e.nativeEvent.pageY);
+        setStartPosition(textPosition);
+    };
+
+    const handleTouchMove = (e: any) => {
+        if (!isDragging) return;
+        
+        const screenHeight = Dimensions.get('window').height;
+        const deltaY = e.nativeEvent.pageY - startY;
+        const newPosition = Math.max(0, Math.min(1, startPosition + (deltaY / screenHeight)));
+        setTextPosition(newPosition);
+    };
+
+    const handleTouchEnd = () => {
+        setIsDragging(false);
+    };
 
     if (!permission) {
         return null;
@@ -143,7 +154,8 @@ export default function CameraPage() {
                                     }}
                                     placeholder="Add text..."
                                     placeholderTextColor="#999"
-                                    className="text-white text-2xl font-bold text-center px-4 py-4"
+                                    className="text-white text-3xl font-bold text-center px-4 py-4"
+                                    style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
                                     autoFocus
                                     maxLength={30}
                                     blurOnSubmit={true}
@@ -157,12 +169,14 @@ export default function CameraPage() {
 
                     {!isAddingText && text && (
                         <View 
-                            className="absolute left-0 right-0"
+                            className="absolute left-0 right-0 w-full"
                             style={{ top: `${textPosition * 100}%` }}
-                            {...panResponder.panHandlers}
+                            onTouchStart={handleTouchStart}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
                         >
-                            <View className="bg-black/50 w-full">
-                                <Text className="text-white text-2xl font-bold text-center px-4 py-4">
+                            <View className="bg-black/50">
+                                <Text className="text-white text-3xl font-bold text-center px-4 py-4">
                                     {text}
                                 </Text>
                             </View>
