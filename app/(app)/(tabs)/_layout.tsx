@@ -6,12 +6,11 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { useWindowDimensions } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
 import ChallengesPage from "./challenges";
 import FriendsPage from "./friends";
-
 
 export default function Layout() {
     const router = useRouter();
@@ -19,22 +18,15 @@ export default function Layout() {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(tab === "friends" ? 1 : 0);
 
-    const routes = [
+    const routes = useMemo(() => [
         { key: "challenges", title: i18n.t("tabs.challenges") },
         { key: "friends", title: i18n.t("tabs.friends") },
-    ];
+    ], []);
 
-    const renderScene = SceneMap({
+    const renderScene = useMemo(() => SceneMap({
         challenges: () => <ChallengesPage />,
         friends: () => <FriendsPage />,
-    });
-
-    useEffect(() => {
-        const newIndex = tab === "friends" ? 1 : 0;
-        if (newIndex !== index) {
-            setIndex(newIndex);
-        }
-    }, [tab]);
+    }), []);
 
     const handleIndexChange = useCallback((newIndex: number) => {
         setIndex(newIndex);
@@ -61,17 +53,23 @@ export default function Layout() {
         </View>
     ), [index, routes, handleIndexChange]);
 
+    const navigationState = useMemo(() => ({
+        index,
+        routes
+    }), [index, routes]);
+
     return (
         <SafeAreaView className="flex-1">
             <View className="flex-1">
                 <TabView
-                    navigationState={{ index, routes }}
+                    navigationState={navigationState}
                     renderScene={renderScene}
                     onIndexChange={handleIndexChange}
                     initialLayout={{ width: layout.width }}
                     renderTabBar={renderTabBar}
                     swipeEnabled={true}
                     tabBarPosition="bottom"
+                    lazy={true}
                 />
             </View>
         </SafeAreaView>
