@@ -26,7 +26,7 @@ export default function FriendActionButton({
 
     if (friendshipStatus === "friends") {
         return (
-            <Text className="text-purple-500 font-semibold">{mutualStreak}🔥</Text>
+            <Text className="font-semibold">{mutualStreak}🔥</Text>
         );
     }
 

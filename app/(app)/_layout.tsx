@@ -1,7 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Redirect, Stack } from "expo-router";
 import { useAuth } from "@/providers/AuthProvider";
-import { AppearanceContext } from "@/providers/AppearanceProvider";
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from "nativewind";
 import { setupNotificationHandlers } from "@/lib/notifications";
@@ -15,8 +14,6 @@ export default function AppLayout() {
     const { isAuthenticated, isLoading } = useAuth();
     const { colorScheme } = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "#171717" : "white";
-    // used to re-render the app when the language changes
-    const { language } = useContext(AppearanceContext);
     const queryClient = useQueryClient();
 
     useEffect(() => {
@@ -42,7 +39,6 @@ export default function AppLayout() {
     return (
         <ContactsProvider>
             <Stack
-                key={language}
                 screenOptions={{
                     headerShown: false,
                     animation: "ios_from_right",
@@ -51,4 +47,4 @@ export default function AppLayout() {
             />
         </ContactsProvider>
     )
-};
+}
