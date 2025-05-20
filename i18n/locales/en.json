@@ -98,6 +98,7 @@
     },
     "friends": {
         "header": "Friends",
+        "addFriends": "Add friends",
         "friends": "Friends",
         "contacts": "Contacts",
         "recommendations": "Recommendations",

@@ -1,8 +1,7 @@
 import i18n from "@/i18n";
 import React, { useCallback } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, SectionList } from "react-native";
 import { Section } from "@/utils/userSections";
-import { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 import { useFriendsList } from "@/hooks/useFriendsList";
 import UserItem from "@/components/common/UserItem";
 import Text from "@/components/common/Text";
@@ -135,7 +134,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
     }
 
     return (
-        <BottomSheetSectionList
+        <SectionList
             className="flex-1"
             sections={sections}
             renderItem={renderItem}
