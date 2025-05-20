@@ -10,10 +10,9 @@ import { StatusBar, Platform, View } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-
-const queryClient = new QueryClient();
+import { queryClient } from "@/lib/queryClient";
 
 export default function Root() {
     const { colorScheme } = useColorScheme();
