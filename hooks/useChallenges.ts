@@ -1,8 +1,10 @@
 import api from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
+import { Challenge, ChallengeInvite } from "@/types/challenge";
+
 export function useChallenges() {
-    const { data: challenges, isLoading: isChallengesLoading, isError: isChallengesError, refetch: refetchChallenges } = useQuery({
+    const { data: challenges, isLoading: isChallengesLoading, isError: isChallengesError, refetch: refetchChallenges } = useQuery<Challenge[]>({
         queryKey: ["challenges"],
         queryFn: async () => {
             const response = await api.get("/challenges/list");
@@ -11,7 +13,7 @@ export function useChallenges() {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
-    const { data: challengeInvites, isLoading: isChallengeInvitesLoading, isError: isChallengeInvitesError, refetch: refetchChallengeInvites } = useQuery({
+    const { data: challengeInvites, isLoading: isChallengeInvitesLoading, isError: isChallengeInvitesError, refetch: refetchChallengeInvites } = useQuery<ChallengeInvite[]>({
         queryKey: ["challenge-invites"],
         queryFn: async () => {
             const response = await api.get("/challenges/invites");
@@ -33,7 +35,7 @@ export function useChallenges() {
 }
 
 export function useChallenge(challengeId: string) {
-    const { data: challenge, isLoading: isChallengeLoading, isError: isChallengeError, refetch: refetchChallenge } = useQuery({
+    const { data: challenge, isLoading: isChallengeLoading, isError: isChallengeError, refetch: refetchChallenge } = useQuery<Challenge>({
         queryKey: ["challenge", challengeId],
         queryFn: async () => {
             const response = await api.get(`/challenges/${challengeId}`);

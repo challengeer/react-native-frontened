@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
 import { getSectionTitle } from "@/utils/timeUtils";
 import { useHistory } from "@/hooks/useHistory";
-import { Challenge } from "@/types/Challenge";
+import { Challenge } from "@/types/challenge";
 import Text from "@/components/common/Text";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";

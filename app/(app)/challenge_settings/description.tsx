@@ -6,7 +6,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { TextAreaInputBar } from "@/components/common/InputBar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Challenge } from "@/types/Challenge";
+import { Challenge } from "@/types/challenge";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";

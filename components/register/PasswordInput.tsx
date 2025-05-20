@@ -13,7 +13,7 @@ interface PasswordValidation {
     message: string;
 }
 
-interface PasswordInputProps {
+export interface PasswordInputProps {
     value: string;
     onChange: (text: string) => void;
     onValidationChange?: (isValid: boolean) => void;
@@ -46,7 +46,7 @@ export default function PasswordInput({ value, onChange, onValidationChange }: P
                     onChangeText={onChange}
                     secureTextEntry={!showPassword}
                 />
-                <Pressable onPress={() => setShowPassword(!showPassword)} className="absolute right-4 top-3/4 -translate-y-3/4"> {/* It seems to be in the center but 1/2 did not work so I had to use 3/4...*/}
+                <Pressable onPress={() => setShowPassword(!showPassword)} className="absolute right-4 top-3/4 -translate-y-3/4">
                     {showPassword ? <Icon icon={EyeSlashIcon} size={20} /> : <Icon icon={EyeIcon} size={20} />}
                 </Pressable>
             </View>

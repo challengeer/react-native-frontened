@@ -91,9 +91,13 @@
         "contacts": "Kontakty",
         "recommendations": "Odporúčania",
         "friendRequests": "Žiadosti o priateľstvo",
+        "noFriends": "Zatiaľ žiadni priatelia",
         "requests": {
             "received": "Prijaté žiadosti",
             "sent": "Odoslané žiadosti"
+        },
+        "search": {
+            "noResults": "Žiadne výsledky pre \"{{search}}\""
         }
     },
     "friendActionButton": {

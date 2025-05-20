@@ -1,15 +1,7 @@
 import api from "@/lib/api";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import UserInterface from "@/types/UserInterface";
 
-export interface Friend extends UserInterface {
-    mutual_streak: number;
-}
-
-export interface FriendRequest extends UserInterface {
-    request_id: string;
-    status: "pending" | "accepted" | "rejected";
-}
+import { Friend, FriendRequest } from "@/types/user";
 
 export function useFriends() {
     const queryClient = useQueryClient();

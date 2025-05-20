@@ -4,19 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 import * as Contacts from 'expo-contacts';
 import * as Localization from 'expo-localization';
-import UserInterface from '@/types/UserInterface';
 
-export interface Contact {
-  contact_id: string;
-  contact_name: string;
-  phone_number: string;
-}
-
-export interface ContactRecommendation {
-  contact_id: string;
-  contact_name: string;
-  phone_number: string;
-}
+import { Contact, ContactRecommendation } from '@/types/contact';
+import { User } from '@/types/user';
 
 export const useContacts = () => {
   const [isContactsSynced, setIsContactsSynced] = useState(false);
@@ -88,7 +78,7 @@ export const useContacts = () => {
     // enabled: isContactsSynced,
   });
 
-  const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<UserInterface[]>({
+  const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<User[]>({
     queryKey: ["contact-recommendations"],
     queryFn: async () => {
       const response = await api.get("/contacts/recommendations");

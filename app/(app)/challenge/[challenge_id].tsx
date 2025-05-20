@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, CameraIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
 import { useChallengeActions } from "@/hooks/useChallengeActions";
-import { Challenge } from "@/types/Challenge";
+import { Challenge } from "@/types/challenge";
 import { getDetailedTimeLeft } from "@/utils/timeUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import Text from "@/components/common/Text";

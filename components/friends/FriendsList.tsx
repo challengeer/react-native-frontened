@@ -1,7 +1,6 @@
 import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
-import { Linking } from "react-native";
 import { useContacts } from "@/hooks/useContacts";
 import { useFriends } from "@/hooks/useFriends";
 import Text from "@/components/common/Text";
@@ -143,6 +142,10 @@ export default function FriendsList() {
         return <NetworkErrorContainer onRetry={retry} />;
     }
 
+    if (sections.length === 0) {
+        return <Text type="secondary" className="text-center text-lg pt-16">{i18n.t("friends.noFriends")}</Text>;
+    }
+
     return (
         <SectionList
             sections={sections}
@@ -151,6 +154,7 @@ export default function FriendsList() {
             keyExtractor={keyExtractor}
             overScrollMode="never"
             maxToRenderPerBatch={10}
+            initialNumToRender={10}
             windowSize={5}
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}

@@ -101,9 +101,13 @@
         "contacts": "Contacts",
         "recommendations": "Recommendations",
         "friendRequests": "Friend requests",
+        "noFriends": "No friends yet",
         "requests": {
             "received": "Received requests",
             "sent": "Sent requests"
+        },
+        "search": {
+            "noResults": "No results found for \"{{search}}\""
         }
     },
     "userSearch": {

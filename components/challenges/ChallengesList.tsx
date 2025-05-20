@@ -1,13 +1,11 @@
 import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
-import { getSectionTitle } from "@/utils/timeUtils";
-import { useHistory } from "@/hooks/useHistory";
-import { Challenge } from "@/types/Challenge";
+import { Challenge, ChallengeInvite } from "@/types/challenge";
+import { useChallenges } from "@/hooks/useChallenges";
 import Text from "@/components/common/Text";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
-import { useChallenges } from "@/hooks/useChallenges";
 import ChallengeInviteRightSection from "./ChallengeInviteRightSection";
 
 interface Section {
@@ -42,7 +40,7 @@ export default function ChallengesList() {
         />
     ), []);
 
-    const renderChallengeInvite = useCallback(({ item, index }: { item: Challenge, index: number }) => (
+    const renderChallengeInvite = useCallback(({ item, index }: { item: ChallengeInvite, index: number }) => (
         <ChallengeItemMemo
             key={item.challenge_id}
             index={index}
@@ -61,11 +59,11 @@ export default function ChallengesList() {
         />
     ), []);
 
-    const renderItem = useCallback(({ item, index }: { item: Challenge, index: number }) => {
-        if (item.sender) {
-            return renderChallenge({ item, index });
-        } else {
+    const renderItem = useCallback(({ item, index }: { item: Challenge | ChallengeInvite, index: number }) => {
+        if ('sender' in item) {
             return renderChallengeInvite({ item, index });
+        } else {
+            return renderChallenge({ item, index });
         }
     }, [renderChallenge, renderChallengeInvite]);
 
@@ -73,8 +71,8 @@ export default function ChallengesList() {
 
     const sections = useMemo(() => {
         return [
-            { title: "Challenges", data: challenges || [] },
-            { title: "Invites", data: challengeInvites || [] },
+            { title: null, data: challenges || [] },
+            { title: i18n.t("challenges.invitations.title"), data: challengeInvites || [] },
         ];
     }, [challenges, challengeInvites]);
     
