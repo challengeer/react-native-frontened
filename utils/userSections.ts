@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { User, Friend, FriendRequest } from "@/types/user";
 import { ContactRecommendation } from "@/types/contact";
 
@@ -26,6 +27,7 @@ export function organizeUsersIntoSections({
     friendRequestsSent,
     recommendations,
     contacts,
+    friends,
     searchQuery,
 }: {
     searchResults?: User[];
@@ -33,6 +35,7 @@ export function organizeUsersIntoSections({
     friendRequestsSent?: FriendRequest[];
     recommendations?: User[];
     contacts?: ContactRecommendation[];
+    friends?: Friend[];
     searchQuery: string;
 }): Section[] {
     const sections: Section[] = [];
@@ -42,8 +45,16 @@ export function organizeUsersIntoSections({
     const filteredFriendRequestsSent = filterBySearch(friendRequestsSent, searchQuery);
     const filteredRecommendations = filterBySearch(recommendations, searchQuery);
     const filteredContacts = filterBySearch(contacts, searchQuery)?.slice(0, 20); // Keep the 20 contacts limit
+    const filteredFriends = filterBySearch(friends, searchQuery);
     
     if (searchQuery && searchResults?.length) {
+        // Get friend IDs for filtering search results
+        const friendIds = new Set((filteredFriends || []).map(f => f.user_id));
+        
+        // Split search results into friends and non-friends
+        const friendSearchResults = searchResults.filter(user => friendIds.has(user.user_id));
+        const nonFriendSearchResults = searchResults.filter(user => !friendIds.has(user.user_id));
+
         // Filter out users that are already in other sections
         const existingUserIds = new Set([
             ...(filteredFriendRequestsReceived || []).map(r => r.user_id),
@@ -52,40 +63,49 @@ export function organizeUsersIntoSections({
             ...(filteredContacts || []).map(c => c.contact_id),
         ]);
 
-        const filteredSearchResults = searchResults.filter(user => !existingUserIds.has(user.user_id));
+        const filteredNonFriendSearchResults = nonFriendSearchResults.filter(user => !existingUserIds.has(user.user_id));
         
-        if (filteredSearchResults.length > 0) {
+        // Add friends section first if there are friend search results
+        if (friendSearchResults.length > 0) {
             sections.push({
-                title: "Search Results",
-                data: filteredSearchResults,
+                title: i18n.t("friends.friends"),
+                data: friendSearchResults,
+            });
+        }
+
+        // Add other search results
+        if (filteredNonFriendSearchResults.length > 0) {
+            sections.push({
+                title: i18n.t("friends.moreResults"),
+                data: filteredNonFriendSearchResults,
             });
         }
     }
 
     if (filteredFriendRequestsReceived?.length) {
         sections.push({
-            title: "Received Requests",
+            title: i18n.t("friends.requests.received"),
             data: filteredFriendRequestsReceived,
         });
     }
 
     if (filteredFriendRequestsSent?.length) {
         sections.push({
-            title: "Sent Requests",
+            title: i18n.t("friends.requests.sent"),
             data: filteredFriendRequestsSent,
         });
     }
 
     if (filteredRecommendations?.length) {
         sections.push({
-            title: "Recommendations",
+            title: i18n.t("friends.recommendations"),
             data: filteredRecommendations,
         });
     }
 
     if (filteredContacts?.length) {
         sections.push({
-            title: "Contacts",
+            title: i18n.t("friends.contacts"),
             data: filteredContacts,
         });
     }

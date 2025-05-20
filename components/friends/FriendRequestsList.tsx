@@ -1,24 +1,30 @@
-import React, { useCallback, useMemo } from "react";
+import i18n from "@/i18n";
+import React, { useCallback } from "react";
 import { ActivityIndicator } from "react-native";
 import { Section } from "@/utils/userSections";
 import { BottomSheetSectionList } from "@gorhom/bottom-sheet";
+import { useFriendsList } from "@/hooks/useFriendsList";
 import UserItem from "@/components/common/UserItem";
 import Text from "@/components/common/Text";
-import { User, FriendRequest } from "@/types/user";
 import FriendActionButton from "@/components/friends/FriendActionButton";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
-import i18n from "@/i18n";
-import { useFriendsList } from "@/hooks/useFriendsList";
+
+import { User, FriendRequest, Friend } from "@/types/user";
 import { ContactRecommendation } from "@/types/contact";
 
 const UserItemMemo = React.memo(UserItem);
+const FriendActionButtonMemo = React.memo(FriendActionButton);
 
 export default function FriendRequestsList({ search }: { search: string }) {
     const { sections, isLoading, isError, refetch } = useFriendsList(search);
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
-        if (section.data.length === 0) return null;
-        return <Text className="px-4 pt-3 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">{section.title}</Text>;
+        if (section.data.length === 0 || !section.title) return null;
+        return (
+            <Text className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900">
+                {section.title}
+            </Text>
+        );
     }, []);
 
     const renderFriendRequest = useCallback(({ item, index, section }: { item: FriendRequest, index: number, section: Section }) => {
@@ -34,7 +40,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
                 name={item.display_name}
                 profilePicture={item.profile_picture}
                 rightSection={
-                    <FriendActionButton
+                    <FriendActionButtonMemo
                         userId={item.user_id}
                         requestId={item.request_id}
                         friendshipStatus={isReceivedRequest ? "request_received" : "request_sent"}
@@ -53,12 +59,24 @@ export default function FriendRequestsList({ search }: { search: string }) {
             title={item.contact_name}
             subtitle={`+${item.phone_number}`}
             rightSection={
-                <FriendActionButton
+                <FriendActionButtonMemo
                     userId={item.contact_id}
                     phoneNumber={item.phone_number}
                     friendshipStatus="contact"
                 />
             }
+        />
+    ), []);
+
+    const renderFriend = useCallback(({ item, index }: { item: Friend, index: number }) => (
+        <UserItemMemo
+            key={item.user_id}
+            index={index}
+            userId={item.user_id}
+            title={item.display_name}
+            subtitle={`@${item.username}`}
+            name={item.display_name}
+            profilePicture={item.profile_picture}
         />
     ), []);
 
@@ -72,7 +90,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
             name={item.display_name}
             profilePicture={item.profile_picture}
             rightSection={
-                <FriendActionButton
+                <FriendActionButtonMemo
                     userId={item.user_id}
                     friendshipStatus="none"
                 />
@@ -80,23 +98,27 @@ export default function FriendRequestsList({ search }: { search: string }) {
         />
     ), []);
 
-    const renderItem = useCallback(({ item, index, section }: { item: FriendRequest | ContactRecommendation | User, index: number, section: Section }) => {
+    const renderItem = useCallback(({ item, index, section }: { item: FriendRequest | ContactRecommendation | User | Friend, index: number, section: Section }) => {
         if ("request_id" in item) {
             return renderFriendRequest({ item: item as FriendRequest, index, section });
         } else if ("contact_id" in item) {
             return renderContact({ item: item as ContactRecommendation, index });
+        } else if (section.title === i18n.t("friends.friends")) {
+            return renderFriend({ item: item as Friend, index });
         } else {
             return renderRecommendation({ item: item as User, index });
         }
-    }, [renderFriendRequest, renderContact, renderRecommendation]);
+    }, [renderFriendRequest, renderContact, renderFriend, renderRecommendation]);
 
-    const keyExtractor = useCallback((item: FriendRequest | ContactRecommendation | User) => {
+    const keyExtractor = useCallback((item: FriendRequest | ContactRecommendation | User | Friend) => {
         if ("request_id" in item) {
             return `friend-request-${(item as FriendRequest).user_id}`;
         } else if ("contact_id" in item) {
             return `contact-${(item as ContactRecommendation).contact_id}`;
+        } else if ("user_id" in item) {
+            return `user-${(item as User).user_id}`;
         } else {
-            return `recommended-${(item as User).user_id}`;
+            return `unknown-${(item as any).user_id}`;
         }
     }, []);
 

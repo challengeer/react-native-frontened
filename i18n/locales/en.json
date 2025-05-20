@@ -98,9 +98,11 @@
     },
     "friends": {
         "header": "Friends",
+        "friends": "Friends",
         "contacts": "Contacts",
         "recommendations": "Recommendations",
         "friendRequests": "Friend requests",
+        "moreResults": "More results",
         "noFriends": "No friends yet",
         "requests": {
             "received": "Received requests",

@@ -7,12 +7,16 @@ import { organizeUsersIntoSections } from "@/utils/userSections";
 export function useFriendsList(search: string) {
     const { searchResults, isSearchLoading, isSearchError, refetchSearch } = useSearch(search);
     const { 
+        friends,
         friendRequestsReceived, 
         friendRequestsSent, 
+        isFriendsLoading,
         isFriendRequestsReceivedLoading,
         isFriendRequestsSentLoading,
+        isFriendsError,
         isFriendRequestsReceivedError,
         isFriendRequestsSentError,
+        refetchFriends,
         refetchFriendRequestsReceived,
         refetchFriendRequestsSent
     } = useFriends();
@@ -29,19 +33,21 @@ export function useFriendsList(search: string) {
 
     const sections = useMemo(() => organizeUsersIntoSections({
         searchResults,
+        friends,
         friendRequestsReceived,
         friendRequestsSent,
         recommendations,
         contacts,
         searchQuery: search,
-    }), [searchResults, friendRequestsReceived, friendRequestsSent, recommendations, contacts, search]);
+    }), [searchResults, friends, friendRequestsReceived, friendRequestsSent, recommendations, contacts, search]);
 
     return {
         sections,
-        isLoading: isSearchLoading || isFriendRequestsReceivedLoading || isFriendRequestsSentLoading || isContactsLoading || isRecommendationsLoading,
-        isError: isSearchError || isFriendRequestsReceivedError || isFriendRequestsSentError || isContactsError || isRecommendationsError,
+        isLoading: isSearchLoading || isFriendsLoading || isFriendRequestsReceivedLoading || isFriendRequestsSentLoading || isContactsLoading || isRecommendationsLoading,
+        isError: isSearchError || isFriendsError || isFriendRequestsReceivedError || isFriendRequestsSentError || isContactsError || isRecommendationsError,
         refetch: () => {
             refetchSearch();
+            refetchFriends();
             refetchFriendRequestsReceived();
             refetchFriendRequestsSent();
             refetchContacts();

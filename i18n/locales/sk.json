@@ -88,9 +88,11 @@
     },
     "friends": {
         "header": "Priatelia",
+        "friends": "Priatelia",
         "contacts": "Kontakty",
         "recommendations": "Odporúčania",
         "friendRequests": "Žiadosti o priateľstvo",
+        "moreResults": "Viac výsledkov",
         "noFriends": "Zatiaľ žiadni priatelia",
         "requests": {
             "received": "Prijaté žiadosti",
