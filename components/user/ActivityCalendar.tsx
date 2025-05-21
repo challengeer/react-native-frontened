@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import { View, PanResponder, Animated, ScrollView, Dimensions } from "react-native";
+import { View, PanResponder, Animated, ScrollView, Dimensions, useWindowDimensions } from "react-native";
 import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
 import { useState, useRef } from "react";
 import Text from "@/components/common/Text";
@@ -25,7 +25,8 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
     const scrollViewRef = useRef<ScrollView>(null);
-    const { width } = Dimensions.get('window');
+    const { width: windowWidth } = useWindowDimensions();
+    const width = windowWidth - 32;
 
     const getAdjacentMonth = (date: Date, offset: number) => {
         const newDate = new Date(date);
@@ -72,18 +73,18 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             <View style={{ width }}>
                 <View className="mb-2 flex-row justify-between">
                     {currentTranslation.weekdays.map(day => (
-                        <View key={day} className="w-9 items-center">
-                            <Text className="text-base text-neutral-500">{day}</Text>
+                        <View key={day} className="flex-1 items-center">
+                            <Text className="text-sm text-neutral-500">{day}</Text>
                         </View>
                     ))}
                 </View>
 
                 {weeks.map((week, weekIndex) => (
-                    <View key={weekIndex} className="flex-row justify-between mb-2 gap-2">
+                    <View key={weekIndex} className="flex-row justify-between">
                         {week.map((day, dayIndex) => (
                             <View
                                 key={dayIndex}
-                                className={`aspect-square flex-1 rounded-lg items-center justify-center relative
+                                className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
                                     ${isSelected(day) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
                                     ${day === null ? 'opacity-0' : ''}`}
                             >
@@ -91,7 +92,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                                     <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
                                 )}
                                 {day !== null && (
-                                    <Text className={`text-lg ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
+                                    <Text className={`text-base ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                         {day}
                                     </Text>
                                 )}
@@ -170,18 +171,20 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 </View>
             </View>
 
-            <ScrollView
-                ref={scrollViewRef}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={handleScroll}
-                scrollEventThrottle={16}
-            >
-                {renderMonth(getAdjacentMonth(currentDate, -1))}
-                {renderMonth(currentDate)}
-                {renderMonth(getAdjacentMonth(currentDate, 1))}
-            </ScrollView>
+            <View>
+                <ScrollView
+                    ref={scrollViewRef}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    onMomentumScrollEnd={handleScroll}
+                    scrollEventThrottle={16}
+                >
+                    {renderMonth(getAdjacentMonth(currentDate, -1))}
+                    {renderMonth(currentDate)}
+                    {renderMonth(getAdjacentMonth(currentDate, 1))}
+                </ScrollView>
+            </View>
         </View>
     );
 }
