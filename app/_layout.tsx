@@ -47,9 +47,7 @@ export default function Root() {
                                     backgroundColor="transparent"
                                 />
 
-                                <View style={{ flex: 1, backgroundColor }}>
-                                    <Slot />
-                                </View>
+                                <Slot />
                             </SafeAreaProvider>
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>

@@ -2,13 +2,14 @@ import i18n from "@/i18n";
 import { useState, useRef, useEffect } from "react";
 import { router } from "expo-router";
 import { View, TextInput } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SearchBar from "@/components/common/SearchBar";
 import Text from "@/components/common/Text";
 import FriendRequestsList from "@/components/friends/FriendRequestsList";
 
 export default function FriendSearch() {
     const [search, setSearch] = useState<string>("");
+    const insets = useSafeAreaInsets();
     const searchInputRef = useRef<TextInput>(null);
 
     useEffect(() => {
@@ -21,7 +22,7 @@ export default function FriendSearch() {
 
 
     return (
-        <SafeAreaView className="flex-1">
+        <View className="flex-1" style={{ paddingTop: insets.top }}>
             <View className="px-4 h-16 w-full flex-row items-center gap-4">
                 <SearchBar
                     onSearch={setSearch}
@@ -40,6 +41,6 @@ export default function FriendSearch() {
             </View>
 
             <FriendRequestsList search={search} />
-        </SafeAreaView>
+        </View>
     );
 }
