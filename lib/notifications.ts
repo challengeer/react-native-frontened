@@ -50,6 +50,7 @@ export function setupNotificationHandlers(queryClient: QueryClient) {
         switch (data?.type) {
             case 'challenge_invite':
                 queryClient.refetchQueries({ queryKey: ['challenges'] });
+                queryClient.refetchQueries({ queryKey: ['challenge-invites'] });
                 queryClient.refetchQueries({ queryKey: ['challenge', data.challenge_id] });
                 break;
 
