@@ -6,16 +6,16 @@ import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { TextAreaInputBar } from "@/components/common/InputBar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Challenge } from "@/types/challenge";
+import { useChallenge } from "@/hooks/useChallenges";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import Button from "@/components/common/Button";
 
 export default function Description() {
-    const { challenge_id } = useLocalSearchParams();
     const queryClient = useQueryClient();
-    const challenge = queryClient.getQueryData<Challenge>(['challenge', challenge_id]);
+    const { challenge_id } = useLocalSearchParams();
+    const { challenge, isChallengeLoading, isChallengeError } = useChallenge(challenge_id as string);
     const [description, setDescription] = useState(challenge?.description ?? "");
     
     const mutation = useMutation({

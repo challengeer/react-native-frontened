@@ -3,18 +3,20 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import { View, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router, Redirect } from "expo-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSafeAreaInsets, SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, PlusIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { Challenge } from "@/types/challenge";
+import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useRef, useCallback } from "react";
+import { useColorScheme } from "nativewind";
+import { useAuth } from "@/providers/AuthProvider";
+import { useChallenge } from "@/hooks/useChallenges";
+import { useFriends } from "@/hooks/useFriends";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import UserItem from "@/components/common/UserItem";
-import { useAuth } from "@/providers/AuthProvider";
-import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useRef, useCallback } from "react";
-import { useColorScheme } from "nativewind";
 import Button from "@/components/common/Button";
 import UserInterface from "@/types/UserInterface";
 import Checkbox from "@/components/common/Checkbox";
@@ -29,15 +31,8 @@ export default function Participants() {
     const insets = useSafeAreaInsets();
     const queryClient = useQueryClient();
 
-    const { data: challenge } = useQuery<Challenge>({
-        queryKey: ["challenge", challenge_id],
-        enabled: !!challenge_id
-    });
-
-    const { data: friends } = useQuery<UserInterface[]>({
-        queryKey: ["friends"],
-        queryFn: () => api.get("/friends/list").then(res => res.data)
-    });
+    const { challenge, isChallengeLoading, isChallengeError } = useChallenge(challenge_id);
+    const { friends, isFriendsLoading, isFriendsError } = useFriends();
 
     const inviteMutation = useMutation({
         mutationFn: async (receiverIds: string[]) => {
