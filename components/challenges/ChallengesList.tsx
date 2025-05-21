@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
-import React, { useCallback, useMemo } from "react";
-import { SectionList, ActivityIndicator } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { SectionList, ActivityIndicator, RefreshControl } from "react-native";
 import { Challenge, ChallengeInvite } from "@/types/challenge";
 import { useChallenges } from "@/hooks/useChallenges";
 import Text from "@/components/common/Text";
@@ -17,6 +17,7 @@ const ChallengeItemMemo = React.memo(ChallengeItem);
 
 export default function ChallengesList() {
     const { challenges, isChallengesLoading, isChallengesError, refetchChallenges, challengeInvites, isChallengeInvitesLoading, isChallengeInvitesError, refetchChallengeInvites } = useChallenges();
+    const [refreshing, setRefreshing] = useState(false);
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0 || section.title === null) return null;
@@ -76,13 +77,18 @@ export default function ChallengesList() {
         ];
     }, [challenges, challengeInvites]);
     
-    const refetch = useCallback(() => {
-        refetchChallenges();
-        refetchChallengeInvites();
-    }, [refetchChallenges, refetchChallengeInvites]);
-
     const isLoading = isChallengesLoading || isChallengeInvitesLoading;
     const isError = isChallengesError || isChallengeInvitesError;
+
+    const refetch = useCallback(async () => {
+        await Promise.all([refetchChallenges(), refetchChallengeInvites()]);
+    }, [refetchChallenges, refetchChallengeInvites]);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await refetch();
+        setRefreshing(false);
+    }, [refetch]);
 
     if (isLoading) {
         return <ActivityIndicator className="flex-1 items-center justify-center" size="large" color="#a855f7" />;
@@ -104,6 +110,12 @@ export default function ChallengesList() {
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
             contentContainerClassName="pb-48"
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={refetch}
+                />
+            }
         />
     );
 } 
