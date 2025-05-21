@@ -1,5 +1,7 @@
 import { User } from "@/types/user";
 
+export type ChallengeCompletionStatus = 'completed' | 'failed' | 'not_started';
+
 /**
  * Represents a unique identifier for a challenge
  */
@@ -18,6 +20,7 @@ export interface Challenge {
     end_date: string; // ISO 8601 date string
     creator: User;
     participants: User[];
+    completion_status: ChallengeCompletionStatus;
     has_new_submissions: boolean;
 }
 

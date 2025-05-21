@@ -6,7 +6,8 @@ import { useChallenges } from "@/hooks/useChallenges";
 import Text from "@/components/common/Text";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
-import ChallengeInviteRightSection from "./ChallengeInviteRightSection";
+import ChallengeInviteRightSection from "@/components/challenges/ChallengeInviteRightSection";
+import ChallengeRightSection from "@/components/challenges/ChallengeRightSection";
 
 interface Section {
     title: string | null;
@@ -38,6 +39,12 @@ export default function ChallengesList() {
             category={item.category}
             endDate={item.end_date}
             hasNewSubmissions={item.has_new_submissions}
+            rightSection={
+                <ChallengeRightSection
+                    challengeId={item.challenge_id}
+                    completionStatus={item.completion_status}
+                />
+            }
         />
     ), []);
 
