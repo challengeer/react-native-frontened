@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useQueryClient } from "@tanstack/react-query";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
-import PhotoTextOverlay from "../../components/PhotoTextOverlay";
+import PhotoTextOverlay from "@/components/submission/PhotoTextOverlay";
 import api from "@/lib/api";
 
 export default function CameraPage() {
@@ -110,8 +110,12 @@ export default function CameraPage() {
                 type: 'image/jpeg',
                 name: 'photo.jpg',
             } as any);
-            formData.append('text', text);
-            formData.append('textPosition', textPosition.toString()); 
+            formData.append('overlays', JSON.stringify([{
+                type: 'text',
+                content: text,
+                x: 0.5,
+                y: textPosition
+            }]));
 
             const response = await api.post(`/challenges/${challenge_id}/submit`, formData, {
                 headers: {
