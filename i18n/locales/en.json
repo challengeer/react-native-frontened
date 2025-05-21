@@ -125,7 +125,9 @@
         "creator": "Creator",
         "buttons": {
             "join": "Join",
-            "ignore": "Ignore"
+            "ignore": "Ignore",
+            "addSubmission": "Add submission",
+            "addSubmissionDescription": "To complete challenge upload at least 1 submission"
         },
         "noFriends": {
             "title": "No Friends Yet",

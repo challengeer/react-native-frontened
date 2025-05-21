@@ -129,11 +129,14 @@ export default function ChallengePage() {
                         </View>
 
                         {challenge?.user_status === "participant" ? (
-                            <Button
-                                title="Add submission"
-                                leftSection={<Icon icon={CameraIcon} />}
-                                onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
-                            />
+                            <View className="gap-2">
+                                <Button
+                                    title={i18n.t("challenges.buttons.addSubmission")}
+                                    leftSection={<Icon icon={CameraIcon} />}
+                                    onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
+                                />
+                                <Text type="secondary" className="text-sm">{i18n.t("challenges.buttons.addSubmissionDescription")}</Text>
+                            </View>
                         ) : challenge?.user_status === "invited" ? (
                             <View className="flex-row gap-2">
                                 <Button
@@ -152,7 +155,14 @@ export default function ChallengePage() {
                                 />
                             </View>
                         ) : (
-                            <Text>You have already submitted a photo for this challenge.</Text>
+                            <View className="gap-2">
+                                <Button
+                                    title={i18n.t("challenges.buttons.addSubmission")}
+                                    leftSection={<Icon icon={CameraIcon} />}
+                                    onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
+                                />
+                                <Text type="secondary" className="text-sm">{i18n.t("challenges.buttons.addSubmissionDescription")}</Text>
+                            </View>
                         )}
                     </View>
 

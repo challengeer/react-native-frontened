@@ -121,7 +121,9 @@
         "creator": "Tvorca výzvy",
         "buttons": {
             "join": "Pridať sa",
-            "ignore": "Ignorovať"
+            "ignore": "Ignorovať",
+            "addSubmission": "Pridať fotku",
+            "addSubmissionDescription": "Na dokončenie výzvy pridaj aspoň 1 fotku"
         },
         "noFriends": {
             "title": "Zatiaľ žiadni priatelia",
