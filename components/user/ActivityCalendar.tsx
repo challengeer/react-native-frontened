@@ -70,7 +70,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const renderMonth = (date: Date) => {
         const weeks = getDaysInMonth(date);
         return (
-            <View style={{ width }}>
+            <View style={{ width: width + 1.5 }}>
                 <View className="mb-2 flex-row justify-between">
                     {currentTranslation.weekdays.map(day => (
                         <View key={day} className="flex-1 items-center">
