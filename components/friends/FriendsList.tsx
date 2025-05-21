@@ -1,27 +1,18 @@
 import i18n from "@/i18n";
-import React, { useCallback, useMemo } from "react";
-import { SectionList, ActivityIndicator } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { SectionList, ActivityIndicator, RefreshControl } from "react-native";
+import { Contact } from "@/types/contact";
+import { Friend, User } from "@/types/user";
 import { useContacts } from "@/hooks/useContacts";
 import { useFriends } from "@/hooks/useFriends";
 import Text from "@/components/common/Text";
-import UserInterface from "@/types/UserInterface";
 import UserItem from "@/components/common/UserItem";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import FriendActionButton from "@/components/friends/FriendActionButton";
 
-interface Friend extends UserInterface {
-    mutual_streak: number;
-}
-
-interface Contact {
-    contact_id: string;
-    contact_name: string;
-    phone_number: string;
-}
-
 interface Section {
     title: string | null;
-    data: (Friend | Contact | UserInterface)[];
+    data: (Friend | Contact | User)[];
 }
 
 const UserItemMemo = React.memo(UserItem);
@@ -29,6 +20,7 @@ const UserItemMemo = React.memo(UserItem);
 export default function FriendsList() {
     const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError, refetchContacts, refetchRecommendations } = useContacts();
     const { friends, isFriendsLoading, isFriendsError, refetchFriends } = useFriends();
+    const [refreshing, setRefreshing] = useState(false);
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0 || section.title === null) return null;
@@ -72,7 +64,7 @@ export default function FriendsList() {
         />
     ), []);
 
-    const renderRecommendation = useCallback(({ item, index }: { item: UserInterface, index: number }) => (
+    const renderRecommendation = useCallback(({ item, index }: { item: User, index: number }) => (
         <UserItemMemo
             key={item.user_id}
             index={index}
@@ -90,23 +82,23 @@ export default function FriendsList() {
         />
     ), []);
 
-    const renderItem = useCallback(({ item, index }: { item: Friend | Contact | UserInterface, index: number }) => {
+    const renderItem = useCallback(({ item, index }: { item: Friend | Contact | User, index: number }) => {
         if ("mutual_streak" in item) {
             return renderFriend({ item: item as Friend, index });
         } else if ("contact_id" in item) {
             return renderContact({ item: item as Contact, index });
         } else {
-            return renderRecommendation({ item: item as UserInterface, index });
+            return renderRecommendation({ item: item as User, index });
         }
     }, [renderFriend, renderContact, renderRecommendation]);
 
-    const keyExtractor = useCallback((item: Friend | Contact | UserInterface) => {
+    const keyExtractor = useCallback((item: Friend | Contact | User) => {
         if ("mutual_streak" in item) {
             return `friend-${(item as Friend).user_id}`;
         } else if ("contact_id" in item) {
             return `contact-${(item as Contact).contact_id}`;
         } else {
-            return `recommended-${(item as UserInterface).user_id}`;
+            return `recommended-${(item as User).user_id}`;
         }
     }, []);
 
@@ -128,18 +120,22 @@ export default function FriendsList() {
     const isLoading = isFriendsLoading || isContactsLoading || isRecommendationsLoading;
     const isError = isFriendsError || isContactsError || isRecommendationsError;
 
-    const retry = useCallback(() => {
-        refetchFriends();
-        refetchContacts();
-        refetchRecommendations();
+    const refetch = useCallback(async () => {
+        await Promise.all([refetchFriends(), refetchContacts(), refetchRecommendations()]);
     }, [refetchFriends, refetchContacts, refetchRecommendations]);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await refetch();
+        setRefreshing(false);
+    }, [refetch]);
 
     if (isLoading) {
         return <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />;
     }
 
     if (isError) {
-        return <NetworkErrorContainer onRetry={retry} />;
+        return <NetworkErrorContainer onRetry={refetch} />;
     }
 
     if (sections.length === 0) {
@@ -159,6 +155,12 @@ export default function FriendsList() {
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
             contentContainerClassName="pb-48"
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }
         />
     );
 } 
