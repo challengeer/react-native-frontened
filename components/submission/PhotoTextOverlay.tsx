@@ -35,7 +35,7 @@ export default function PhotoTextOverlay({
 
     const handleTouchMove = (e: any) => {
         if (!isDragging) return;
-        
+
         const screenHeight = Dimensions.get('window').height;
         const deltaY = e.nativeEvent.pageY - startY;
         const newPosition = Math.max(0.06, Math.min(0.82, startPosition + (deltaY / screenHeight)));
@@ -49,11 +49,11 @@ export default function PhotoTextOverlay({
     return (
         <View className="absolute inset-0">
             {isAddingText && (
-                <Pressable 
+                <Pressable
                     className="absolute inset-0"
                     onPress={() => setIsAddingText(false)}
                 >
-                    <View className="absolute left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
+                    <View className="absolute mb-6 left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
                         <View className="bg-black/50 w-full">
                             <TextInput
                                 value={text}
@@ -63,7 +63,7 @@ export default function PhotoTextOverlay({
                                 }}
                                 placeholder="Add text..."
                                 placeholderTextColor="#999"
-                                className="text-white text-3xl font-bold text-center px-4 py-4"
+                                className="text-white text-xl text-center px-4 py-2"
                                 style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
                                 autoFocus
                                 maxLength={30}
@@ -78,7 +78,7 @@ export default function PhotoTextOverlay({
             )}
 
             {!isAddingText && text && (
-                <View 
+                <View
                     className="absolute left-0 right-0 w-full"
                     style={{ top: `${textPosition * 100}%` }}
                     onTouchStart={handleTouchStart}
@@ -87,7 +87,7 @@ export default function PhotoTextOverlay({
                 >
                     <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
                         <View className="bg-black/50">
-                            <Text className="text-white text-3xl font-bold text-center px-4 py-4">
+                            <Text className="text-white text-xl text-center px-4 py-2">
                                 {text}
                             </Text>
                         </View>
@@ -95,13 +95,15 @@ export default function PhotoTextOverlay({
                 </View>
             )}
 
-            <View className="flex-row gap-4">
+            <View className="flex-row gap-4 absolute top-0 right-0">
                 {!isAddingText && (
                     <Icon
                         icon={PencilIcon}
                         lightColor="#fff"
                         darkColor="#fff"
+                        className="p-10 bg-red-500 z-10"
                         onPress={() => {
+                            console.log("pencil");
                             setIsAddingText(true);
                         }}
                     />
@@ -111,7 +113,9 @@ export default function PhotoTextOverlay({
                         icon={CheckIcon}
                         lightColor="#fff"
                         darkColor="#fff"
+                        className="p-10 bg-red-500 z-10"
                         onPress={() => {
+                            console.log("check");
                             setIsAddingText(false);
                         }}
                     />

@@ -11,7 +11,7 @@ import Avatar from "@/components/common/Avatar";
 import Text from "@/components/common/Text";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
-import ImageWithText from "@/components/submission/ImageWithText";
+import Overlays from "@/components/submission/Overlays";
 
 export default function SubmissionPage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
@@ -108,8 +108,13 @@ export default function SubmissionPage() {
 
     return (
         <View className="flex-1 relative">
-            <ImageWithText
-                imageUrl={currentSubmission?.photo_url}
+            <ExpoImage
+                source={{ uri: currentSubmission?.photo_url }}
+                style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                contentFit="cover"
+            />
+
+            <Overlays
                 overlays={currentSubmission?.overlays}
             />
 
