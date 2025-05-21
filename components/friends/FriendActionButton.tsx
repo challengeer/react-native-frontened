@@ -42,13 +42,13 @@ export default function FriendActionButton({
                 size="sm"
                 title={i18n.t("auth.contacts.invite")}
                 onPress={() => phoneNumber && handleInvite(phoneNumber)}
-                leftSection={
-                    <Icon
-                        icon={UserPlusIcon}
-                        lightColor="white"
-                        darkColor="white"
-                    />
-                }
+                // leftSection={
+                //     <Icon
+                //         icon={UserPlusIcon}
+                //         lightColor="white"
+                //         darkColor="white"
+                //     />
+                // }
             />
         );
     }
@@ -59,13 +59,13 @@ export default function FriendActionButton({
                 size="sm"
                 variant="secondary"
                 title={i18n.t("friendActionButton.added")}
-                leftSection={
-                    <Icon
-                        icon={CheckCircleIcon}
-                        lightColor="black"
-                        darkColor="white"
-                    />
-                }
+                // leftSection={
+                //     <Icon
+                //         icon={CheckCircleIcon}
+                //         lightColor="black"
+                //         darkColor="white"
+                //     />
+                // }
             />
         );
     }
@@ -78,13 +78,13 @@ export default function FriendActionButton({
                     title={i18n.t("friendActionButton.accept")}
                     onPress={() => requestId && acceptRequest(requestId)}
                     loading={isAcceptingRequest}
-                    leftSection={
-                        <Icon
-                            icon={UserPlusIcon}
-                            lightColor="white"
-                            darkColor="white"
-                        />
-                    }
+                    // leftSection={
+                    //     <Icon
+                    //         icon={UserPlusIcon}
+                    //         lightColor="white"
+                    //         darkColor="white"
+                    //     />
+                    // }
                 />
                 <Icon
                     icon={XMarkIcon}
@@ -100,13 +100,13 @@ export default function FriendActionButton({
             title={i18n.t("friendActionButton.add")}
             onPress={() => addFriend(userId)}
             loading={isAddingFriend}
-            leftSection={
-                <Icon
-                    icon={UserPlusIcon}
-                    lightColor="white"
-                    darkColor="white"
-                />
-            }
+            // leftSection={
+            //     <Icon
+            //         icon={UserPlusIcon}
+            //         lightColor="white"
+            //         darkColor="white"
+            //     />
+            // }
         />
     );
 } 
