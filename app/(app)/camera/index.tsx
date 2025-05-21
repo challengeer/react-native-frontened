@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useQueryClient } from "@tanstack/react-query";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
+import PhotoTextOverlay from "../../components/PhotoTextOverlay";
 import api from "@/lib/api";
 
 export default function CameraPage() {
@@ -143,47 +144,15 @@ export default function CameraPage() {
                         contentFit="cover"
                     />
 
-                    {isAddingText && (
-                        <View className="absolute left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
-                            <View className="bg-black/50 w-full">
-                                <TextInput
-                                    value={text}
-                                    onChangeText={(newText) => {
-                                        const cleanText = newText.replace(/\n/g, '').slice(0, 30);
-                                        setText(cleanText);
-                                    }}
-                                    placeholder="Add text..."
-                                    placeholderTextColor="#999"
-                                    className="text-white text-3xl font-bold text-center px-4 py-4"
-                                    style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
-                                    autoFocus
-                                    maxLength={30}
-                                    blurOnSubmit={true}
-                                    onSubmitEditing={() => {
-                                        setIsAddingText(false);
-                                    }}
-                                />
-                            </View>
-                        </View>
-                    )}
-
-                    {!isAddingText && text && (
-                        <View 
-                            className="absolute left-0 right-0 w-full"
-                            style={{ top: `${textPosition * 100}%` }}
-                            onTouchStart={handleTouchStart}
-                            onTouchMove={handleTouchMove}
-                            onTouchEnd={handleTouchEnd}
-                        >
-                            <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
-                                <View className="bg-black/50">
-                                    <Text className="text-white text-3xl font-bold text-center px-4 py-4">
-                                        {text}
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                    <PhotoTextOverlay
+                        text={text}
+                        setText={setText}
+                        textPosition={textPosition}
+                        setTextPosition={setTextPosition}
+                        isAddingText={isAddingText}
+                        setIsAddingText={setIsAddingText}
+                        keyboardHeight={keyboardHeight}
+                    />
 
                     <LinearGradient
                         colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
@@ -201,28 +170,6 @@ export default function CameraPage() {
                                     setTextPosition(0.5);
                                 }}
                             />
-                            <View className="flex-row gap-4">
-                                {!isAddingText && (
-                                    <Icon
-                                        icon={PencilIcon}
-                                        lightColor="#fff"
-                                        darkColor="#fff"
-                                        onPress={() => {
-                                            setIsAddingText(true);
-                                        }}
-                                    />
-                                )}
-                                {isAddingText && (
-                                    <Icon
-                                        icon={CheckIcon}
-                                        lightColor="#fff"
-                                        darkColor="#fff"
-                                        onPress={() => {
-                                            setIsAddingText(false);
-                                        }}
-                                    />
-                                )}
-                            </View>
                         </View>
                     </LinearGradient>
 
