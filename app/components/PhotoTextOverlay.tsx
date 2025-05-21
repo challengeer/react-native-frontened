@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Dimensions, TouchableWithoutFeedback, Pressable } from 'react-native';
 import { useState } from 'react';
 import { PencilIcon, CheckIcon } from "react-native-heroicons/outline";
 import Icon from "@/components/common/Icon";
@@ -47,13 +47,12 @@ export default function PhotoTextOverlay({
     };
 
     return (
-        <TouchableWithoutFeedback onPress={() => {
-            if (isAddingText) {
-                setIsAddingText(false);
-            }
-        }}>
-            <View className="flex-1">
-                {isAddingText && (
+        <View className="absolute inset-0">
+            {isAddingText && (
+                <Pressable 
+                    className="absolute inset-0"
+                    onPress={() => setIsAddingText(false)}
+                >
                     <View className="absolute left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
                         <View className="bg-black/50 w-full">
                             <TextInput
@@ -75,49 +74,49 @@ export default function PhotoTextOverlay({
                             />
                         </View>
                     </View>
-                )}
+                </Pressable>
+            )}
 
-                {!isAddingText && text && (
-                    <View 
-                        className="absolute left-0 right-0 w-full"
-                        style={{ top: `${textPosition * 100}%` }}
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                    >
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
-                            <View className="bg-black/50">
-                                <Text className="text-white text-3xl font-bold text-center px-4 py-4">
-                                    {text}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                )}
-
-                <View className="flex-row gap-4">
-                    {!isAddingText && (
-                        <Icon
-                            icon={PencilIcon}
-                            lightColor="#fff"
-                            darkColor="#fff"
-                            onPress={() => {
-                                setIsAddingText(true);
-                            }}
-                        />
-                    )}
-                    {isAddingText && (
-                        <Icon
-                            icon={CheckIcon}
-                            lightColor="#fff"
-                            darkColor="#fff"
-                            onPress={() => {
-                                setIsAddingText(false);
-                            }}
-                        />
-                    )}
+            {!isAddingText && text && (
+                <View 
+                    className="absolute left-0 right-0 w-full"
+                    style={{ top: `${textPosition * 100}%` }}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                >
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
+                        <View className="bg-black/50">
+                            <Text className="text-white text-3xl font-bold text-center px-4 py-4">
+                                {text}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
+            )}
+
+            <View className="flex-row gap-4">
+                {!isAddingText && (
+                    <Icon
+                        icon={PencilIcon}
+                        lightColor="#fff"
+                        darkColor="#fff"
+                        onPress={() => {
+                            setIsAddingText(true);
+                        }}
+                    />
+                )}
+                {isAddingText && (
+                    <Icon
+                        icon={CheckIcon}
+                        lightColor="#fff"
+                        darkColor="#fff"
+                        onPress={() => {
+                            setIsAddingText(false);
+                        }}
+                    />
+                )}
             </View>
-        </TouchableWithoutFeedback>
+        </View>
     );
 } 
