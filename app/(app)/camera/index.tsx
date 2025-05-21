@@ -87,7 +87,7 @@ export default function CameraPage() {
     }
 
     const takePicture = async () => {
-        const photo = await cameraRef.current?.takePictureAsync();
+        const photo = await cameraRef.current?.takePictureAsync({ skipProcessing: true });
         setUri(photo?.uri || null);
     };
 
@@ -111,7 +111,7 @@ export default function CameraPage() {
                 name: 'photo.jpg',
             } as any);
             formData.append('overlays', JSON.stringify([{
-                type: 'text',
+                overlay_type: 'text',
                 content: text,
                 x: 0.5,
                 y: textPosition
@@ -127,8 +127,8 @@ export default function CameraPage() {
                 queryClient.refetchQueries({ queryKey: ['submissions', challenge_id] });
                 router.push(`/(app)/(tabs)/challenges`);
             }
-        } catch (error) {
-            console.error('Error uploading file:', error);
+        } catch (error: any) {
+            console.error('Error uploading file:', error.response.data);
             // Handle error appropriately
         } finally {
             setIsUploading(false);
