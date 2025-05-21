@@ -71,7 +71,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const renderMonth = (date: Date) => {
         const weeks = getDaysInMonth(date);
         return (
-            <View style={{ width: width + 4 }}>
+            <View style={{ width }} className="px-1">
                 <View className="mb-2 flex-row justify-between">
                     {currentTranslation.weekdays.map(day => (
                         <View key={day} className="flex-1 items-center">
@@ -195,6 +195,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     onMomentumScrollEnd={handleScroll}
                     scrollEventThrottle={32}
                     decelerationRate="fast"
+                    contentContainerStyle={{ paddingHorizontal: 4 }}
                 >
                     {renderMonth(getAdjacentMonth(currentDate, -1))}
                     {renderMonth(currentDate)}
