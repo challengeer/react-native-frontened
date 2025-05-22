@@ -82,16 +82,19 @@ export default function PhotoTextOverlay({
                                     <TextInput
                                         value={text}
                                         onChangeText={(newText) => {
-                                            const cleanText = newText.replace(/\n/g, '').slice(0, 30);
+                                            const cleanText = newText.slice(0, 100);
                                             setText(cleanText);
                                         }}
                                         placeholder="Add text..."
                                         placeholderTextColor="#999"
-                                        className="text-white text-xl text-center px-4 py-2"
+                                        className="text-white text-xl px-4 py-2"
                                         style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
                                         autoFocus
-                                        maxLength={30}
-                                        blurOnSubmit={true}
+                                        maxLength={100}
+                                        multiline
+                                        numberOfLines={3}
+                                        textAlignVertical="center"
+                                        blurOnSubmit={false}
                                         onSubmitEditing={() => {
                                             setIsAddingText(false);
                                         }}
@@ -111,7 +114,7 @@ export default function PhotoTextOverlay({
                         >
                             <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
                                 <View className="bg-black/50">
-                                    <Text className="text-white text-xl text-center px-4 py-2">
+                                    <Text className="text-white text-xl px-4 py-2" style={{ textAlign: 'center' }}>
                                         {text}
                                     </Text>
                                 </View>
