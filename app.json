@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Challengeer",
+    "name": "Challengeer Beta",
     "slug": "challengeer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon-beta.png",
     "scheme": "challengeer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -23,7 +23,7 @@
       "googleServicesFile": "./google-services.json",
       "permissions": ["POST_NOTIFICATIONS"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon-beta.png",
         "backgroundColor": "#ffffff"
       },
       "notification": {
