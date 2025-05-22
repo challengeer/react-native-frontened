@@ -118,27 +118,6 @@ export default function PhotoTextOverlay({
                             </TouchableOpacity>
                         </View>
                     )}
-
-                    <View className="flex-row gap-4 absolute top-0 right-0">
-                        {!isAddingText && (
-                            <Icon
-                                icon={PencilIcon}
-                                lightColor="#fff"
-                                darkColor="#fff"
-                                className="p-10 bg-red-500 z-10"
-                                onPress={() => setIsAddingText(true)}
-                            />
-                        )}
-                        {isAddingText && (
-                            <Icon
-                                icon={CheckIcon}
-                                lightColor="#fff"
-                                darkColor="#fff"
-                                className="p-10 bg-red-500 z-10"
-                                onPress={() => setIsAddingText(false)}
-                            />
-                        )}
-                    </View>
                 </View>
 
                 <LinearGradient
@@ -152,6 +131,22 @@ export default function PhotoTextOverlay({
                             darkColor="#fff"
                             onPress={onDiscard}
                         />
+                        {!isAddingText && (
+                            <Icon
+                                icon={PencilIcon}
+                                lightColor="#fff"
+                                darkColor="#fff"
+                                onPress={() => setIsAddingText(true)}
+                            />
+                        )}
+                        {isAddingText && (
+                            <Icon
+                                icon={CheckIcon}
+                                lightColor="#fff"
+                                darkColor="#fff"
+                                onPress={() => setIsAddingText(false)}
+                            />
+                        )}
                     </View>
                 </LinearGradient>
 
