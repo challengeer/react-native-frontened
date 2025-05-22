@@ -28,6 +28,10 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const isScrolling = useRef(false);
     const { width: windowWidth } = useWindowDimensions();
     const width = windowWidth - 32;
+    const daySize = (width - 8) / 7; // 7 days in a week, 8px for padding
+    const weekHeight = daySize; // Square aspect ratio
+    const maxWeeks = 7; // Maximum number of weeks a month can have
+    const calendarHeight = (weekHeight * maxWeeks) + 24; // 24px for weekday header
 
     const getAdjacentMonth = (date: Date, offset: number) => {
         const newDate = new Date(date);
@@ -74,8 +78,14 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
         const todayDate = isCurrentMonth ? today.getDate() : null;
 
+        // Ensure we always have 7 weeks
+        const paddedWeeks = [...weeks];
+        while (paddedWeeks.length < 7) {
+            paddedWeeks.push(Array(7).fill(null));
+        }
+
         return (
-            <View style={{ width }} className="px-1">
+            <View style={{ width, height: calendarHeight }} className="px-1">
                 <View className="mb-2 flex-row justify-between">
                     {currentTranslation.weekdays.map(day => (
                         <View key={day} className="flex-1 items-center">
@@ -84,35 +94,37 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     ))}
                 </View>
 
-                {weeks.map((week, weekIndex) => (
-                    <View key={weekIndex} className="flex-row justify-between">
-                        {week.map((day, dayIndex) => {
-                            const isDaySelected = isSelected(day, date);
-                            const isDayToday = isCurrentMonth && day === todayDate;
-                            
-                            return (
-                                <View
-                                    key={dayIndex}
-                                    className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                                        ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                                        ${day === null ? 'opacity-0' : ''}`}
-                                >
-                                    {isDayToday && (
-                                        <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                                    )}
-                                    {day !== null && (
-                                        <Text 
-                                            className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
-                                            style={{ opacity: day === null ? 0 : 1 }}
-                                        >
-                                            {day}
-                                        </Text>
-                                    )}
-                                </View>
-                            );
-                        })}
-                    </View>
-                ))}
+                <View style={{ flex: 1 }}>
+                    {paddedWeeks.map((week, weekIndex) => (
+                        <View key={weekIndex} className="flex-row justify-between">
+                            {week.map((day, dayIndex) => {
+                                const isDaySelected = isSelected(day, date);
+                                const isDayToday = isCurrentMonth && day === todayDate;
+                                
+                                return (
+                                    <View
+                                        key={dayIndex}
+                                        className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
+                                            ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                                            ${day === null ? 'opacity-0' : ''}`}
+                                    >
+                                        {isDayToday && (
+                                            <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                                        )}
+                                        {day !== null && (
+                                            <Text 
+                                                className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
+                                                style={{ opacity: day === null ? 0 : 1 }}
+                                            >
+                                                {day}
+                                            </Text>
+                                        )}
+                                    </View>
+                                );
+                            })}
+                        </View>
+                    ))}
+                </View>
             </View>
         );
     };
