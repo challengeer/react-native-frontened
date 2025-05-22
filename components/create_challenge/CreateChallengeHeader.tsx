@@ -22,7 +22,7 @@ export default function CreateChallengeHeader({ currentStep, onBack }: CreateCha
             <StepIndicatorBar
                 stepCount={3}
                 currentPosition={currentStep}
-                className="px-4"
+                className="px-4 pt-2"
             />
         </View>
     );

@@ -250,5 +250,21 @@
                 "sun": "Sun"
             }
         }
+    },
+    "sports": {
+        "title": "Select sports category",
+        "continue": "Continue",
+        "categories": {
+            "running": "Running",
+            "swimming": "Swimming",
+            "cycling": "Cycling",
+            "yoga": "Yoga",
+            "pilates": "Pilates",
+            "dancing": "Dancing",
+            "boxing": "Boxing",
+            "skating": "Skating",
+            "hiking": "Hiking",
+            "rock_climbing": "Rock Climbing"
+        }
     }
 }

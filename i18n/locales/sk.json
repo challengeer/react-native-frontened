@@ -250,5 +250,21 @@
                 "sun": "Ne"
             }
         }
+    },
+    "sports": {
+        "title": "Vyberte športovú kategóriu",
+        "continue": "Pokračovať",
+        "categories": {
+            "running": "Beh",
+            "swimming": "Plávanie",
+            "cycling": "Cyklistika",
+            "yoga": "Jóga",
+            "pilates": "Pilates",
+            "dancing": "Tancovanie",
+            "boxing": "Box",
+            "skating": "Korčuľovanie",
+            "hiking": "Turistika",
+            "rock_climbing": "Lezenie"
+        }
     }
 }
