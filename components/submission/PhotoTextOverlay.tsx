@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Platform, Dimensions, TouchableWithoutFeedback, Pressable } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, Dimensions, TouchableWithoutFeedback, Pressable, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { PencilIcon, CheckIcon } from "react-native-heroicons/outline";
+import { PencilIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/outline";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import Icon from "@/components/common/Icon";
+import Button from "@/components/common/Button";
 
 interface PhotoTextOverlayProps {
     text: string;
@@ -12,6 +15,10 @@ interface PhotoTextOverlayProps {
     isAddingText: boolean;
     setIsAddingText: (isAdding: boolean) => void;
     keyboardHeight: number;
+    uri: string | null;
+    onDiscard: () => void;
+    onSubmit: () => void;
+    isUploading: boolean;
 }
 
 export default function PhotoTextOverlay({
@@ -21,7 +28,11 @@ export default function PhotoTextOverlay({
     setTextPosition,
     isAddingText,
     setIsAddingText,
-    keyboardHeight
+    keyboardHeight,
+    uri,
+    onDiscard,
+    onSubmit,
+    isUploading
 }: PhotoTextOverlayProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [startY, setStartY] = useState(0);
@@ -46,81 +57,121 @@ export default function PhotoTextOverlay({
         setIsDragging(false);
     };
 
+    if (!uri) return null;
+
     return (
-        <View className="absolute inset-0">
-            {isAddingText && (
-                <Pressable
-                    className="absolute inset-0"
-                    onPress={() => setIsAddingText(false)}
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            className="flex-1"
+        >
+            <View className="flex-1 relative">
+                <Image
+                    source={{ uri }}
+                    style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                    contentFit="cover"
+                />
+
+                <View className="absolute inset-0">
+                    {isAddingText && (
+                        <Pressable
+                            className="absolute inset-0"
+                            onPress={() => setIsAddingText(false)}
+                        >
+                            <View className="absolute mb-6 left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
+                                <View className="bg-black/50 w-full">
+                                    <TextInput
+                                        value={text}
+                                        onChangeText={(newText) => {
+                                            const cleanText = newText.replace(/\n/g, '').slice(0, 30);
+                                            setText(cleanText);
+                                        }}
+                                        placeholder="Add text..."
+                                        placeholderTextColor="#999"
+                                        className="text-white text-xl text-center px-4 py-2"
+                                        style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
+                                        autoFocus
+                                        maxLength={30}
+                                        blurOnSubmit={true}
+                                        onSubmitEditing={() => {
+                                            setIsAddingText(false);
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        </Pressable>
+                    )}
+
+                    {!isAddingText && text && (
+                        <View
+                            className="absolute left-0 right-0 w-full"
+                            style={{ top: `${textPosition * 100}%` }}
+                            onTouchStart={handleTouchStart}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                        >
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
+                                <View className="bg-black/50">
+                                    <Text className="text-white text-xl text-center px-4 py-2">
+                                        {text}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                    <View className="flex-row gap-4 absolute top-0 right-0">
+                        {!isAddingText && (
+                            <Icon
+                                icon={PencilIcon}
+                                lightColor="#fff"
+                                darkColor="#fff"
+                                className="p-10 bg-red-500 z-10"
+                                onPress={() => setIsAddingText(true)}
+                            />
+                        )}
+                        {isAddingText && (
+                            <Icon
+                                icon={CheckIcon}
+                                lightColor="#fff"
+                                darkColor="#fff"
+                                className="p-10 bg-red-500 z-10"
+                                onPress={() => setIsAddingText(false)}
+                            />
+                        )}
+                    </View>
+                </View>
+
+                <LinearGradient
+                    colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
+                    style={{ position: "absolute", top: 0, left: 0, right: 0 }}
                 >
-                    <View className="absolute mb-6 left-0 right-0 w-full" style={{ bottom: keyboardHeight }}>
-                        <View className="bg-black/50 w-full">
-                            <TextInput
-                                value={text}
-                                onChangeText={(newText) => {
-                                    const cleanText = newText.replace(/\n/g, '').slice(0, 30);
-                                    setText(cleanText);
-                                }}
-                                placeholder="Add text..."
-                                placeholderTextColor="#999"
-                                className="text-white text-xl text-center px-4 py-2"
-                                style={{ fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif' }}
-                                autoFocus
-                                maxLength={30}
-                                blurOnSubmit={true}
-                                onSubmitEditing={() => {
-                                    setIsAddingText(false);
-                                }}
+                    <View className="p-6 flex-row items-center justify-between">
+                        <Icon
+                            icon={XMarkIcon}
+                            lightColor="#fff"
+                            darkColor="#fff"
+                            onPress={onDiscard}
+                        />
+                    </View>
+                </LinearGradient>
+
+                {!isAddingText && (
+                    <LinearGradient
+                        colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.25)"]}
+                        style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+                    >
+                        <View className="justify-center items-center p-6">
+                            <Button
+                                title="Submit photo"
+                                size="lg"
+                                loading={isUploading}
+                                disabled={isUploading}
+                                onPress={onSubmit}
                             />
                         </View>
-                    </View>
-                </Pressable>
-            )}
-
-            {!isAddingText && text && (
-                <View
-                    className="absolute left-0 right-0 w-full"
-                    style={{ top: `${textPosition * 100}%` }}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => setIsAddingText(true)}>
-                        <View className="bg-black/50">
-                            <Text className="text-white text-xl text-center px-4 py-2">
-                                {text}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            )}
-
-            <View className="flex-row gap-4 absolute top-0 right-0">
-                {!isAddingText && (
-                    <Icon
-                        icon={PencilIcon}
-                        lightColor="#fff"
-                        darkColor="#fff"
-                        className="p-10 bg-red-500 z-10"
-                        onPress={() => {
-                            console.log("pencil");
-                            setIsAddingText(true);
-                        }}
-                    />
-                )}
-                {isAddingText && (
-                    <Icon
-                        icon={CheckIcon}
-                        lightColor="#fff"
-                        darkColor="#fff"
-                        className="p-10 bg-red-500 z-10"
-                        onPress={() => {
-                            console.log("check");
-                            setIsAddingText(false);
-                        }}
-                    />
+                    </LinearGradient>
                 )}
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 } 

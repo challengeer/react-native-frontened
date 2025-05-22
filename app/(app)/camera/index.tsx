@@ -245,65 +245,25 @@ export default function CameraPage() {
     }
 
     const renderPicture = () => (
-        <KeyboardAvoidingView 
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            className="flex-1"
-        >
-            <View className="flex-1 relative">
-                <Image
-                    source={{ uri: state.uri || "" }}
-                    style={{ width: "100%", height: "100%", borderRadius: 24 }}
-                    contentFit="cover"
-                />
-
-                <PhotoTextOverlay
-                    text={state.text}
-                    setText={(text) => setState(prev => ({ ...prev, text }))}
-                    textPosition={state.textPosition}
-                    setTextPosition={(position) => setState(prev => ({ ...prev, textPosition: position }))}
-                    isAddingText={state.isAddingText}
-                    setIsAddingText={(isAdding) => setState(prev => ({ ...prev, isAddingText: isAdding }))}
-                    keyboardHeight={keyboardHeight}
-                />
-
-                <LinearGradient
-                    colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
-                    style={{ position: "absolute", top: 0, left: 0, right: 0 }}
-                >
-                    <View className="p-6 flex-row items-center justify-between">
-                        <Icon
-                            icon={XMarkIcon}
-                            lightColor="#fff"
-                            darkColor="#fff"
-                            onPress={() => setState(prev => ({
-                                ...prev,
-                                uri: null,
-                                text: "",
-                                isAddingText: false,
-                                textPosition: 0.5
-                            }))}
-                        />
-                    </View>
-                </LinearGradient>
-
-                {!state.isAddingText && (
-                    <LinearGradient
-                        colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.25)"]}
-                        style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-                    >
-                        <View className="justify-center items-center p-6">
-                            <Button
-                                title="Submit photo"
-                                size="lg"
-                                loading={state.isUploading}
-                                disabled={state.isUploading}
-                                onPress={handleSubmit}
-                            />
-                        </View>
-                    </LinearGradient>
-                )}
-            </View>
-        </KeyboardAvoidingView>
+        <PhotoTextOverlay
+            text={state.text}
+            setText={(text) => setState(prev => ({ ...prev, text }))}
+            textPosition={state.textPosition}
+            setTextPosition={(position) => setState(prev => ({ ...prev, textPosition: position }))}
+            isAddingText={state.isAddingText}
+            setIsAddingText={(isAdding) => setState(prev => ({ ...prev, isAddingText: isAdding }))}
+            keyboardHeight={keyboardHeight}
+            uri={state.uri}
+            onDiscard={() => setState(prev => ({
+                ...prev,
+                uri: null,
+                text: "",
+                isAddingText: false,
+                textPosition: 0.5
+            }))}
+            onSubmit={handleSubmit}
+            isUploading={state.isUploading}
+        />
     );
 
     const renderCamera = () => (
