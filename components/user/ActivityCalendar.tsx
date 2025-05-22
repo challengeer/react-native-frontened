@@ -27,7 +27,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const scrollViewRef = useRef<ScrollView>(null);
     const isScrolling = useRef(false);
     const { width: windowWidth } = useWindowDimensions();
-    const width = windowWidth - 32;
+    const width = windowWidth - 24;
     const daySize = (width - 8) / 7; // 7 days in a week, 8px for padding
     const weekHeight = daySize; // Square aspect ratio
     const maxWeeks = 7; // Maximum number of weeks a month can have
@@ -219,7 +219,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     onMomentumScrollEnd={handleScroll}
                     scrollEventThrottle={32}
                     decelerationRate="fast"
-                    contentContainerStyle={{ paddingHorizontal: 4 }}
                     style={{ width }}
                     onLayout={() => {
                         // Scroll to the middle month initially
