@@ -95,7 +95,7 @@ export default function SubmissionLayout() {
             <GestureDetector gesture={panGesture}>
                 <Animated.View className="flex-1 bg-black" style={animatedStyle}>
                     <View
-                        className="flex-1 bg-black"
+                        className="flex-1 justify-center bg-black"
                         style={{
                             marginTop: insets.top,
                             marginBottom: insets.bottom

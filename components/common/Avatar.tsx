@@ -13,7 +13,7 @@ const colors = ["bg-red-400", "bg-orange-400", "bg-amber-400", "bg-yellow-400", 
 export default function Avatar({ source, name = "User", size = "md" }: AvatarProps) {
     const sizeClasses = {
         xs: {
-            container: "w-8 h-8",
+            container: "w-10 h-10",
             text: "text-base",
         },
         sm: {

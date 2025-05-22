@@ -74,10 +74,10 @@ export default function SubmissionPage() {
 
     if (data?.length === 0) {
         return (
-            <View className="flex-1 relative">
+            <View className="w-full aspect-[9/16] relative">
                 <ExpoImage
                     source={{ uri: `https://picsum.photos/seed/${challenge_id}/100/150` }}
-                    style={{ width: "100%", height: "100%", borderRadius: 24, opacity: 0.8 }}
+                    style={{ width: "100%", height: "100%", opacity: 0.8 }}
                     contentFit="cover"
                     blurRadius={5}
                 />
@@ -107,10 +107,10 @@ export default function SubmissionPage() {
     }
 
     return (
-        <View className="flex-1 relative">
+        <View className="w-full aspect-[9/16] relative">
             <ExpoImage
                 source={{ uri: currentSubmission?.photo_url }}
-                style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                style={{ width: "100%", height: "100%" }}
                 contentFit="cover"
             />
 
@@ -138,7 +138,7 @@ export default function SubmissionPage() {
                 style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 20 }}
                 pointerEvents="box-none"
             >
-                <View className="px-4 py-6 gap-4">
+                <View className="p-4 gap-4">
                     <View className="flex-row h-0.5 gap-1">
                         {[...Array(totalPhotos)].map((_, index) => (
                             <View
@@ -157,7 +157,7 @@ export default function SubmissionPage() {
                             onPress={() => router.push(`/(app)/user/${currentSubmission?.user?.user_id}`)}
                         >
                             <Avatar
-                                size="sm"
+                                size="xs"
                                 source={currentSubmission?.user?.profile_picture}
                                 name={currentSubmission?.user?.display_name || "User"}
                             />
@@ -166,7 +166,7 @@ export default function SubmissionPage() {
                                 <Text className="leading-tight font-medium">
                                     {currentSubmission?.user?.display_name || "User"}
                                 </Text>
-                                <Text className="leading-tight text-base opacity-80">
+                                <Text className="leading-tight opacity-80">
                                     {getTimeAgo(currentSubmission?.submitted_at)}
                                 </Text>
                             </View>
