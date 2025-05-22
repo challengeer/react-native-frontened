@@ -70,6 +70,10 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const renderMonth = (date: Date) => {
         const weeks = getDaysInMonth(date);
+        const today = new Date();
+        const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
+        const todayDate = isCurrentMonth ? today.getDate() : null;
+
         return (
             <View style={{ width }} className="px-1">
                 <View className="mb-2 flex-row justify-between">
@@ -82,23 +86,31 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
                 {weeks.map((week, weekIndex) => (
                     <View key={weekIndex} className="flex-row justify-between">
-                        {week.map((day, dayIndex) => (
-                            <View
-                                key={dayIndex}
-                                className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                                    ${isSelected(day, date) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                                    ${day === null ? 'opacity-0' : ''}`}
-                            >
-                                {isToday(day) && (
-                                    <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                                )}
-                                {day !== null && (
-                                    <Text className={`text-base ${isSelected(day, date) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
-                                        {day}
-                                    </Text>
-                                )}
-                            </View>
-                        ))}
+                        {week.map((day, dayIndex) => {
+                            const isDaySelected = isSelected(day, date);
+                            const isDayToday = isCurrentMonth && day === todayDate;
+                            
+                            return (
+                                <View
+                                    key={dayIndex}
+                                    className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
+                                        ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                                        ${day === null ? 'opacity-0' : ''}`}
+                                >
+                                    {isDayToday && (
+                                        <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                                    )}
+                                    {day !== null && (
+                                        <Text 
+                                            className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
+                                            style={{ opacity: day === null ? 0 : 1 }}
+                                        >
+                                            {day}
+                                        </Text>
+                                    )}
+                                </View>
+                            );
+                        })}
                     </View>
                 ))}
             </View>
@@ -158,13 +170,13 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return selectedDates.some(date => date.split('T')[0] === currentDateStr);
     };
 
-    const isToday = (day: number | null) => {
+    const isToday = (day: number | null, monthDate: Date) => {
         if (!day) return false;
         const today = new Date();
         return (
             today.getDate() === day &&
-            today.getMonth() === currentDate.getMonth() &&
-            today.getFullYear() === currentDate.getFullYear()
+            today.getMonth() === monthDate.getMonth() &&
+            today.getFullYear() === monthDate.getFullYear()
         );
     };
 
