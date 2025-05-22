@@ -86,14 +86,14 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                             <View
                                 key={dayIndex}
                                 className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                                    ${isSelected(day) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                                    ${isSelected(day, date) ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
                                     ${day === null ? 'opacity-0' : ''}`}
                             >
                                 {isToday(day) && (
                                     <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
                                 )}
                                 {day !== null && (
-                                    <Text className={`text-base ${isSelected(day) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
+                                    <Text className={`text-base ${isSelected(day, date) ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                         {day}
                                     </Text>
                                 )}
@@ -147,10 +147,10 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return `${currentTranslation.months[month]} ${year}`;
     };
 
-    const isSelected = (day: number | null) => {
+    const isSelected = (day: number | null, monthDate: Date) => {
         if (!day) return false;
         // Create date at midnight in local timezone
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
         // Adjust for local timezone offset
         const offset = date.getTimezoneOffset();
         const localDate = new Date(date.getTime() - (offset * 60 * 1000));
@@ -196,10 +196,23 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     scrollEventThrottle={32}
                     decelerationRate="fast"
                     contentContainerStyle={{ paddingHorizontal: 4 }}
+                    style={{ width }}
+                    onLayout={() => {
+                        // Scroll to the middle month initially
+                        scrollViewRef.current?.scrollTo({ x: width, animated: false });
+                    }}
                 >
-                    {renderMonth(getAdjacentMonth(currentDate, -1))}
-                    {renderMonth(currentDate)}
-                    {renderMonth(getAdjacentMonth(currentDate, 1))}
+                    <View style={{ width: width * 3, flexDirection: 'row' }}>
+                        <View style={{ width }}>
+                            {renderMonth(getAdjacentMonth(currentDate, -1))}
+                        </View>
+                        <View style={{ width }}>
+                            {renderMonth(currentDate)}
+                        </View>
+                        <View style={{ width }}>
+                            {renderMonth(getAdjacentMonth(currentDate, 1))}
+                        </View>
+                    </View>
                 </ScrollView>
             </View>
         </View>
