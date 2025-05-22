@@ -1,13 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
-interface Overlay {
-    overlay_id: number;
-    overlay_type: 'text';
-    content: string;
-    x: number;
-    y: number;
-}
+import { Overlay } from '@/types/submission';
 
 export default function Overlays({ overlays }: { overlays: Overlay[] }) {
     return (
