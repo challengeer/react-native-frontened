@@ -63,20 +63,20 @@ export default function SettingsPage() {
             rightSection: user?.username || "",
             onPress: () => router.push("/settings/username"),
         },
-        {
-            key: "phoneNumber",
-            rightSection: user?.phone_number || "",
-            onPress: () => router.push("/settings/mobile"),
-        },
-        {
-            key: "email",
-            rightSection: user?.email || "",
-            onPress: () => router.push("/settings/email"),
-        },
-        {
-            key: "password",
-            onPress: () => router.push("/settings/password"),
-        },
+        // {
+        //     key: "phoneNumber",
+        //     rightSection: user?.phone_number || "",
+        //     onPress: () => router.push("/settings/mobile"),
+        // },
+        // {
+        //     key: "email",
+        //     rightSection: user?.email || "",
+        //     onPress: () => router.push("/settings/email"),
+        // },
+        // {
+        //     key: "password",
+        //     onPress: () => router.push("/settings/password"),
+        // },
         {
             key: "appearance",
             onPress: () => router.push("/settings/app_appearance"),
@@ -137,7 +137,6 @@ export default function SettingsPage() {
 
                 <Button
                     title={i18n.t("buttons.logout")}
-                    size="lg"
                     variant="logout"
                     onPress={logout}
                 />

@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useAuth } from "@/providers/AuthProvider";
@@ -55,7 +55,11 @@ export default function Name() {
                 }
             />
 
-            <View className="flex-1 px-4 pb-4 justify-between">
+            <KeyboardAvoidingView
+                behavior="padding"
+                className="flex-1 px-4 justify-between"
+                keyboardVerticalOffset={16}
+            >
                 <InputBar
                     value={name}
                     onChangeText={setName}
@@ -70,7 +74,7 @@ export default function Name() {
                     loading={isLoading}
                     onPress={handleSubmit}
                 />
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }   
