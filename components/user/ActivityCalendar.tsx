@@ -23,15 +23,15 @@ const TRANSLATIONS = {
 
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [isScrolling, setIsScrolling] = useState(false);
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
     const scrollViewRef = useRef<ScrollView>(null);
-    const isScrolling = useRef(false);
     const { width: windowWidth } = useWindowDimensions();
     const width = windowWidth - 24;
-    const daySize = (width - 8) / 7; // 7 days in a week, 8px for padding
-    const weekHeight = daySize; // Square aspect ratio
-    const maxWeeks = 7; // Maximum number of weeks a month can have
-    const calendarHeight = (weekHeight * maxWeeks) + 24; // 24px for weekday header
+    const daySize = (width - 8) / 7;
+    const weekHeight = daySize;
+    const maxWeeks = 7;
+    const calendarHeight = (weekHeight * maxWeeks) + 24;
 
     const getAdjacentMonth = (date: Date, offset: number) => {
         const newDate = new Date(date);
@@ -133,34 +133,25 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         const offsetX = event.nativeEvent.contentOffset.x;
         const page = Math.round(offsetX / width);
         
-        if (page === 1) {
-            // We're on the current month, do nothing
-            return;
-        }
+        if (page === 2 || isScrolling) return;
 
-        // Prevent multiple rapid state updates
-        if (isScrolling.current) return;
-        isScrolling.current = true;
-
-        if (page === 0) {
-            // Scrolled to previous month
+        if (page === 0 || page === 1) {
+            setIsScrolling(true);
             const newDate = getAdjacentMonth(currentDate, -1);
             setCurrentDate(newDate);
             onMonthChange?.(newDate);
-            // Use requestAnimationFrame to ensure smooth transition
             requestAnimationFrame(() => {
-                scrollViewRef.current?.scrollTo({ x: width, animated: false });
-                isScrolling.current = false;
+                scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
+                setIsScrolling(false);
             });
-        } else if (page === 2) {
-            // Scrolled to next month
+        } else if (page === 3 || page === 4) {
+            setIsScrolling(true);
             const newDate = getAdjacentMonth(currentDate, 1);
             setCurrentDate(newDate);
             onMonthChange?.(newDate);
-            // Use requestAnimationFrame to ensure smooth transition
             requestAnimationFrame(() => {
-                scrollViewRef.current?.scrollTo({ x: width, animated: false });
-                isScrolling.current = false;
+                scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
+                setIsScrolling(false);
             });
         }
     };
@@ -198,14 +189,22 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 <Text className="font-medium">{formatMonthYear(currentDate)}</Text>
                 <View className="flex-row gap-3">
                     <IconCircle icon={ChevronLeftIcon} onPress={() => {
-                        setCurrentDate(getAdjacentMonth(currentDate, -1));
-                        onMonthChange?.(getAdjacentMonth(currentDate, -1));
-                        scrollViewRef.current?.scrollTo({ x: width, animated: true });
+                        if (isScrolling) return;
+                        setIsScrolling(true);
+                        const newDate = getAdjacentMonth(currentDate, -1);
+                        setCurrentDate(newDate);
+                        onMonthChange?.(newDate);
+                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: true });
+                        setTimeout(() => setIsScrolling(false), 300);
                     }} />
                     <IconCircle icon={ChevronRightIcon} onPress={() => {
-                        setCurrentDate(getAdjacentMonth(currentDate, 1));
-                        onMonthChange?.(getAdjacentMonth(currentDate, 1));
-                        scrollViewRef.current?.scrollTo({ x: width, animated: true });
+                        if (isScrolling) return;
+                        setIsScrolling(true);
+                        const newDate = getAdjacentMonth(currentDate, 1);
+                        setCurrentDate(newDate);
+                        onMonthChange?.(newDate);
+                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: true });
+                        setTimeout(() => setIsScrolling(false), 300);
                     }} />
                 </View>
             </View>
@@ -217,15 +216,17 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     pagingEnabled
                     showsHorizontalScrollIndicator={false}
                     onMomentumScrollEnd={handleScroll}
-                    scrollEventThrottle={32}
+                    scrollEventThrottle={16}
                     decelerationRate="fast"
                     style={{ width }}
                     onLayout={() => {
-                        // Scroll to the middle month initially
-                        scrollViewRef.current?.scrollTo({ x: width, animated: false });
+                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
                     }}
                 >
-                    <View style={{ width: width * 3, flexDirection: 'row' }}>
+                    <View style={{ width: width * 5, flexDirection: 'row' }}>
+                        <View style={{ width }}>
+                            {renderMonth(getAdjacentMonth(currentDate, -2))}
+                        </View>
                         <View style={{ width }}>
                             {renderMonth(getAdjacentMonth(currentDate, -1))}
                         </View>
@@ -234,6 +235,9 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                         </View>
                         <View style={{ width }}>
                             {renderMonth(getAdjacentMonth(currentDate, 1))}
+                        </View>
+                        <View style={{ width }}>
+                            {renderMonth(getAdjacentMonth(currentDate, 2))}
                         </View>
                     </View>
                 </ScrollView>
