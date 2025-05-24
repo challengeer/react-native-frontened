@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { BoltIcon as BoltIconOutline, UsersIcon as UsersIconOutline } from "react-native-heroicons/outline";
 import { BoltIcon as BoltIconSolid, UsersIcon as UsersIconSolid } from "react-native-heroicons/solid";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { useWindowDimensions } from "react-native";
 import { useCallback, useState, useMemo } from "react";
@@ -14,8 +14,9 @@ import FriendsPage from "./friends";
 
 export default function Layout() {
     const router = useRouter();
-    const { tab } = useLocalSearchParams<{ tab: string }>();
     const layout = useWindowDimensions();
+    const insets = useSafeAreaInsets();
+    const { tab } = useLocalSearchParams<{ tab: string }>();
     const [index, setIndex] = useState(tab === "friends" ? 1 : 0);
 
     const routes = useMemo(() => [
@@ -59,19 +60,17 @@ export default function Layout() {
     }), [index, routes]);
 
     return (
-        <SafeAreaView className="flex-1">
-            <View className="flex-1">
-                <TabView
-                    navigationState={navigationState}
-                    renderScene={renderScene}
-                    onIndexChange={handleIndexChange}
-                    initialLayout={{ width: layout.width }}
-                    renderTabBar={renderTabBar}
-                    swipeEnabled={true}
-                    tabBarPosition="bottom"
-                    lazy={true}
-                />
-            </View>
-        </SafeAreaView>
+        <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
+            <TabView
+                navigationState={navigationState}
+                renderScene={renderScene}
+                onIndexChange={handleIndexChange}
+                initialLayout={{ width: layout.width }}
+                renderTabBar={renderTabBar}
+                swipeEnabled={true}
+                tabBarPosition="bottom"
+                lazy={true}
+            />
+        </View>
     );
 }

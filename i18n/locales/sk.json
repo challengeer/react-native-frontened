@@ -223,6 +223,9 @@
             "title": "Súkromie",
             "privacyPolicy": {
                 "header": "Zásady ochrany osobných údajov"
+            },
+            "termsOfService": {
+                "header": "Podmienky používania"
             }
         },
         "version": "Challengeer v{{version}}",

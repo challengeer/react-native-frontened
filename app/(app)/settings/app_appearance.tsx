@@ -1,7 +1,6 @@
 import i18n from "@/i18n";
 import React, { useContext } from "react";
 import { ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { AppearanceContext } from "@/providers/AppearanceProvider";
 import { useColorScheme } from "nativewind";
@@ -18,7 +17,7 @@ export default function AppAppearance() {
     const { changeColorScheme } = useContext(AppearanceContext);
 
     return (
-        <SafeAreaView className="flex-1">
+        <>
             <Header
                 title={i18n.t("settings.account.appearance.header")}
                 leftSection={
@@ -29,7 +28,7 @@ export default function AppAppearance() {
                 }
             />
             
-            <ScrollView className="flex-1 px-4">
+            <ScrollView className="flex-1 px-4 pt-2">
                 {themes.map((theme, index) => (
                     <OptionButton
                         key={theme}
@@ -43,6 +42,6 @@ export default function AppAppearance() {
                     />
                 ))}
             </ScrollView>
-        </SafeAreaView>
+        </>
     );
 }

@@ -223,6 +223,9 @@
             "title": "Privacy",
             "privacyPolicy": {
                 "header": "Privacy policy"
+            },
+            "termsOfService": {
+                "header": "Terms of service"
             }
         },
         "version": "Challengeer v{{version}}",

@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import api from "@/lib/api";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftIcon, ShareIcon, Cog8ToothIcon, CheckCircleIcon } from "react-native-heroicons/outline";
 import { UserPlusIcon, UserMinusIcon } from "react-native-heroicons/solid";
@@ -28,9 +28,10 @@ interface UserProfile extends UserInterface {
 }
 
 export default function UserPage() {
-    const { user_id } = useLocalSearchParams<{ user_id: string }>();
     const { user } = useAuth();
+    const { user_id } = useLocalSearchParams<{ user_id: string }>();
     const { addFriend, isAddingFriend, acceptRequest, isAcceptingRequest, rejectRequest, isRejectingRequest } = useFriends();
+    const insets = useSafeAreaInsets();
 
     const { data, isPending, isError, refetch } = useQuery<UserProfile>({
         queryKey: ["user", user_id],
@@ -42,7 +43,7 @@ export default function UserPage() {
     });
  
     return (
-        <SafeAreaView className="flex-1">
+        <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
             <Header
                 title={i18n.t("user.header")}
                 leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />}
@@ -169,6 +170,6 @@ export default function UserPage() {
                     />
                 </ScrollView>
             )}
-        </SafeAreaView>
+        </View>
     )
 }

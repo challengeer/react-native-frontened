@@ -1,15 +1,14 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
 import React, { useState } from "react";
-import { KeyboardAvoidingView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/providers/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { InputBar } from "@/components/common/InputBar";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
-import { InputBar } from "@/components/common/InputBar";
 import Button from "@/components/common/Button";
 
 const NAME_MAX_LENGTH = 30;
@@ -44,7 +43,7 @@ export default function Name() {
     };
 
     return (
-        <SafeAreaView className="flex-1">
+        <>
             <Header
                 title={i18n.t("settings.account.displayName.header")}
                 leftSection={
@@ -55,11 +54,7 @@ export default function Name() {
                 }
             />
 
-            <KeyboardAvoidingView
-                behavior="padding"
-                className="flex-1 px-4 justify-between"
-                keyboardVerticalOffset={16}
-            >
+            <View className="flex-1 px-4 pb-4 pt-2 justify-between">
                 <InputBar
                     value={name}
                     onChangeText={setName}
@@ -74,7 +69,7 @@ export default function Name() {
                     loading={isLoading}
                     onPress={handleSubmit}
                 />
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+            </View>
+        </>
     );
 }   
