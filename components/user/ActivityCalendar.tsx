@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { View, Dimensions, useWindowDimensions, FlatList } from "react-native";
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo, memo } from "react";
 import Text from "@/components/common/Text";
 import IconCircle from "@/components/common/IconCircle";
 
@@ -20,6 +20,94 @@ const TRANSLATIONS = {
         weekdays: ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne']
     }
 };
+
+const MonthView = memo(({ date, width, calendarHeight, currentTranslation, isSelected, todayDate, isCurrentMonth, getDaysInMonth }: {
+    date: Date;
+    width: number;
+    calendarHeight: number;
+    currentTranslation: typeof TRANSLATIONS.en;
+    isSelected: (day: number | null, monthDate: Date) => boolean;
+    todayDate: number | null;
+    isCurrentMonth: boolean;
+    getDaysInMonth: (date: Date) => (number | null)[][];
+}) => {
+    const weeks = useMemo(() => getDaysInMonth(date), [date]);
+
+    // Ensure we always have 7 weeks
+    const paddedWeeks = useMemo(() => {
+        const result = [...weeks];
+        while (result.length < 7) {
+            result.push(Array(7).fill(null));
+        }
+        return result;
+    }, [weeks]);
+
+    return (
+        <View style={{ width, height: calendarHeight }} className="pl-4">
+            <View className="mb-2 flex-row justify-between">
+                {currentTranslation.weekdays.map(day => (
+                    <View key={day} className="flex-1 items-center">
+                        <Text className="text-sm text-neutral-500">{day}</Text>
+                    </View>
+                ))}
+            </View>
+
+            <View style={{ flex: 1 }}>
+                {paddedWeeks.map((week, weekIndex) => (
+                    <View key={weekIndex} className="flex-row justify-between">
+                        {week.map((day: number | null, dayIndex: number) => {
+                            const isDaySelected = isSelected(day, date);
+                            const isDayToday = isCurrentMonth && day === todayDate;
+
+                            return (
+                                <View
+                                    key={dayIndex}
+                                    className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
+                                        ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                                        ${day === null ? 'opacity-0' : ''}`}
+                                >
+                                    {isDayToday && (
+                                        <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                                    )}
+                                    {day !== null && (
+                                        <Text
+                                            className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
+                                            style={{ opacity: day === null ? 0 : 1 }}
+                                        >
+                                            {day}
+                                        </Text>
+                                    )}
+                                </View>
+                            );
+                        })}
+                    </View>
+                ))}
+            </View>
+        </View>
+    );
+});
+
+const MonthHeader = memo(({ date, currentTranslation, onChevronPress }: {
+    date: Date;
+    currentTranslation: typeof TRANSLATIONS.en;
+    onChevronPress: (direction: 'left' | 'right') => void;
+}) => {
+    const formatMonthYear = useCallback((date: Date) => {
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        return `${currentTranslation.months[month]} ${year}`;
+    }, [currentTranslation]);
+
+    return (
+        <View className="flex-row justify-between items-center mb-4">
+            <Text className="font-medium pl-4">{formatMonthYear(date)}</Text>
+            <View className="flex-row gap-2">
+                <IconCircle icon={ChevronLeftIcon} onPress={() => onChevronPress('left')} />
+                <IconCircle icon={ChevronRightIcon} onPress={() => onChevronPress('right')} />
+            </View>
+        </View>
+    );
+});
 
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -71,63 +159,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return weeks;
     };
 
-    const renderMonth = (date: Date) => {
-        const weeks = getDaysInMonth(date);
-        const today = new Date();
-        const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
-        const todayDate = isCurrentMonth ? today.getDate() : null;
-
-        // Ensure we always have 7 weeks
-        const paddedWeeks = [...weeks];
-        while (paddedWeeks.length < 7) {
-            paddedWeeks.push(Array(7).fill(null));
-        }
-
-        return (
-            <View style={{ width, height: calendarHeight }} className="pl-4">
-                <View className="mb-2 flex-row justify-between">
-                    {currentTranslation.weekdays.map(day => (
-                        <View key={day} className="flex-1 items-center">
-                            <Text className="text-sm text-neutral-500">{day}</Text>
-                        </View>
-                    ))}
-                </View>
-
-                <View style={{ flex: 1 }}>
-                    {paddedWeeks.map((week, weekIndex) => (
-                        <View key={weekIndex} className="flex-row justify-between">
-                            {week.map((day, dayIndex) => {
-                                const isDaySelected = isSelected(day, date);
-                                const isDayToday = isCurrentMonth && day === todayDate;
-
-                                return (
-                                    <View
-                                        key={dayIndex}
-                                        className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                                            ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                                            ${day === null ? 'opacity-0' : ''}`}
-                                    >
-                                        {isDayToday && (
-                                            <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                                        )}
-                                        {day !== null && (
-                                            <Text
-                                                className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
-                                                style={{ opacity: day === null ? 0 : 1 }}
-                                            >
-                                                {day}
-                                            </Text>
-                                        )}
-                                    </View>
-                                );
-                            })}
-                        </View>
-                    ))}
-                </View>
-            </View>
-        );
-    };
-
     const formatMonthYear = (date: Date) => {
         const month = date.getMonth();
         const year = date.getFullYear();
@@ -145,8 +176,11 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const generateMonths = useCallback((startDate: Date, count: number) => {
         const months = [];
+        const currentDate = new Date(startDate);
         for (let i = 0; i < count; i++) {
-            months.push(getAdjacentMonth(startDate, -i));
+            const newDate = new Date(currentDate);
+            newDate.setMonth(currentDate.getMonth() - i);
+            months.push(newDate);
         }
         return months;
     }, []);
@@ -157,10 +191,20 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         const { contentOffset, layoutMeasurement, contentSize } = nativeEvent;
         const currentIndex = Math.floor(contentOffset.x / width);
 
+        // Only load more months when we're close to the end
         if (currentIndex >= months.length - 3) {
-            // Load more months when approaching the end (which is now the past)
-            const newMonths = generateMonths(months[months.length - 1], 12);
-            setMonths(prev => [...prev, ...newMonths]);
+            const lastMonth = months[months.length - 1];
+            const newMonths = generateMonths(lastMonth, 12);
+            
+            // Filter out any duplicate months
+            const uniqueNewMonths = newMonths.filter(newMonth => 
+                !months.some(existingMonth => 
+                    existingMonth.getMonth() === newMonth.getMonth() && 
+                    existingMonth.getFullYear() === newMonth.getFullYear()
+                )
+            );
+            
+            setMonths(prev => [...prev, ...uniqueNewMonths]);
         }
     }, [months, width, generateMonths]);
 
@@ -172,8 +216,17 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const handleMomentumScrollEnd = useCallback(({ nativeEvent }: any) => {
         const { contentOffset } = nativeEvent;
         const currentIndex = Math.round(contentOffset.x / width);
-        handleMonthChange(months[currentIndex]);
-    }, [width, months, handleMonthChange]);
+        
+        // Ensure the index is within bounds and handle the inverted list
+        if (currentIndex >= 0 && currentIndex < months.length) {
+            const targetDate = months[currentIndex];
+            // Only update if the month/year is different to prevent unnecessary updates
+            if (targetDate.getMonth() !== currentDate.getMonth() || 
+                targetDate.getFullYear() !== currentDate.getFullYear()) {
+                handleMonthChange(targetDate);
+            }
+        }
+    }, [width, months, currentDate, handleMonthChange]);
 
     const handleChevronPress = useCallback((direction: 'left' | 'right') => {
         const currentIndex = months.findIndex(date => 
@@ -187,24 +240,48 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         if (targetIndex >= 0 && targetIndex < months.length) {
             flatListRef.current?.scrollToIndex({
                 index: targetIndex,
-                animated: true
+                animated: true,
+                viewPosition: 0.5
             });
             handleMonthChange(months[targetIndex]);
         }
     }, [months, currentDate, handleMonthChange]);
 
-    const renderItem = useCallback(({ item: date }: { item: Date }) => (
-        <View style={{ width }}>
-            <View className="flex-row justify-between items-center mb-4">
-                <Text className="font-medium pl-4">{formatMonthYear(date)}</Text>
-                <View className="flex-row gap-2">
-                    <IconCircle icon={ChevronLeftIcon} onPress={() => handleChevronPress('left')} />
-                    <IconCircle icon={ChevronRightIcon} onPress={() => handleChevronPress('right')} />
-                </View>
+    const renderItem = useCallback(({ item: date }: { item: Date }) => {
+        const today = new Date();
+        const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
+        const todayDate = isCurrentMonth ? today.getDate() : null;
+
+        return (
+            <View style={{ width }}>
+                <MonthHeader 
+                    date={date} 
+                    currentTranslation={currentTranslation} 
+                    onChevronPress={handleChevronPress} 
+                />
+                <MonthView 
+                    date={date}
+                    width={width}
+                    calendarHeight={calendarHeight}
+                    currentTranslation={currentTranslation}
+                    isSelected={isSelected}
+                    todayDate={todayDate}
+                    isCurrentMonth={isCurrentMonth}
+                    getDaysInMonth={getDaysInMonth}
+                />
             </View>
-            {renderMonth(date)}
-        </View>
-    ), [width, formatMonthYear, renderMonth, handleChevronPress]);
+        );
+    }, [width, calendarHeight, currentTranslation, isSelected, handleChevronPress]);
+
+    const getItemLayout = useCallback((data: any, index: number) => ({
+        length: width,
+        offset: width * index,
+        index,
+    }), [width]);
+
+    const keyExtractor = useCallback((item: Date, index: number) => 
+        `${item.getFullYear()}-${item.getMonth()}-${index}`, 
+    []);
 
     return (
         <View className="mt-2">
@@ -212,7 +289,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 ref={flatListRef}
                 data={months}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.toISOString()}
+                keyExtractor={keyExtractor}
                 horizontal
                 inverted
                 pagingEnabled
@@ -221,15 +298,18 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 showsHorizontalScrollIndicator={false}
                 onScroll={handleScroll}
                 onMomentumScrollEnd={handleMomentumScrollEnd}
-                scrollEventThrottle={0}
+                scrollEventThrottle={16}
                 initialScrollIndex={0}
                 contentContainerStyle={{ alignItems: 'center' }}
-                getItemLayout={(data, index) => ({
-                    length: width,
-                    offset: width * index,
-                    index,
-                })}
-                key={months.length}
+                getItemLayout={getItemLayout}
+                maxToRenderPerBatch={3}
+                windowSize={3}
+                removeClippedSubviews={true}
+                snapToAlignment="center"
+                maintainVisibleContentPosition={{
+                    minIndexForVisible: 0,
+                    autoscrollToTopThreshold: 10
+                }}
             />
         </View>
     );
