@@ -5,7 +5,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, CameraIcon } from "react-native-heroicons/outline";
 import { useQuery } from "@tanstack/react-query";
-import { useChallengeActions } from "@/hooks/useChallengeActions";
+import { useChallenges } from "@/hooks/useChallenges";
 import { Challenge } from "@/types/challenge";
 import { getDetailedTimeLeft } from "@/utils/timeUtils";
 import { useAuth } from "@/providers/AuthProvider";
@@ -25,9 +25,9 @@ interface ChallengeDetail extends Challenge {
 }
 
 export default function ChallengePage() {
-    const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
-    const { acceptInvite, rejectInvite } = useChallengeActions();
     const { user } = useAuth();
+    const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
+    const { acceptChallengeInvite, isAcceptingChallengeInvite, rejectChallengeInvite, isRejectingChallengeInvite } = useChallenges();
     const [countdown, setCountdown] = useState("00:00:00");
 
     const { data: challenge, isPending, isError, refetch } = useQuery<ChallengeDetail>({
@@ -142,14 +142,16 @@ export default function ChallengePage() {
                                 <Button
                                     title="Accept"
                                     className="flex-1"
-                                    onPress={() => acceptInvite.mutate(challenge?.invitation_id)}
+                                    loading={isAcceptingChallengeInvite}
+                                    onPress={() => acceptChallengeInvite(challenge?.invitation_id)}
                                 />
                                 <Button
                                     title="Ignore"
                                     variant="secondary"
                                     className="flex-1"
+                                    loading={isRejectingChallengeInvite}
                                     onPress={() => {
-                                        rejectInvite.mutate(challenge?.invitation_id)
+                                        rejectChallengeInvite(challenge?.invitation_id)
                                         router.back()
                                     }}
                                 />
