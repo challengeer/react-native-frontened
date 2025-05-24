@@ -168,7 +168,7 @@ export default function CameraPage() {
 
             if (response.status === 200) {
                 queryClient.refetchQueries({ queryKey: ['submissions', challenge_id] });
-                router.push(`/(app)/(tabs)/challenges`);
+                router.replace(`/(app)/(tabs)/challenges`);
             }
         } catch (error: any) {
             console.error('Error uploading file:', error.response.data);
