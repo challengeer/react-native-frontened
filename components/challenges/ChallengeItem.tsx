@@ -35,7 +35,7 @@ export default function ChallengeItem({
             {sender && (
                 <Pressable className="flex-row items-center gap-2 mb-2" onPress={() => router.push(`/(app)/user/${sender.user_id}`)}>
                     <Avatar
-                        size="xs"
+                        size="xxs"
                         name={sender.display_name}
                         source={sender.profile_picture}
                     />
@@ -59,7 +59,7 @@ export default function ChallengeItem({
 
                 <View className="flex-1">
                     <Text className="text-lg font-medium line-clamp-1">{title}</Text>
-                    <Text type="secondary" className="text-base">{category} &middot; {getTimeLeft(endDate)}</Text>
+                    <Text type="secondary" className="text-base capitalize">{category} &middot; {getTimeLeft(endDate)}</Text>
                 </View>
 
                 {rightSection}

@@ -115,7 +115,7 @@ export default function ChallengePage() {
                             <View className="w-full flex-row items-center gap-4 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
                                 <Icon icon={TrophyIcon} />
                                 <View className="flex-col">
-                                    <Text className="font-medium">{challenge?.category}</Text>
+                                    <Text className="font-medium capitalize">{challenge?.category}</Text>
                                     <Text type="secondary" className="text-base">Category</Text>
                                 </View>
                             </View>
