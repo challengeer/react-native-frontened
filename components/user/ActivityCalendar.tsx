@@ -184,7 +184,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     };
 
     return (
-        <View className="mt-6">
+        <View className="mt-2">
             <View className="flex-row justify-between items-center mb-4">
                 <Text className="font-medium">{formatMonthYear(currentDate)}</Text>
                 <View className="flex-row gap-3">
