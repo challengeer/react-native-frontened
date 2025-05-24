@@ -58,7 +58,11 @@
     "time": {
         "left": "{{time}} left",
         "ago": "{{time}} ago",
-        "ended": "Ended"
+        "ended": "Ended",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "fullDate": "{{month}} {{day}}, {{year}}",
+        "shortDate": "{{month}} {{day}}"
     },
     "friendActionButton": {
         "add": "Add",

@@ -54,7 +54,11 @@
     "time": {
         "left": "Zostáva {{time}}",
         "ago": "Pred {{time}}",
-        "ended": "Koniec"
+        "ended": "Koniec",
+        "today": "Dnes",
+        "yesterday": "Včera",
+        "fullDate": "{{month}} {{day}}, {{year}}",
+        "shortDate": "{{month}} {{day}}"
     },
     "register": {
         "header": "Vytvoriť účet",

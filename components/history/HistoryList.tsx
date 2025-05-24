@@ -1,4 +1,3 @@
-import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
 import { getSectionTitle } from "@/utils/timeUtils";
@@ -20,15 +19,7 @@ export default function HistoryList({ search }: { search: string }) {
         if (section.data.length === 0 || section.title === null) return null;
         return (
             <Text 
-                className="px-4 pt-4 pb-2 text-lg font-bold bg-white dark:bg-neutral-900"
-                style={{
-                    elevation: 4,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.1,
-                    shadowRadius: 2,
-                    zIndex: 1,
-                }}
+                className="px-4 pt-4 pb-2 capitalize text-lg font-bold bg-white dark:bg-neutral-900"
             >
                 {section.title}
             </Text>
@@ -60,8 +51,7 @@ export default function HistoryList({ search }: { search: string }) {
 
         // Group challenges by date
         const groupedChallenges: Record<string, Challenge[]> = filteredHistory.reduce((acc: Record<string, Challenge[]>, challenge: Challenge) => {
-            const date = new Date(challenge.created_at);
-            const sectionTitle = getSectionTitle(date);
+            const sectionTitle = getSectionTitle(challenge.created_at);
             
             if (!acc[sectionTitle]) {
                 acc[sectionTitle] = [];

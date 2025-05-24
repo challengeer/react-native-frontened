@@ -1,13 +1,25 @@
 import i18n from "@/i18n";
 
+export const getCurrentUTCTime = (): number => {
+  const now = new Date();
+  return new Date(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    now.getUTCHours(),
+    now.getUTCMinutes(),
+    now.getUTCSeconds(),
+    now.getUTCMilliseconds()
+  ).getTime();
+};
+
 export const getTimeLeft = (timestamp: string): string => {
-  const now = Date.now();
+  const now = getCurrentUTCTime();
   const future = new Date(timestamp).getTime();
-  
   const seconds = Math.floor((future - now) / 1000);
 
   if (seconds < 0) {
-    return getTimeAgo(timestamp);
+    return i18n.t("time.ended");
   }
 
   // Less than a minute
@@ -33,7 +45,7 @@ export const getTimeLeft = (timestamp: string): string => {
 };
 
 export const getTimeAgo = (timestamp: string): string => {
-  const now = Date.now();
+  const now = getCurrentUTCTime();
   const past = new Date(timestamp).getTime();
   const seconds = Math.floor((now - past) / 1000);
 
@@ -56,11 +68,10 @@ export const getTimeAgo = (timestamp: string): string => {
 };
 
 export const getDetailedTimeLeft = (timestamp: string): string => {
-  const now = Date.now();
+  const now = getCurrentUTCTime();
   const future = new Date(timestamp).getTime();
   const diff = future - now;
 
-  // If time has passed, return "00:00:00"
   if (diff < 0) {
     return i18n.t("time.ended");
   }
@@ -77,43 +88,46 @@ export const getDetailedTimeLeft = (timestamp: string): string => {
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 };
 
-export const getSectionTitle = (date: Date): string => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+export const getSectionTitle = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    const now = new Date(getCurrentUTCTime());
     
-    const challengeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    // Create date objects without time components
+    const today = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    
+    const challengeDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     
     // Check if it's today
     if (challengeDate.getTime() === today.getTime()) {
-        return "Today";
+        return i18n.t('time.today');
     }
     
     // Check if it's yesterday
     if (challengeDate.getTime() === yesterday.getTime()) {
-        return "Yesterday";
+        return i18n.t('time.yesterday');
     }
     
     // Check if it's within the last 7 days
     const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setDate(today.getDate() - 7);
     
     if (challengeDate >= sevenDaysAgo) {
-        return date.toLocaleDateString('en-US', { weekday: 'long' });
+        return date.toLocaleDateString(i18n.locale, { weekday: 'long' });
     }
     
     // For older dates, show the full date
-    const month = date.toLocaleDateString('en-US', { month: 'short' });
-    const day = date.getDate();
-    const year = date.getFullYear();
+    const month = date.toLocaleDateString(i18n.locale, { month: 'short' });
+    const day = date.getUTCDate();
+    const year = date.getUTCFullYear();
     
     // If it's from a different year, include the year
-    if (date.getFullYear() !== now.getFullYear()) {
-        return `${month} ${day}, ${year}`;
+    if (date.getUTCFullYear() !== now.getUTCFullYear()) {
+        return i18n.t('time.fullDate', { month, day, year });
     }
     
-    return `${month} ${day}`;
+    return i18n.t('time.shortDate', { month, day });
 };
 
 export const getTimeString = (date: Date): string => {
