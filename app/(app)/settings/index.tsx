@@ -1,14 +1,12 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
-import * as Application from "expo-application";
-import React, { useCallback, useContext, useRef } from "react";
+import React, { useCallback } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { router } from "expo-router";
-import { ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, View, Linking } from "react-native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useQueryClient } from "@tanstack/react-query";
-import { AppearanceContext } from "@/providers/AppearanceProvider";
+import * as Application from "expo-application";
 import Text from "@/components/common/Text";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
@@ -19,9 +17,7 @@ import useImagePicker from "@/components/settings/imagePicker";
 
 export default function SettingsPage() {
     const { user, logout, refreshUser } = useAuth();
-    const { languageKey } = useContext(AppearanceContext);
     const queryClient = useQueryClient();
-    const scrollViewRef = useRef<ScrollView>(null);
 
     const handleImageSelect = useCallback(async (formData: FormData) => {
         try {
@@ -90,8 +86,19 @@ export default function SettingsPage() {
         },
     ];
 
+    const privacySettings = [
+        {
+            key: "privacyPolicy",
+            onPress: () => Linking.openURL("https://challengeer.app/privacy-policy"),
+        },
+        {
+            key: "termsOfService",
+            onPress: () => Linking.openURL("https://challengeer.app/terms-of-service"),
+        },
+    ];
+
     return (
-        <SafeAreaView className="flex-1" key={languageKey}>
+        <>
             <Header
                 title={i18n.t("settings.header")}
                 leftSection={
@@ -103,14 +110,9 @@ export default function SettingsPage() {
             />
 
             <ScrollView
-                ref={scrollViewRef}
                 overScrollMode="never"
                 showsVerticalScrollIndicator={false}
-                className="px-4"
-                maintainVisibleContentPosition={{
-                    minIndexForVisible: 0,
-                    autoscrollToTopThreshold: null
-                }}
+                className="px-4 pt-2"
             >
                 <Text className="mb-2 text-lg font-bold">
                     {i18n.t("settings.account.title")}
@@ -134,13 +136,17 @@ export default function SettingsPage() {
                     {i18n.t("settings.privacy.title")}
                 </Text>
 
-                <View className="mb-4">
-                    <OptionButton
-                        itemIndex={0}
-                        totalItems={1}
-                        title={i18n.t("settings.privacy.privacyPolicy.header")}
-                        showArrow
-                    />
+                <View className="mb-8">
+                    {privacySettings.map((item, index) => (
+                        <OptionButton
+                            key={item.key}
+                            itemIndex={index}
+                            totalItems={privacySettings.length}
+                            title={i18n.t(`settings.privacy.${item.key}.header`)}
+                            onPress={item.onPress}
+                            showArrow
+                        />
+                    ))}
                 </View>
 
                 <Button
@@ -159,6 +165,6 @@ export default function SettingsPage() {
                     </Text>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </>
     );
 }

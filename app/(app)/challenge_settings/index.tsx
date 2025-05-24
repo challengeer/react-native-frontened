@@ -1,10 +1,9 @@
 import i18n from "@/i18n";
-import { router, useLocalSearchParams } from "expo-router";
-import { View, ScrollView } from "react-native";
-import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SafeAreaView } from "react-native-safe-area-context";
 import api from "@/lib/api";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { View, ScrollView } from "react-native";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import SettingsItem from "@/components/settings/SettingsItem";
@@ -42,9 +41,18 @@ export default function ChallengeSettings() {
     });
 
     return (
-        <SafeAreaView className="flex-1">
-            <Header title={i18n.t("challenge_settings.header")} leftSection={<IconCircle icon={ArrowLeftIcon} onPress={() => router.back()} />} />
-            <ScrollView className="px-4">
+        <>
+            <Header
+                title={i18n.t("challenge_settings.header")}
+                leftSection={
+                    <IconCircle
+                        icon={ArrowLeftIcon}
+                        onPress={() => router.back()}
+                    />
+                }
+            />
+
+            <ScrollView className="px-4 pt-2">
                 <View className="mb-4">
                     {settingsItems.map((item, index) => (
                         <SettingsItem
@@ -66,6 +74,6 @@ export default function ChallengeSettings() {
                     showArrow
                 />
             </ScrollView>
-        </SafeAreaView>
+        </>
     )
 }

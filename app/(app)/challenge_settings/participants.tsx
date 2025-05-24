@@ -4,7 +4,7 @@ import api from "@/lib/api";
 import { View, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, router, Redirect } from "expo-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSafeAreaInsets, SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeftIcon, PlusIcon, XMarkIcon } from "react-native-heroicons/outline";
 import { Challenge } from "@/types/challenge";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -57,7 +57,7 @@ export default function Participants() {
         onMutate: async (participantId) => {
             await queryClient.cancelQueries({ queryKey: ["challenge", challenge_id] });
             const previousChallenge = queryClient.getQueryData<Challenge>(["challenge", challenge_id]);
-            
+
             queryClient.setQueryData<Challenge>(["challenge", challenge_id], (old: any) => {
                 if (!old) return old;
                 return {
@@ -65,7 +65,7 @@ export default function Participants() {
                     participants: old.participants.filter((p: any) => p.user_id !== participantId),
                 };
             });
-            
+
             return previousChallenge;
         },
         onSuccess: () => {
@@ -101,7 +101,7 @@ export default function Participants() {
     }
 
     return (
-        <SafeAreaView className="flex-1">
+        <>
             <Header
                 title={i18n.t("challenge_settings.participants.header")}
                 leftSection={
@@ -114,7 +114,7 @@ export default function Participants() {
             />
 
             {challenge ? (
-                <ScrollView className="flex-1">
+                <ScrollView className="flex-1 pt-2">
                     {challenge?.participants && challenge.participants.length > 0 ? (
                         challenge.participants.map((participant, index) => (
                             <UserItem
@@ -203,6 +203,6 @@ export default function Participants() {
                     />
                 </View>
             </BottomSheetModal>
-        </SafeAreaView>
+        </>
     );
 }
