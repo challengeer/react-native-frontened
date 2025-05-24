@@ -5,14 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AppearanceContextType {
   language: string;
-  languageKey: number;
   changeLanguage: (lang: string) => Promise<void>;
   changeColorScheme: (colorScheme: "light" | "dark") => Promise<void>;
 }
 
 export const AppearanceContext = createContext<AppearanceContextType>({
   language: i18n.locale,
-  languageKey: 0,
   changeLanguage: async () => {
     // Default empty implementation
     console.warn('changeLanguage was called before Provider was initialized');
@@ -25,8 +23,7 @@ export const AppearanceContext = createContext<AppearanceContextType>({
 
 const AppearanceProvider = ({ children }: { children: React.ReactNode }) => {
     const [language, setLanguage] = useState<string>(i18n.locale);
-    const [languageKey, setLanguageKey] = useState(0);
-    const { setColorScheme } = useColorScheme();
+    const { colorScheme, setColorScheme } = useColorScheme();
 
     useEffect(() => {
         // Load language and color scheme preference from AsyncStorage
@@ -52,27 +49,30 @@ const AppearanceProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const changeLanguage = async (lang: string) => {
+        if (language === lang) return;
+
         try {
             i18n.locale = lang;
             setLanguage(lang);
-            setLanguageKey(prev => prev + 1);
             await AsyncStorage.setItem("appLanguage", lang);
         } catch (error) {
             console.error("Failed to save language preference:", error);
         }
     };
 
-    const changeColorScheme = async (colorScheme: "light" | "dark") => {
+    const changeColorScheme = async (newColorScheme: "light" | "dark") => {
+        if (colorScheme === newColorScheme) return;
+
         try {
-            setColorScheme(colorScheme);
-            await AsyncStorage.setItem("appColorScheme", colorScheme);
+            setColorScheme(newColorScheme);
+            await AsyncStorage.setItem("appColorScheme", newColorScheme);
         } catch (error) {
             console.error("Failed to save color scheme preference:", error);
         }
     };
 
     return (
-        <AppearanceContext.Provider value={{ language, languageKey, changeLanguage, changeColorScheme }}>
+        <AppearanceContext.Provider value={{ language, changeLanguage, changeColorScheme }}>
             {children}
         </AppearanceContext.Provider>
     );
