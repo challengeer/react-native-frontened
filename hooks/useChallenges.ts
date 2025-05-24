@@ -1,9 +1,11 @@
 import api from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Challenge, ChallengeInvite } from "@/types/challenge";
 
 export function useChallenges() {
+    const queryClient = useQueryClient();
+
     const { data: challenges, isLoading: isChallengesLoading, isError: isChallengesError, refetch: refetchChallenges } = useQuery<Challenge[]>({
         queryKey: ["challenges"],
         queryFn: async () => {
@@ -22,6 +24,26 @@ export function useChallenges() {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
+    const { mutate: acceptChallengeInvite, isPending: isAcceptingChallengeInvite } = useMutation({
+        mutationFn: async (invitationId: string) => {
+            await api.put(`/challenges/accept`, { invitation_id: invitationId });
+        },
+        onSettled: () => {
+            queryClient.refetchQueries({ queryKey: ["challenge-invites"] });
+            queryClient.refetchQueries({ queryKey: ["challenges"] });
+        },
+    });
+
+    const { mutate: rejectChallengeInvite, isPending: isRejectingChallengeInvite } = useMutation({
+        mutationFn: async (invitationId: string) => {
+            await api.put(`/challenges/reject`, { invitation_id: invitationId });
+        },
+        onSettled: () => {
+            queryClient.refetchQueries({ queryKey: ["challenge-invites"] });
+            queryClient.refetchQueries({ queryKey: ["challenges"] });
+        },
+    });
+
     return {
         challenges,
         isChallengesLoading,
@@ -31,6 +53,10 @@ export function useChallenges() {
         isChallengeInvitesLoading,
         isChallengeInvitesError,
         refetchChallengeInvites,
+        acceptChallengeInvite,
+        rejectChallengeInvite,
+        isAcceptingChallengeInvite,
+        isRejectingChallengeInvite,
     };
 }
 
