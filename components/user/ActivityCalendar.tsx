@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
-import { View, PanResponder, Animated, ScrollView, Dimensions, useWindowDimensions } from "react-native";
-import { ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
-import { useState, useRef } from "react";
+import { View, Dimensions, useWindowDimensions, FlatList } from "react-native";
+import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
+import { useState, useRef, useCallback } from "react";
 import Text from "@/components/common/Text";
 import IconCircle from "@/components/common/IconCircle";
 
@@ -23,15 +23,14 @@ const TRANSLATIONS = {
 
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [isScrolling, setIsScrolling] = useState(false);
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
-    const scrollViewRef = useRef<ScrollView>(null);
     const { width: windowWidth } = useWindowDimensions();
-    const width = windowWidth - 24;
+    const width = windowWidth - 16;
     const daySize = (width - 8) / 7;
     const weekHeight = daySize;
     const maxWeeks = 7;
-    const calendarHeight = (weekHeight * maxWeeks) + 24;
+    const calendarHeight = (weekHeight * maxWeeks) + 32;
+    const flatListRef = useRef<FlatList>(null);
 
     const getAdjacentMonth = (date: Date, offset: number) => {
         const newDate = new Date(date);
@@ -85,7 +84,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         }
 
         return (
-            <View style={{ width, height: calendarHeight }} className="px-1">
+            <View style={{ width, height: calendarHeight }} className="pl-4">
                 <View className="mb-2 flex-row justify-between">
                     {currentTranslation.weekdays.map(day => (
                         <View key={day} className="flex-1 items-center">
@@ -100,7 +99,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                             {week.map((day, dayIndex) => {
                                 const isDaySelected = isSelected(day, date);
                                 const isDayToday = isCurrentMonth && day === todayDate;
-                                
+
                                 return (
                                     <View
                                         key={dayIndex}
@@ -112,7 +111,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                                             <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
                                         )}
                                         {day !== null && (
-                                            <Text 
+                                            <Text
                                                 className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
                                                 style={{ opacity: day === null ? 0 : 1 }}
                                             >
@@ -129,33 +128,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         );
     };
 
-    const handleScroll = (event: any) => {
-        const offsetX = event.nativeEvent.contentOffset.x;
-        const page = Math.round(offsetX / width);
-        
-        if (page === 2 || isScrolling) return;
-
-        if (page === 0 || page === 1) {
-            setIsScrolling(true);
-            const newDate = getAdjacentMonth(currentDate, -1);
-            setCurrentDate(newDate);
-            onMonthChange?.(newDate);
-            requestAnimationFrame(() => {
-                scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
-                setIsScrolling(false);
-            });
-        } else if (page === 3 || page === 4) {
-            setIsScrolling(true);
-            const newDate = getAdjacentMonth(currentDate, 1);
-            setCurrentDate(newDate);
-            onMonthChange?.(newDate);
-            requestAnimationFrame(() => {
-                scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
-                setIsScrolling(false);
-            });
-        }
-    };
-
     const formatMonthYear = (date: Date) => {
         const month = date.getMonth();
         const year = date.getFullYear();
@@ -164,84 +136,101 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const isSelected = (day: number | null, monthDate: Date) => {
         if (!day) return false;
-        // Create date at midnight in local timezone
         const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
-        // Adjust for local timezone offset
         const offset = date.getTimezoneOffset();
         const localDate = new Date(date.getTime() - (offset * 60 * 1000));
         const currentDateStr = localDate.toISOString().split('T')[0];
         return selectedDates.some(date => date.split('T')[0] === currentDateStr);
     };
 
-    const isToday = (day: number | null, monthDate: Date) => {
-        if (!day) return false;
-        const today = new Date();
-        return (
-            today.getDate() === day &&
-            today.getMonth() === monthDate.getMonth() &&
-            today.getFullYear() === monthDate.getFullYear()
+    const generateMonths = useCallback((startDate: Date, count: number) => {
+        const months = [];
+        for (let i = 0; i < count; i++) {
+            months.push(getAdjacentMonth(startDate, -i));
+        }
+        return months;
+    }, []);
+
+    const [months, setMonths] = useState(() => generateMonths(currentDate, 12));
+
+    const handleScroll = useCallback(({ nativeEvent }: any) => {
+        const { contentOffset, layoutMeasurement, contentSize } = nativeEvent;
+        const currentIndex = Math.floor(contentOffset.x / width);
+
+        if (currentIndex >= months.length - 3) {
+            // Load more months when approaching the end (which is now the past)
+            const newMonths = generateMonths(months[months.length - 1], 12);
+            setMonths(prev => [...prev, ...newMonths]);
+        }
+    }, [months, width, generateMonths]);
+
+    const handleMonthChange = useCallback((date: Date) => {
+        setCurrentDate(date);
+        onMonthChange?.(date);
+    }, [onMonthChange]);
+
+    const handleMomentumScrollEnd = useCallback(({ nativeEvent }: any) => {
+        const { contentOffset } = nativeEvent;
+        const currentIndex = Math.round(contentOffset.x / width);
+        handleMonthChange(months[currentIndex]);
+    }, [width, months, handleMonthChange]);
+
+    const handleChevronPress = useCallback((direction: 'left' | 'right') => {
+        const currentIndex = months.findIndex(date => 
+            date.getMonth() === currentDate.getMonth() && 
+            date.getFullYear() === currentDate.getFullYear()
         );
-    };
+        
+        if (currentIndex === -1) return;
+        
+        const targetIndex = direction === 'left' ? currentIndex + 1 : currentIndex - 1;
+        if (targetIndex >= 0 && targetIndex < months.length) {
+            flatListRef.current?.scrollToIndex({
+                index: targetIndex,
+                animated: true
+            });
+            handleMonthChange(months[targetIndex]);
+        }
+    }, [months, currentDate, handleMonthChange]);
+
+    const renderItem = useCallback(({ item: date }: { item: Date }) => (
+        <View style={{ width }}>
+            <View className="flex-row justify-between items-center mb-4">
+                <Text className="font-medium pl-4">{formatMonthYear(date)}</Text>
+                <View className="flex-row gap-2">
+                    <IconCircle icon={ChevronLeftIcon} onPress={() => handleChevronPress('left')} />
+                    <IconCircle icon={ChevronRightIcon} onPress={() => handleChevronPress('right')} />
+                </View>
+            </View>
+            {renderMonth(date)}
+        </View>
+    ), [width, formatMonthYear, renderMonth, handleChevronPress]);
 
     return (
         <View className="mt-2">
-            <View className="flex-row justify-between items-center mb-4">
-                <Text className="font-medium">{formatMonthYear(currentDate)}</Text>
-                <View className="flex-row gap-3">
-                    <IconCircle icon={ChevronLeftIcon} onPress={() => {
-                        if (isScrolling) return;
-                        setIsScrolling(true);
-                        const newDate = getAdjacentMonth(currentDate, -1);
-                        setCurrentDate(newDate);
-                        onMonthChange?.(newDate);
-                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: true });
-                        setTimeout(() => setIsScrolling(false), 300);
-                    }} />
-                    <IconCircle icon={ChevronRightIcon} onPress={() => {
-                        if (isScrolling) return;
-                        setIsScrolling(true);
-                        const newDate = getAdjacentMonth(currentDate, 1);
-                        setCurrentDate(newDate);
-                        onMonthChange?.(newDate);
-                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: true });
-                        setTimeout(() => setIsScrolling(false), 300);
-                    }} />
-                </View>
-            </View>
-
-            <View>
-                <ScrollView
-                    ref={scrollViewRef}
-                    horizontal
-                    pagingEnabled
-                    showsHorizontalScrollIndicator={false}
-                    onMomentumScrollEnd={handleScroll}
-                    scrollEventThrottle={16}
-                    decelerationRate="fast"
-                    style={{ width }}
-                    onLayout={() => {
-                        scrollViewRef.current?.scrollTo({ x: width * 2, animated: false });
-                    }}
-                >
-                    <View style={{ width: width * 5, flexDirection: 'row' }}>
-                        <View style={{ width }}>
-                            {renderMonth(getAdjacentMonth(currentDate, -2))}
-                        </View>
-                        <View style={{ width }}>
-                            {renderMonth(getAdjacentMonth(currentDate, -1))}
-                        </View>
-                        <View style={{ width }}>
-                            {renderMonth(currentDate)}
-                        </View>
-                        <View style={{ width }}>
-                            {renderMonth(getAdjacentMonth(currentDate, 1))}
-                        </View>
-                        <View style={{ width }}>
-                            {renderMonth(getAdjacentMonth(currentDate, 2))}
-                        </View>
-                    </View>
-                </ScrollView>
-            </View>
+            <FlatList
+                ref={flatListRef}
+                data={months}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.toISOString()}
+                horizontal
+                inverted
+                pagingEnabled
+                snapToInterval={width}
+                decelerationRate="fast"
+                showsHorizontalScrollIndicator={false}
+                onScroll={handleScroll}
+                onMomentumScrollEnd={handleMomentumScrollEnd}
+                scrollEventThrottle={0}
+                initialScrollIndex={0}
+                contentContainerStyle={{ alignItems: 'center' }}
+                getItemLayout={(data, index) => ({
+                    length: width,
+                    offset: width * index,
+                    index,
+                })}
+                key={months.length}
+            />
         </View>
     );
 }
