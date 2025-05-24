@@ -31,7 +31,7 @@ const MonthView = memo(({ date, width, calendarHeight, currentTranslation, isSel
     isCurrentMonth: boolean;
     getDaysInMonth: (date: Date) => (number | null)[][];
 }) => {
-    const weeks = useMemo(() => getDaysInMonth(date), [date]);
+    const weeks = useMemo(() => getDaysInMonth(date), [date, getDaysInMonth]);
 
     // Ensure we always have 7 weeks
     const paddedWeeks = useMemo(() => {
@@ -41,6 +41,36 @@ const MonthView = memo(({ date, width, calendarHeight, currentTranslation, isSel
         }
         return result;
     }, [weeks]);
+
+    const renderWeek = useCallback((week: (number | null)[], weekIndex: number) => (
+        <View key={weekIndex} className="flex-row justify-between">
+            {week.map((day: number | null, dayIndex: number) => {
+                const isDaySelected = isSelected(day, date);
+                const isDayToday = isCurrentMonth && day === todayDate;
+
+                return (
+                    <View
+                        key={dayIndex}
+                        className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
+                            ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
+                            ${day === null ? 'opacity-0' : ''}`}
+                    >
+                        {isDayToday && (
+                            <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
+                        )}
+                        {day !== null && (
+                            <Text
+                                className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
+                                style={{ opacity: day === null ? 0 : 1 }}
+                            >
+                                {day}
+                            </Text>
+                        )}
+                    </View>
+                );
+            })}
+        </View>
+    ), [date, isCurrentMonth, isSelected, todayDate]);
 
     return (
         <View style={{ width, height: calendarHeight }} className="pl-4">
@@ -53,35 +83,7 @@ const MonthView = memo(({ date, width, calendarHeight, currentTranslation, isSel
             </View>
 
             <View style={{ flex: 1 }}>
-                {paddedWeeks.map((week, weekIndex) => (
-                    <View key={weekIndex} className="flex-row justify-between">
-                        {week.map((day: number | null, dayIndex: number) => {
-                            const isDaySelected = isSelected(day, date);
-                            const isDayToday = isCurrentMonth && day === todayDate;
-
-                            return (
-                                <View
-                                    key={dayIndex}
-                                    className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                                        ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                                        ${day === null ? 'opacity-0' : ''}`}
-                                >
-                                    {isDayToday && (
-                                        <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                                    )}
-                                    {day !== null && (
-                                        <Text
-                                            className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
-                                            style={{ opacity: day === null ? 0 : 1 }}
-                                        >
-                                            {day}
-                                        </Text>
-                                    )}
-                                </View>
-                            );
-                        })}
-                    </View>
-                ))}
+                {paddedWeeks.map((week, weekIndex) => renderWeek(week, weekIndex))}
             </View>
         </View>
     );
@@ -247,6 +249,10 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         }
     }, [months, currentDate, handleMonthChange]);
 
+    const memoizedGetDaysInMonth = useCallback(getDaysInMonth, []);
+    const memoizedIsSelected = useCallback(isSelected, [selectedDates]);
+    const memoizedHandleMonthChange = useCallback(handleMonthChange, [onMonthChange]);
+
     const renderItem = useCallback(({ item: date }: { item: Date }) => {
         const today = new Date();
         const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
@@ -264,14 +270,14 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                     width={width}
                     calendarHeight={calendarHeight}
                     currentTranslation={currentTranslation}
-                    isSelected={isSelected}
+                    isSelected={memoizedIsSelected}
                     todayDate={todayDate}
                     isCurrentMonth={isCurrentMonth}
-                    getDaysInMonth={getDaysInMonth}
+                    getDaysInMonth={memoizedGetDaysInMonth}
                 />
             </View>
         );
-    }, [width, calendarHeight, currentTranslation, isSelected, handleChevronPress]);
+    }, [width, calendarHeight, currentTranslation, memoizedIsSelected, memoizedGetDaysInMonth, handleChevronPress]);
 
     const getItemLayout = useCallback((data: any, index: number) => ({
         length: width,
