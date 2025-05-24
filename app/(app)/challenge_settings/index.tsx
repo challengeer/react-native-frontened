@@ -1,9 +1,9 @@
 import i18n from "@/i18n";
+import api from "@/lib/api";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { View, ScrollView } from "react-native";
-import { ArrowLeftIcon, EllipsisHorizontalIcon } from "react-native-heroicons/outline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
+import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Header from "@/components/common/Header";
 import IconCircle from "@/components/common/IconCircle";
 import SettingsItem from "@/components/settings/SettingsItem";
@@ -48,12 +48,6 @@ export default function ChallengeSettings() {
                     <IconCircle
                         icon={ArrowLeftIcon}
                         onPress={() => router.back()}
-                    />
-                }
-                rightSection={
-                    <IconCircle
-                        icon={EllipsisHorizontalIcon}
-                        onPress={() => router.push(`/challenge_settings/participants?challenge_id=${challenge_id}`)}
                     />
                 }
             />
