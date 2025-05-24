@@ -6,6 +6,7 @@ import { Challenge } from "@/types/challenge";
 import Text from "@/components/common/Text";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
+import ChallengeRightSection from "@/components/challenges/ChallengeRightSection";
 
 interface Section {
     title: string | null;
@@ -36,6 +37,12 @@ export default function HistoryList({ search }: { search: string }) {
             category={item.category}
             endDate={item.end_date}
             hasNewSubmissions={item.has_new_submissions}
+            rightSection={
+                <ChallengeRightSection
+                    challengeId={item.challenge_id}
+                    completionStatus={item.completion_status}
+                />
+            }
         />
     ), []);
 
