@@ -1,12 +1,10 @@
 import i18n from "@/i18n";
-import api from "@/lib/api";
-import React, { ActivityIndicator, RefreshControl, ScrollView, View, Text as RNText } from "react-native";
+import { useEffect, useState } from "react";
+import React, { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeftIcon, CheckCircleIcon, ClockIcon, Cog8ToothIcon, TrophyIcon, CameraIcon } from "react-native-heroicons/outline";
-import { useQuery } from "@tanstack/react-query";
-import { useChallenges } from "@/hooks/useChallenges";
-import { Challenge } from "@/types/challenge";
+import { useChallenge, useChallenges } from "@/hooks/useChallenges";
 import { getDetailedTimeLeft } from "@/utils/timeUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import Text from "@/components/common/Text";
@@ -17,26 +15,14 @@ import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button";
 import UserItem from "@/components/common/UserItem";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
-import { useEffect, useState } from "react";
-
-interface ChallengeDetail extends Challenge {
-    user_status: "participant" | "invited" | "submitted";
-    invitation_id: string;
-}
 
 export default function ChallengePage() {
     const { user } = useAuth();
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
+    const { challenge, isChallengeLoading, isChallengeError, refetchChallenge } = useChallenge(challenge_id);
     const { acceptChallengeInvite, isAcceptingChallengeInvite, rejectChallengeInvite, isRejectingChallengeInvite } = useChallenges();
     const [countdown, setCountdown] = useState("00:00:00");
-
-    const { data: challenge, isPending, isError, refetch } = useQuery<ChallengeDetail>({
-        queryKey: ["challenge", challenge_id],
-        queryFn: async () => {
-            const response = await api.get(`/challenges/${challenge_id}`);
-            return response.data;
-        }
-    });
+    const insets = useSafeAreaInsets();
 
     useEffect(() => {
         if (!challenge?.end_date) return;
@@ -51,7 +37,7 @@ export default function ChallengePage() {
     }, [challenge?.end_date]);
 
     return (
-        <SafeAreaView className="flex-1">
+        <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
             <Header
                 title={i18n.t("challenges.header")}
                 leftSection={
@@ -70,18 +56,18 @@ export default function ChallengePage() {
                 }
             />
 
-            {isPending ? (
+            {isChallengeLoading ? (
                 <ActivityIndicator className="flex-1 justify-center items-center" size="large" color="#a855f7" />
-            ) : isError ? (
-                <NetworkErrorContainer onRetry={refetch} />
+            ) : isChallengeError ? (
+                <NetworkErrorContainer onRetry={refetchChallenge} />
             ) : (
                 <ScrollView
                     overScrollMode="never"
                     showsVerticalScrollIndicator={false}
                     refreshControl={
                         <RefreshControl
-                            refreshing={isPending}
-                            onRefresh={refetch}
+                            refreshing={isChallengeLoading}
+                            onRefresh={refetchChallenge}
                         />
                     }
                 >
@@ -99,17 +85,6 @@ export default function ChallengePage() {
                                 <Text type="secondary" className="mt-1 text-base text-center">{challenge?.description}</Text>
                             }
                         </View>
-
-                        {/* <View className="gap-2">
-                            <View className="flex-row items-center gap-2">
-                                <Icon icon={TrophyIcon} lightColor="#737373" darkColor="#a3a3a3" />
-                                <Text type="secondary" className="text-base">{challenge?.category}</Text>
-                            </View>
-                            <View className="flex-row items-center gap-2">
-                                <Icon icon={ClockIcon} lightColor="#737373" darkColor="#a3a3a3" />
-                                <Text type="secondary" className="text-base">{getTimeLeft(challenge?.end_date)}</Text>
-                            </View>
-                        </View> */}
 
                         <View className="items-center gap-2">
                             <View className="w-full flex-row items-center gap-4 bg-neutral-100 dark:bg-neutral-800 px-4 py-3 rounded-xl flex-1">
@@ -219,6 +194,6 @@ export default function ChallengePage() {
                     )}
                 </ScrollView>
             )}
-        </SafeAreaView>
+        </View>
     )
 }
