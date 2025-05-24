@@ -151,14 +151,16 @@ export default function CameraPage() {
                 name: 'photo.jpg',
             } as any);
 
-            const overlay: Overlay = {
-                overlay_type: 'text',
-                content: state.text,
-                x: 0.5,
-                y: state.textPosition
-            };
+            if (state.text) {
+                const overlay: Overlay = {
+                    overlay_type: 'text',
+                    content: state.text,
+                    x: 0.5,
+                    y: state.textPosition
+                };
 
-            formData.append('overlays', JSON.stringify([overlay]));
+                formData.append('overlays', JSON.stringify([overlay]));
+            }
 
             const response = await api.post(`/challenges/${challenge_id}/submit`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
