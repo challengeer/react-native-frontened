@@ -1,13 +1,14 @@
 import i18n from "@/i18n";
 import api from "@/lib/api";
 import * as Application from "expo-application";
-import React, { useCallback } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useQueryClient } from "@tanstack/react-query";
+import { AppearanceContext } from "@/providers/AppearanceProvider";
 import Text from "@/components/common/Text";
 import OptionButton from "@/components/settings/SettingsItem";
 import Header from "@/components/common/Header";
@@ -18,7 +19,9 @@ import useImagePicker from "@/components/settings/imagePicker";
 
 export default function SettingsPage() {
     const { user, logout, refreshUser } = useAuth();
+    const { languageKey } = useContext(AppearanceContext);
     const queryClient = useQueryClient();
+    const scrollViewRef = useRef<ScrollView>(null);
 
     const handleImageSelect = useCallback(async (formData: FormData) => {
         try {
@@ -88,7 +91,7 @@ export default function SettingsPage() {
     ];
 
     return (
-        <SafeAreaView className="flex-1">
+        <SafeAreaView className="flex-1" key={languageKey}>
             <Header
                 title={i18n.t("settings.header")}
                 leftSection={
@@ -100,9 +103,14 @@ export default function SettingsPage() {
             />
 
             <ScrollView
+                ref={scrollViewRef}
                 overScrollMode="never"
                 showsVerticalScrollIndicator={false}
                 className="px-4"
+                maintainVisibleContentPosition={{
+                    minIndexForVisible: 0,
+                    autoscrollToTopThreshold: null
+                }}
             >
                 <Text className="mb-2 text-lg font-bold">
                     {i18n.t("settings.account.title")}
@@ -152,5 +160,5 @@ export default function SettingsPage() {
                 </View>
             </ScrollView>
         </SafeAreaView>
-    )
+    );
 }

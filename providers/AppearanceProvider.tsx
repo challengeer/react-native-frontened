@@ -5,12 +5,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AppearanceContextType {
   language: string;
+  languageKey: number;
   changeLanguage: (lang: string) => Promise<void>;
   changeColorScheme: (colorScheme: "light" | "dark") => Promise<void>;
 }
 
 export const AppearanceContext = createContext<AppearanceContextType>({
   language: i18n.locale,
+  languageKey: 0,
   changeLanguage: async () => {
     // Default empty implementation
     console.warn('changeLanguage was called before Provider was initialized');
@@ -23,6 +25,7 @@ export const AppearanceContext = createContext<AppearanceContextType>({
 
 const AppearanceProvider = ({ children }: { children: React.ReactNode }) => {
     const [language, setLanguage] = useState<string>(i18n.locale);
+    const [languageKey, setLanguageKey] = useState(0);
     const { setColorScheme } = useColorScheme();
 
     useEffect(() => {
@@ -52,6 +55,7 @@ const AppearanceProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             i18n.locale = lang;
             setLanguage(lang);
+            setLanguageKey(prev => prev + 1);
             await AsyncStorage.setItem("appLanguage", lang);
         } catch (error) {
             console.error("Failed to save language preference:", error);
@@ -68,7 +72,7 @@ const AppearanceProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AppearanceContext.Provider value={{ language, changeLanguage, changeColorScheme }}>
+        <AppearanceContext.Provider value={{ language, languageKey, changeLanguage, changeColorScheme }}>
             {children}
         </AppearanceContext.Provider>
     );

@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -13,10 +13,11 @@ import RadioButton from "@/components/settings/RadioButton";
 const languages = ["en", "sk"];
 
 export default function LanguageSettings() {
-    const { language, changeLanguage } = useContext(AppearanceContext);
+    const { language, languageKey, changeLanguage } = useContext(AppearanceContext);
+    const scrollViewRef = useRef<ScrollView>(null);
 
     return (
-        <SafeAreaView className="flex-1">
+        <SafeAreaView className="flex-1" key={languageKey}>
             <Header
                 title={i18n.t("settings.account.language.header")}
                 leftSection={
@@ -27,7 +28,14 @@ export default function LanguageSettings() {
                 }
             />
 
-            <ScrollView className="flex-1 px-4">
+            <ScrollView 
+                ref={scrollViewRef}
+                className="flex-1 px-4"
+                maintainVisibleContentPosition={{
+                    minIndexForVisible: 0,
+                    autoscrollToTopThreshold: null
+                }}
+            >
                 {languages.map((lang, index) => (
                     <OptionButton
                         key={lang}
