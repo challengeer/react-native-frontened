@@ -111,15 +111,15 @@ export default function ActivityCalendar({
         setIsScrolling(true);
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
-        
+
         setCurrentDate(newDate);
         setMonths(generateMonthsRange(newDate));
         onMonthChange?.(newDate);
 
         // Reset scroll position after state updates
         setTimeout(() => {
-            flatListRef.current?.scrollToIndex({ 
-                index: CENTER_INDEX, 
+            flatListRef.current?.scrollToIndex({
+                index: CENTER_INDEX,
                 animated: false,
                 viewPosition: 0.5
             });
@@ -130,8 +130,8 @@ export default function ActivityCalendar({
     const handleMomentumScrollEnd = useCallback(() => {
         // Only handle momentum end if we're not already handling a scroll
         if (!isScrolling) {
-            flatListRef.current?.scrollToIndex({ 
-                index: CENTER_INDEX, 
+            flatListRef.current?.scrollToIndex({
+                index: CENTER_INDEX,
                 animated: false,
                 viewPosition: 0.5
             });
@@ -147,6 +147,13 @@ export default function ActivityCalendar({
     }, []);
 
     // IMPORTANT: Needs a function to handle the chevron press
+    const handleChevronPress = useCallback((direction: "left" | "right") => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + (direction === "left" ? -1 : 1));
+        setCurrentDate(newDate);
+        setMonths(generateMonthsRange(newDate));
+        onMonthChange?.(newDate);
+    }, [currentDate, onMonthChange, generateMonthsRange]);
 
     const renderItem = useCallback(({ item }: { item: Date }) => {
         const today = new Date();
@@ -154,12 +161,7 @@ export default function ActivityCalendar({
         const todayDate = isCurrentMonth ? today.getDate() : null;
 
         return (
-            <View style={{ width }} className="px-2">
-                <MonthHeader
-                    date={item}
-                    currentTranslation={currentTranslation}
-                    onChevronPress={handleChevronPress}
-                />
+            <View style={{ width }}>
                 <MonthView
                     date={item}
                     width={width - 12}
@@ -191,11 +193,17 @@ export default function ActivityCalendar({
 
     return (
         <View className="mt-2 flex-1">
+            <MonthHeader
+                date={currentDate}
+                currentTranslation={currentTranslation}
+                onChevronPress={handleChevronPress}
+            />
             <FlatList
                 ref={flatListRef}
                 data={months}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
+                overScrollMode="never"
                 horizontal
                 pagingEnabled
                 snapToInterval={width}
