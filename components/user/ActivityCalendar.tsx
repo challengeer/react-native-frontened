@@ -35,6 +35,7 @@ export default function ActivityCalendar({
     const width = windowWidth - 32;
     const flatListRef = useRef<FlatList>(null);
     const CENTER_INDEX = 1;
+    const [isScrolling, setIsScrolling] = useState(false);
 
     const currentTranslation =
         TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
@@ -101,30 +102,51 @@ export default function ActivityCalendar({
         onMonthChange?.(date);
     }, [onMonthChange]);
 
-    const handleMomentumScrollEnd = useCallback(({ nativeEvent }: any) => {
+    const handleScroll = useCallback(({ nativeEvent }: any) => {
         const currentIndex = Math.round(nativeEvent.contentOffset.x / width);
         const direction = currentIndex - CENTER_INDEX;
 
-        if (direction === 0) return;
+        if (direction === 0 || isScrolling) return;
 
+        setIsScrolling(true);
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
+        
         setCurrentDate(newDate);
         setMonths(generateMonthsRange(newDate));
         onMonthChange?.(newDate);
 
-        requestAnimationFrame(() => {
-            flatListRef.current?.scrollToIndex({ index: CENTER_INDEX, animated: false });
-        });
-    }, [width, currentDate, onMonthChange, generateMonthsRange]);
+        // Reset scroll position after state updates
+        setTimeout(() => {
+            flatListRef.current?.scrollToIndex({ 
+                index: CENTER_INDEX, 
+                animated: false,
+                viewPosition: 0.5
+            });
+            setIsScrolling(false);
+        }, 50);
+    }, [width, currentDate, onMonthChange, generateMonthsRange, isScrolling]);
 
-    const handleChevronPress = useCallback((direction: 'left' | 'right') => {
-        const targetIndex = CENTER_INDEX + (direction === 'right' ? 1 : -1);
+    const handleMomentumScrollEnd = useCallback(() => {
+        // Only handle momentum end if we're not already handling a scroll
+        if (!isScrolling) {
+            flatListRef.current?.scrollToIndex({ 
+                index: CENTER_INDEX, 
+                animated: false,
+                viewPosition: 0.5
+            });
+        }
+    }, [isScrolling]);
+
+    const scrollToIndex = useCallback((index: number, animated: boolean = true) => {
         flatListRef.current?.scrollToIndex({
-            index: targetIndex,
-            animated: true
+            index,
+            animated,
+            viewPosition: 0.5
         });
     }, []);
+
+    // IMPORTANT: Needs a function to handle the chevron press
 
     const renderItem = useCallback(({ item }: { item: Date }) => {
         const today = new Date();
@@ -181,7 +203,9 @@ export default function ActivityCalendar({
                 showsHorizontalScrollIndicator={false}
                 initialScrollIndex={CENTER_INDEX}
                 getItemLayout={getItemLayout}
+                onScroll={handleScroll}
                 onMomentumScrollEnd={handleMomentumScrollEnd}
+                scrollEventThrottle={16}
                 contentContainerStyle={{ alignItems: "center" }}
                 windowSize={3}
                 maxToRenderPerBatch={3}
