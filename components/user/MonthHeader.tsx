@@ -21,7 +21,7 @@ const MonthHeader = memo(({ date, currentTranslation, onChevronPress }: MonthHea
 
     return (
         <View className="flex-row justify-between items-center mb-4">
-            <Text className="font-medium pl-4">{formatMonthYear(date)}</Text>
+            <Text className="font-medium">{formatMonthYear(date)}</Text>
             <View className="flex-row gap-2">
                 <IconCircle icon={ChevronLeftIcon} onPress={() => onChevronPress('left')} />
                 <IconCircle icon={ChevronRightIcon} onPress={() => onChevronPress('right')} />

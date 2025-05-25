@@ -16,15 +16,15 @@ interface MonthViewProps {
     getDaysInMonth: (date: Date) => (number | null)[][];
 }
 
-const MonthView = memo(({ 
-    date, 
-    width, 
-    calendarHeight, 
-    currentTranslation, 
-    isSelected, 
-    todayDate, 
-    isCurrentMonth, 
-    getDaysInMonth 
+const MonthView = memo(({
+    date,
+    width,
+    calendarHeight,
+    currentTranslation,
+    isSelected,
+    todayDate,
+    isCurrentMonth,
+    getDaysInMonth
 }: MonthViewProps) => {
     const weeks = useMemo(() => getDaysInMonth(date), [date, getDaysInMonth]);
 
@@ -38,7 +38,7 @@ const MonthView = memo(({
     }, [weeks]);
 
     return (
-        <View style={{ width, height: calendarHeight }} className="pl-4">
+        <View style={{ width, height: calendarHeight }}>
             <View className="mb-2 flex-row justify-between">
                 {currentTranslation.weekdays.map(day => (
                     <View key={day} className="flex-1 items-center">

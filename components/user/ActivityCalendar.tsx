@@ -24,8 +24,8 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
     const { width: windowWidth } = useWindowDimensions();
-    const width = windowWidth - 16;
-    const daySize = (width - 8) / 7;
+    const width = windowWidth - 32;
+    const daySize = (width - 4) / 7;
     const weekHeight = daySize;
     const maxWeeks = 7;
     const calendarHeight = (weekHeight * maxWeeks) + 32;
@@ -150,7 +150,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         const todayDate = isCurrentMonth ? today.getDate() : null;
 
         return (
-            <View style={{ width }}>
+            <View style={{ width }} className="px-2">
                 <MonthHeader 
                     date={date} 
                     currentTranslation={currentTranslation} 
@@ -158,7 +158,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 />
                 <MonthView 
                     date={date}
-                    width={width}
+                    width={width - 12}
                     calendarHeight={calendarHeight}
                     currentTranslation={currentTranslation}
                     isSelected={memoizedIsSelected}
@@ -191,7 +191,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     }, []);
 
     return (
-        <View className="mt-2">
+        <View className="mt-2 flex-1">
             <FlatList
                 ref={flatListRef}
                 data={months}
@@ -201,16 +201,16 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 pagingEnabled
                 snapToInterval={width}
                 decelerationRate="fast"
+                snapToOffsets={months.map((_, index) => index * width)}
                 showsHorizontalScrollIndicator={false}
                 onScroll={handleScroll}
                 onMomentumScrollEnd={handleMomentumScrollEnd}
-                scrollEventThrottle={16}
                 contentContainerStyle={{ alignItems: 'center' }}
                 getItemLayout={getItemLayout}
-                maxToRenderPerBatch={3}
-                windowSize={3}
+                maxToRenderPerBatch={6}
+                windowSize={6}
                 removeClippedSubviews={true}
-                snapToAlignment="center"
+                snapToAlignment="start"
                 maintainVisibleContentPosition={{
                     minIndexForVisible: 0,
                     autoscrollToTopThreshold: 10
