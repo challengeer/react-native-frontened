@@ -1,9 +1,8 @@
 import i18n from "@/i18n";
-import { View, Dimensions, useWindowDimensions, FlatList } from "react-native";
-import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "react-native-heroicons/outline";
-import { useState, useRef, useCallback, useMemo, memo } from "react";
-import Text from "@/components/common/Text";
-import IconCircle from "@/components/common/IconCircle";
+import { View, useWindowDimensions, FlatList } from "react-native";
+import { useState, useRef, useCallback, useEffect } from "react";
+import MonthHeader from "./MonthHeader";
+import MonthView from "./MonthView";
 
 interface ActivityCalendarProps {
     selectedDates?: string[];
@@ -21,96 +20,6 @@ const TRANSLATIONS = {
     }
 };
 
-const MonthView = memo(({ date, width, calendarHeight, currentTranslation, isSelected, todayDate, isCurrentMonth, getDaysInMonth }: {
-    date: Date;
-    width: number;
-    calendarHeight: number;
-    currentTranslation: typeof TRANSLATIONS.en;
-    isSelected: (day: number | null, monthDate: Date) => boolean;
-    todayDate: number | null;
-    isCurrentMonth: boolean;
-    getDaysInMonth: (date: Date) => (number | null)[][];
-}) => {
-    const weeks = useMemo(() => getDaysInMonth(date), [date, getDaysInMonth]);
-
-    // Ensure we always have 7 weeks
-    const paddedWeeks = useMemo(() => {
-        const result = [...weeks];
-        while (result.length < 7) {
-            result.push(Array(7).fill(null));
-        }
-        return result;
-    }, [weeks]);
-
-    const renderWeek = useCallback((week: (number | null)[], weekIndex: number) => (
-        <View key={weekIndex} className="flex-row justify-between">
-            {week.map((day: number | null, dayIndex: number) => {
-                const isDaySelected = isSelected(day, date);
-                const isDayToday = isCurrentMonth && day === todayDate;
-
-                return (
-                    <View
-                        key={dayIndex}
-                        className={`aspect-square flex-1 m-0.5 rounded-lg items-center justify-center relative
-                            ${isDaySelected ? 'bg-primary-500' : 'bg-neutral-100 dark:bg-neutral-800'}
-                            ${day === null ? 'opacity-0' : ''}`}
-                    >
-                        {isDayToday && (
-                            <View className="absolute -inset-1 rounded-xl border-2 border-primary-600" />
-                        )}
-                        {day !== null && (
-                            <Text
-                                className={`text-base ${isDaySelected ? 'text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
-                                style={{ opacity: day === null ? 0 : 1 }}
-                            >
-                                {day}
-                            </Text>
-                        )}
-                    </View>
-                );
-            })}
-        </View>
-    ), [date, isCurrentMonth, isSelected, todayDate]);
-
-    return (
-        <View style={{ width, height: calendarHeight }} className="pl-4">
-            <View className="mb-2 flex-row justify-between">
-                {currentTranslation.weekdays.map(day => (
-                    <View key={day} className="flex-1 items-center">
-                        <Text className="text-sm text-neutral-500">{day}</Text>
-                    </View>
-                ))}
-            </View>
-
-            <View style={{ flex: 1 }}>
-                {paddedWeeks.map((week, weekIndex) => renderWeek(week, weekIndex))}
-            </View>
-        </View>
-    );
-});
-
-const MonthHeader = memo(({ date, currentTranslation, onChevronPress }: {
-    date: Date;
-    currentTranslation: typeof TRANSLATIONS.en;
-    onChevronPress: (direction: 'left' | 'right') => void;
-}) => {
-    const formatMonthYear = useCallback((date: Date) => {
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        return `${currentTranslation.months[month]} ${year}`;
-    }, [currentTranslation]);
-
-    return (
-        <View className="flex-row justify-between items-center mb-4">
-            <Text className="font-medium pl-4">{formatMonthYear(date)}</Text>
-            <View className="flex-row gap-2">
-                <IconCircle icon={ChevronLeftIcon} onPress={() => onChevronPress('left')} />
-                <IconCircle icon={ChevronRightIcon} onPress={() => onChevronPress('right')} />
-            </View>
-        </View>
-    );
-});
-
 export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
     const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
@@ -121,12 +30,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     const maxWeeks = 7;
     const calendarHeight = (weekHeight * maxWeeks) + 32;
     const flatListRef = useRef<FlatList>(null);
-
-    const getAdjacentMonth = (date: Date, offset: number) => {
-        const newDate = new Date(date);
-        newDate.setMonth(newDate.getMonth() + offset);
-        return newDate;
-    };
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -161,12 +64,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return weeks;
     };
 
-    const formatMonthYear = (date: Date) => {
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        return `${currentTranslation.months[month]} ${year}`;
-    };
-
     const isSelected = (day: number | null, monthDate: Date) => {
         if (!day) return false;
         const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
@@ -176,29 +73,26 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return selectedDates.some(date => date.split('T')[0] === currentDateStr);
     };
 
-    const generateMonths = useCallback((startDate: Date, count: number) => {
-        const months = [];
-        const currentDate = new Date(startDate);
-        for (let i = 0; i < count; i++) {
-            const newDate = new Date(currentDate);
-            newDate.setMonth(currentDate.getMonth() - i);
-            months.push(newDate);
+    const generateMonthsRange = (centerDate: Date, past: number, future: number) => {
+        const months: Date[] = [];
+        for (let i = -past; i <= future; i++) {
+            const date = new Date(centerDate);
+            date.setMonth(date.getMonth() + i);
+            months.push(new Date(date));
         }
         return months;
-    }, []);
+    };
 
-    const [months, setMonths] = useState(() => generateMonths(currentDate, 12));
+    const [months, setMonths] = useState(() => generateMonthsRange(currentDate, 12, 12));
 
     const handleScroll = useCallback(({ nativeEvent }: any) => {
         const { contentOffset, layoutMeasurement, contentSize } = nativeEvent;
         const currentIndex = Math.floor(contentOffset.x / width);
 
-        // Only load more months when we're close to the end
         if (currentIndex >= months.length - 3) {
             const lastMonth = months[months.length - 1];
-            const newMonths = generateMonths(lastMonth, 12);
+            const newMonths = generateMonthsRange(lastMonth, 12, 12);
             
-            // Filter out any duplicate months
             const uniqueNewMonths = newMonths.filter(newMonth => 
                 !months.some(existingMonth => 
                     existingMonth.getMonth() === newMonth.getMonth() && 
@@ -208,7 +102,7 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
             
             setMonths(prev => [...prev, ...uniqueNewMonths]);
         }
-    }, [months, width, generateMonths]);
+    }, [months, width]);
 
     const handleMonthChange = useCallback((date: Date) => {
         setCurrentDate(date);
@@ -219,10 +113,8 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         const { contentOffset } = nativeEvent;
         const currentIndex = Math.round(contentOffset.x / width);
         
-        // Ensure the index is within bounds and handle the inverted list
         if (currentIndex >= 0 && currentIndex < months.length) {
             const targetDate = months[currentIndex];
-            // Only update if the month/year is different to prevent unnecessary updates
             if (targetDate.getMonth() !== currentDate.getMonth() || 
                 targetDate.getFullYear() !== currentDate.getFullYear()) {
                 handleMonthChange(targetDate);
@@ -251,7 +143,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
 
     const memoizedGetDaysInMonth = useCallback(getDaysInMonth, []);
     const memoizedIsSelected = useCallback(isSelected, [selectedDates]);
-    const memoizedHandleMonthChange = useCallback(handleMonthChange, [onMonthChange]);
 
     const renderItem = useCallback(({ item: date }: { item: Date }) => {
         const today = new Date();
@@ -289,6 +180,16 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         `${item.getFullYear()}-${item.getMonth()}-${index}`, 
     []);
 
+    useEffect(() => {
+        const index = months.findIndex(date =>
+            date.getMonth() === currentDate.getMonth() &&
+            date.getFullYear() === currentDate.getFullYear()
+        );
+        if (index !== -1) {
+            flatListRef.current?.scrollToIndex({ index, animated: false });
+        }
+    }, []);
+
     return (
         <View className="mt-2">
             <FlatList
@@ -297,7 +198,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 horizontal
-                inverted
                 pagingEnabled
                 snapToInterval={width}
                 decelerationRate="fast"
@@ -305,7 +205,6 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 onScroll={handleScroll}
                 onMomentumScrollEnd={handleMomentumScrollEnd}
                 scrollEventThrottle={16}
-                initialScrollIndex={0}
                 contentContainerStyle={{ alignItems: 'center' }}
                 getItemLayout={getItemLayout}
                 maxToRenderPerBatch={3}
