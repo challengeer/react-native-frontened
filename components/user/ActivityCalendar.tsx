@@ -11,25 +11,38 @@ interface ActivityCalendarProps {
 
 const TRANSLATIONS = {
     en: {
-        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        months: [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ],
+        weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     },
     sk: {
-        months: ['Január', 'Február', 'Marec', 'Apríl', 'Máj', 'Jún', 'Júl', 'August', 'September', 'Október', 'November', 'December'],
-        weekdays: ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne']
+        months: [
+            "Január", "Február", "Marec", "Apríl", "Máj", "Jún",
+            "Júl", "August", "September", "Október", "November", "December"
+        ],
+        weekdays: ["Po", "Ut", "St", "Št", "Pi", "So", "Ne"]
     }
 };
 
-export default function ActivityCalendar({ selectedDates = [], onMonthChange }: ActivityCalendarProps) {
+export default function ActivityCalendar({
+    selectedDates = [],
+    onMonthChange
+}: ActivityCalendarProps) {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const currentTranslation = TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
     const { width: windowWidth } = useWindowDimensions();
     const width = windowWidth - 32;
+    const flatListRef = useRef<FlatList>(null);
+    const CENTER_INDEX = 1;
+
+    const currentTranslation =
+        TRANSLATIONS[i18n.locale as keyof typeof TRANSLATIONS] || TRANSLATIONS.en;
+
     const daySize = (width - 4) / 7;
     const weekHeight = daySize;
     const maxWeeks = 7;
-    const calendarHeight = (weekHeight * maxWeeks) + 32;
-    const flatListRef = useRef<FlatList>(null);
+    const calendarHeight = weekHeight * maxWeeks + 32;
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -64,45 +77,24 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
         return weeks;
     };
 
-    const isSelected = (day: number | null, monthDate: Date) => {
+    const isSelected = useCallback((day: number | null, monthDate: Date) => {
         if (!day) return false;
         const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
         const offset = date.getTimezoneOffset();
-        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
-        const currentDateStr = localDate.toISOString().split('T')[0];
-        return selectedDates.some(date => date.split('T')[0] === currentDateStr);
-    };
+        const localDate = new Date(date.getTime() - offset * 60 * 1000);
+        const currentDateStr = localDate.toISOString().split("T")[0];
+        return selectedDates.some(d => d.split("T")[0] === currentDateStr);
+    }, [selectedDates]);
 
-    const generateMonthsRange = (centerDate: Date, past: number, future: number) => {
-        const months: Date[] = [];
-        for (let i = -past; i <= future; i++) {
+    const generateMonthsRange = useCallback((centerDate: Date) => {
+        return [-1, 0, 1].map(offset => {
             const date = new Date(centerDate);
-            date.setMonth(date.getMonth() + i);
-            months.push(new Date(date));
-        }
-        return months;
-    };
+            date.setMonth(date.getMonth() + offset);
+            return date;
+        });
+    }, []);
 
-    const [months, setMonths] = useState(() => generateMonthsRange(currentDate, 12, 12));
-
-    const handleScroll = useCallback(({ nativeEvent }: any) => {
-        const { contentOffset, layoutMeasurement, contentSize } = nativeEvent;
-        const currentIndex = Math.floor(contentOffset.x / width);
-
-        if (currentIndex >= months.length - 3) {
-            const lastMonth = months[months.length - 1];
-            const newMonths = generateMonthsRange(lastMonth, 12, 12);
-            
-            const uniqueNewMonths = newMonths.filter(newMonth => 
-                !months.some(existingMonth => 
-                    existingMonth.getMonth() === newMonth.getMonth() && 
-                    existingMonth.getFullYear() === newMonth.getFullYear()
-                )
-            );
-            
-            setMonths(prev => [...prev, ...uniqueNewMonths]);
-        }
-    }, [months, width]);
+    const [months, setMonths] = useState(() => generateMonthsRange(currentDate));
 
     const handleMonthChange = useCallback((date: Date) => {
         setCurrentDate(date);
@@ -110,84 +102,69 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
     }, [onMonthChange]);
 
     const handleMomentumScrollEnd = useCallback(({ nativeEvent }: any) => {
-        const { contentOffset } = nativeEvent;
-        const currentIndex = Math.round(contentOffset.x / width);
-        
-        if (currentIndex >= 0 && currentIndex < months.length) {
-            const targetDate = months[currentIndex];
-            if (targetDate.getMonth() !== currentDate.getMonth() || 
-                targetDate.getFullYear() !== currentDate.getFullYear()) {
-                handleMonthChange(targetDate);
-            }
-        }
-    }, [width, months, currentDate, handleMonthChange]);
+        const currentIndex = Math.round(nativeEvent.contentOffset.x / width);
+        const direction = currentIndex - CENTER_INDEX;
+
+        if (direction === 0) return;
+
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + direction);
+        setCurrentDate(newDate);
+        setMonths(generateMonthsRange(newDate));
+        onMonthChange?.(newDate);
+
+        requestAnimationFrame(() => {
+            flatListRef.current?.scrollToIndex({ index: CENTER_INDEX, animated: false });
+        });
+    }, [width, currentDate, onMonthChange, generateMonthsRange]);
 
     const handleChevronPress = useCallback((direction: 'left' | 'right') => {
-        const currentIndex = months.findIndex(date => 
-            date.getMonth() === currentDate.getMonth() && 
-            date.getFullYear() === currentDate.getFullYear()
-        );
-        
-        if (currentIndex === -1) return;
-        
-        const targetIndex = direction === 'left' ? currentIndex + 1 : currentIndex - 1;
-        if (targetIndex >= 0 && targetIndex < months.length) {
-            flatListRef.current?.scrollToIndex({
-                index: targetIndex,
-                animated: true,
-                viewPosition: 0.5
-            });
-            handleMonthChange(months[targetIndex]);
-        }
-    }, [months, currentDate, handleMonthChange]);
+        const targetIndex = CENTER_INDEX + (direction === 'right' ? 1 : -1);
+        flatListRef.current?.scrollToIndex({
+            index: targetIndex,
+            animated: true
+        });
+    }, []);
 
-    const memoizedGetDaysInMonth = useCallback(getDaysInMonth, []);
-    const memoizedIsSelected = useCallback(isSelected, [selectedDates]);
-
-    const renderItem = useCallback(({ item: date }: { item: Date }) => {
+    const renderItem = useCallback(({ item }: { item: Date }) => {
         const today = new Date();
-        const isCurrentMonth = today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear();
+        const isCurrentMonth = today.getMonth() === item.getMonth() && today.getFullYear() === item.getFullYear();
         const todayDate = isCurrentMonth ? today.getDate() : null;
 
         return (
             <View style={{ width }} className="px-2">
-                <MonthHeader 
-                    date={date} 
-                    currentTranslation={currentTranslation} 
-                    onChevronPress={handleChevronPress} 
+                <MonthHeader
+                    date={item}
+                    currentTranslation={currentTranslation}
+                    onChevronPress={handleChevronPress}
                 />
-                <MonthView 
-                    date={date}
+                <MonthView
+                    date={item}
                     width={width - 12}
                     calendarHeight={calendarHeight}
                     currentTranslation={currentTranslation}
-                    isSelected={memoizedIsSelected}
+                    isSelected={isSelected}
                     todayDate={todayDate}
                     isCurrentMonth={isCurrentMonth}
-                    getDaysInMonth={memoizedGetDaysInMonth}
+                    getDaysInMonth={getDaysInMonth}
                 />
             </View>
         );
-    }, [width, calendarHeight, currentTranslation, memoizedIsSelected, memoizedGetDaysInMonth, handleChevronPress]);
+    }, [width, calendarHeight, currentTranslation, isSelected]);
 
-    const getItemLayout = useCallback((data: any, index: number) => ({
+    const getItemLayout = useCallback((_: any, index: number) => ({
         length: width,
         offset: width * index,
-        index,
+        index
     }), [width]);
 
-    const keyExtractor = useCallback((item: Date, index: number) => 
-        `${item.getFullYear()}-${item.getMonth()}-${index}`, 
-    []);
+    const keyExtractor = useCallback((item: Date) =>
+        `${item.getFullYear()}-${item.getMonth()}`, []);
 
     useEffect(() => {
-        const index = months.findIndex(date =>
-            date.getMonth() === currentDate.getMonth() &&
-            date.getFullYear() === currentDate.getFullYear()
-        );
-        if (index !== -1) {
-            flatListRef.current?.scrollToIndex({ index, animated: false });
-        }
+        requestAnimationFrame(() => {
+            flatListRef.current?.scrollToIndex({ index: CENTER_INDEX, animated: false });
+        });
     }, []);
 
     return (
@@ -201,20 +178,14 @@ export default function ActivityCalendar({ selectedDates = [], onMonthChange }: 
                 pagingEnabled
                 snapToInterval={width}
                 decelerationRate="fast"
-                snapToOffsets={months.map((_, index) => index * width)}
                 showsHorizontalScrollIndicator={false}
-                onScroll={handleScroll}
-                onMomentumScrollEnd={handleMomentumScrollEnd}
-                contentContainerStyle={{ alignItems: 'center' }}
+                initialScrollIndex={CENTER_INDEX}
                 getItemLayout={getItemLayout}
-                maxToRenderPerBatch={6}
-                windowSize={6}
-                removeClippedSubviews={true}
-                snapToAlignment="start"
-                maintainVisibleContentPosition={{
-                    minIndexForVisible: 0,
-                    autoscrollToTopThreshold: 10
-                }}
+                onMomentumScrollEnd={handleMomentumScrollEnd}
+                contentContainerStyle={{ alignItems: "center" }}
+                windowSize={3}
+                maxToRenderPerBatch={3}
+                removeClippedSubviews
             />
         </View>
     );
