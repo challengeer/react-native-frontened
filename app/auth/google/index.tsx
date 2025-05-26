@@ -46,7 +46,7 @@ export default function PhoneVerificationPage() {
       // Store the verification ID in the route params
       router.push(`/auth/google/code?verificationId=${verificationId}&phoneNumber=${phoneNumber}`);
     } catch (err: any) {
-      setError(i18n.t('auth.google.verification.error.verificationFailed'));
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }

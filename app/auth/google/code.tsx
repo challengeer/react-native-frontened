@@ -38,7 +38,7 @@ export default function VerificationCodePage() {
       // Navigate to the contacts page
       router.replace("/auth/contacts");
     } catch (err: any) {
-      setError(i18n.t('auth.google.verification.code.error.verificationFailed'));
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
