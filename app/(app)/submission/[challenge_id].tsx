@@ -1,11 +1,11 @@
-import api from "@/lib/api";
-import { View, Pressable, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
+import { Pressable } from "react-native-gesture-handler";
 import { useLocalSearchParams, router } from "expo-router";
 import { Image as ExpoImage } from "expo-image";
 import { useCallback, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, ArrowLeftIcon } from "react-native-heroicons/outline";
+import { useSubmissions } from "@/hooks/useSubmissions";
 import { getTimeAgo } from "@/utils/timeUtils";
 import Avatar from "@/components/common/Avatar";
 import Text from "@/components/common/Text";
@@ -15,39 +15,11 @@ import Overlays from "@/components/submission/Overlays";
 
 export default function SubmissionPage() {
     const { challenge_id } = useLocalSearchParams<{ challenge_id: string }>();
+    const { submissions, isSubmissionsLoading, isSubmissionsError } = useSubmissions(challenge_id);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const queryClient = useQueryClient();
 
-    const { data, isPending } = useQuery({
-        queryKey: ['submissions', challenge_id],
-        queryFn: async () => {
-            try {
-                const response = await api.get(`/challenges/${challenge_id}/submissions`);
-
-                // prefetch all images
-                await Promise.all(
-                    response.data.map((submission: any) =>
-                        ExpoImage.prefetch(submission.photo_url)
-                    )
-                );
-
-                await queryClient.invalidateQueries({ queryKey: ["challenges"] });
-                await queryClient.invalidateQueries({ queryKey: ["challenge", challenge_id] });
-
-                return response.data;
-            } catch (error) {
-                await ExpoImage.prefetch(`https://picsum.photos/seed/${challenge_id}/100/150`);
-                return [];
-            }
-        },
-        retry: false,
-        staleTime: 1000 * 60 * 5,
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-    });
-
-    const totalPhotos = data?.length || 0;
-    const currentSubmission = data?.[currentIndex];
+    const totalPhotos = submissions?.length || 0;
+    const currentSubmission = submissions?.[currentIndex];
 
     const handlePrevious = useCallback(() => {
         if (currentIndex > 0) {
@@ -64,7 +36,7 @@ export default function SubmissionPage() {
         }
     }, [currentIndex, totalPhotos]);
 
-    if (isPending) {
+    if (isSubmissionsLoading) {
         return (
             <View className="flex-1 items-center justify-center">
                 <ActivityIndicator size="large" color="#fff" />
@@ -72,7 +44,7 @@ export default function SubmissionPage() {
         );
     }
 
-    if (data?.length === 0) {
+    if (isSubmissionsError) {
         return (
             <View className="w-full aspect-[9/16] relative">
                 <ExpoImage
@@ -114,9 +86,11 @@ export default function SubmissionPage() {
                 contentFit="cover"
             />
 
-            <Overlays
-                overlays={currentSubmission?.overlays}
-            />
+            {currentSubmission?.overlays && (
+                <Overlays
+                    overlays={currentSubmission.overlays}
+                />
+            )}
 
             <View
                 className="absolute inset-0 flex-row"
@@ -135,7 +109,7 @@ export default function SubmissionPage() {
 
             <LinearGradient
                 colors={["rgba(0,0,0,0.25)", "rgba(0,0,0,0)"]}
-                style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 20 }}
+                style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 40 }}
                 pointerEvents="box-none"
             >
                 <View className="p-4 gap-4">
@@ -167,7 +141,7 @@ export default function SubmissionPage() {
                                     {currentSubmission?.user?.display_name || "User"}
                                 </Text>
                                 <Text className="leading-tight opacity-80">
-                                    {getTimeAgo(currentSubmission?.submitted_at)}
+                                    {getTimeAgo(currentSubmission?.submitted_at || "")}
                                 </Text>
                             </View>
                         </Pressable>
