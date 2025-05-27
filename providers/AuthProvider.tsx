@@ -20,7 +20,7 @@ interface AuthContextType {
     user: UserPrivateInterface | null;
     isLoading: boolean;
     isAuthenticated: boolean;
-    signInWithGoogle: () => Promise<void>;
+    signInWithGoogle: (phoneNumber?: string) => Promise<void>;
     submitPhoneNumber: (phoneNumber: string) => Promise<string>;
     confirmPhoneVerification: (verificationId: string, code: string) => Promise<void>;
     logout: () => Promise<void>;
@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = async (phoneNumber?: string) => {
         try {
             // Get the users ID token
             await GoogleSignin.hasPlayServices();
@@ -144,6 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const result = await api.post('/auth/google', { 
                 id_token: firebaseToken,
                 fcm_token: fcmToken,
+                phone_number: phoneNumber,
                 ...deviceInfo
             });
 

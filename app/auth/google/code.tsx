@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import React, { useState } from "react";
 import { KeyboardAvoidingView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { useAuth } from "@/providers/AuthProvider";
 import Header from "@/components/common/Header";
@@ -21,6 +21,7 @@ export default function VerificationCodePage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const handleVerify = async () => {
     if (!verificationId || !code) {
@@ -45,43 +46,42 @@ export default function VerificationCodePage() {
   };
 
   return (
-    <SafeAreaView className="flex-1">
-      <KeyboardAvoidingView
-        behavior="padding"
-        className="flex-1"
-      >
-        <Header
-          title={i18n.t('auth.google.verification.code.header')}
-          leftSection={
-            <IconCircle
-              icon={ArrowLeftIcon}
-              onPress={() => router.back()}
-            />
-          }
-        />
-
-        <View className="flex-1 px-4 pb-4 justify-between">
-          <View className="gap-4">
-            <VerificationInput
-              value={code}
-              onChange={setCode}
-              phoneNumber={phoneNumber}
-            />
-
-            {error && (
-              <Text type="error" className="text-base">{error}</Text>
-            )}
-          </View>
-
-          <Button
-            title={i18n.t('auth.google.verification.code.verify')}
-            size="lg"
-            onPress={handleVerify}
-            disabled={code.length !== 6 || isLoading}
-            loading={isLoading}
+    <KeyboardAvoidingView
+      behavior="padding"
+      className="flex-1"
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+    >
+      <Header
+        title={i18n.t('auth.google.verification.code.header')}
+        leftSection={
+          <IconCircle
+            icon={ArrowLeftIcon}
+            onPress={() => router.back()}
           />
+        }
+      />
+
+      <View className="flex-1 px-4 pb-4 justify-between">
+        <View className="gap-4">
+          <VerificationInput
+            value={code}
+            onChange={setCode}
+            phoneNumber={phoneNumber}
+          />
+
+          {error && (
+            <Text type="error" className="text-base">{error}</Text>
+          )}
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+        <Button
+          title={i18n.t('auth.google.verification.code.verify')}
+          size="lg"
+          onPress={handleVerify}
+          disabled={code.length !== 6 || isLoading}
+          loading={isLoading}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 } 

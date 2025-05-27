@@ -4,7 +4,7 @@ import React, { useState, useCallback, memo, useMemo, useEffect } from "react";
 import { View, ActivityIndicator, Pressable, SectionList, Linking } from "react-native";
 import { UserPlusIcon } from "react-native-heroicons/solid";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
 import { useContacts } from "@/hooks/useContacts";
 import Text from "@/components/common/Text";
@@ -32,9 +32,9 @@ const UserItemMemo = memo(UserItem);
 export default function ContactsPage() {
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
+  const insets = useSafeAreaInsets();
 
   const { contacts, recommendations, isContactsLoading, isRecommendationsLoading, isContactsError, isRecommendationsError } = useContacts();
-  
   const { syncContacts } = useContacts();
 
   useEffect(() => {
@@ -180,7 +180,7 @@ export default function ContactsPage() {
   const isError = isContactsError || isRecommendationsError;
 
   return (
-    <SafeAreaView className="flex-1">
+    <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <Header
         title={i18n.t("auth.contacts.header")}
         rightSection={
@@ -223,6 +223,6 @@ export default function ContactsPage() {
           loading={isSendingRequests}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

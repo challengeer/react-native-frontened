@@ -1,7 +1,7 @@
 import i18n from "@/i18n";
 import { useState } from "react";
 import { ScrollView, View, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import Text from "@/components/common/Text";
 import Header from "@/components/common/Header";
@@ -27,6 +27,7 @@ const onboardingData = [
 
 export default function AuthPage() {
     const [currentPosition, setCurrentPosition] = useState(1);
+    const insets = useSafeAreaInsets();
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const contentOffset = event.nativeEvent.contentOffset.x;
@@ -35,7 +36,7 @@ export default function AuthPage() {
     };
 
     return (
-        <SafeAreaView className="flex-1">
+        <View className="flex-1" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
             <Header title={i18n.t('auth.onboarding.title')} />
 
             <StepIndicatorBar
@@ -63,6 +64,6 @@ export default function AuthPage() {
             <View className="p-4">
                 <GoogleSignInButton />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
