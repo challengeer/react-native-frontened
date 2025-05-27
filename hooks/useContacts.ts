@@ -1,7 +1,7 @@
 import api from '@/lib/api';
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
+import { useContactsContext } from '@/providers/ContactsProvider';
 import * as Contacts from 'expo-contacts';
 import * as Localization from 'expo-localization';
 
@@ -9,7 +9,7 @@ import { Contact, ContactRecommendation } from '@/types/contact';
 import { User } from '@/types/user';
 
 export const useContacts = () => {
-  const [isContactsSynced, setIsContactsSynced] = useState(false);
+  const { isContactsSynced } = useContactsContext();
 
   const formatContacts = (contacts: Contacts.Contact[]): Contact[] => {
     const countryCode = (Localization.getLocales()[0].regionCode || 'US') as CountryCode;
@@ -63,8 +63,6 @@ export const useContacts = () => {
       }
     } catch (err) {
       console.error('Failed to fetch contacts:', err);
-    } finally {
-      setIsContactsSynced(true);
     }
   };
 
@@ -75,7 +73,7 @@ export const useContacts = () => {
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
-    // enabled: isContactsSynced,
+    enabled: isContactsSynced,
   });
 
   const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<User[]>({
@@ -85,7 +83,7 @@ export const useContacts = () => {
       return response.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
-    // enabled: isContactsSynced,
+    enabled: isContactsSynced,
   });
 
   return {

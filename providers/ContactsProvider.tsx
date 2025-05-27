@@ -1,17 +1,26 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useContacts } from '@/hooks/useContacts';
 
-const ContactsContext = createContext<any>(undefined);
+interface ContactsContextType {
+  isContactsSynced: boolean;
+}
+
+const ContactsContext = createContext<ContactsContextType | undefined>(undefined);
 
 export const ContactsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isContactsSynced, setIsContactsSynced] = useState(false);
   const { syncContacts } = useContacts();
 
   useEffect(() => {
-    syncContacts();
+    const sync = async () => {
+      await syncContacts();
+      setIsContactsSynced(true);
+    };
+    sync();
   }, []);
 
   return (
-    <ContactsContext.Provider value={{}}>
+    <ContactsContext.Provider value={{ isContactsSynced }}>
       {children}
     </ContactsContext.Provider>
   );
