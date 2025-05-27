@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { FlashMode, CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { Pressable, Text, View, StatusBar, Keyboard, Platform } from "react-native";
+import { Pressable, Text, View, StatusBar, Keyboard, Platform, Linking } from "react-native";
 import { FlipType, ImageManipulator, SaveFormat, useImageManipulator } from "expo-image-manipulator";
 import { LinearGradient } from "expo-linear-gradient";
 import { XMarkIcon, BoltIcon, BoltSlashIcon, ArrowPathIcon } from "react-native-heroicons/outline";
@@ -182,8 +182,15 @@ export default function CameraPage() {
     if (!permission.granted) {
         return (
             <View className="flex-1 bg-black items-center justify-center">
-                <Text className="text-center">We need your permission to use the camera</Text>
-                <Button onPress={requestPermission} title="Grant permission" />
+                <Text className="text-center text-white mb-4">We need your permission to use the camera</Text>
+                {permission.status === 'denied' ? (
+                    <Button 
+                        onPress={() => Linking.openSettings()} 
+                        title="Open Settings" 
+                    />
+                ) : (
+                    <Button onPress={requestPermission} title="Grant permission" />
+                )}
             </View>
         );
     }
