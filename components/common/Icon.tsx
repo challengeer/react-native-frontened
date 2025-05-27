@@ -17,6 +17,7 @@ export interface ThemedIconProps {
   size?: number;
   onPress?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export default function Icon({
@@ -27,6 +28,7 @@ export default function Icon({
   size = 24,
   onPress,
   className,
+  disabled = false,
   ...props
 }: ThemedIconProps) {
   const { colorScheme } = useColorScheme();
@@ -36,8 +38,8 @@ export default function Icon({
     <Pressable 
       onPress={onPress} 
       hitSlop={10}
-      disabled={!onPress}
-      className={className}
+      disabled={disabled || !onPress}
+      className={`${className} ${disabled ? 'opacity-50' : ''}`}
     >
       <props.icon color={color} strokeWidth={strokeWidth} size={size} {...props} />
     </Pressable>

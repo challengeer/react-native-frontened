@@ -1,9 +1,12 @@
 import i18n from "@/i18n";
 import React, { useCallback, useMemo, useState } from "react";
-import { SectionList, ActivityIndicator, RefreshControl } from "react-native";
+import { router } from "expo-router";
+import { SectionList, ActivityIndicator, RefreshControl, View } from "react-native";
 import { Challenge, ChallengeInvite } from "@/types/challenge";
 import { useChallenges } from "@/hooks/useChallenges";
+import { useFriends } from "@/hooks/useFriends";
 import Text from "@/components/common/Text";
+import Button from "@/components/common/Button";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import ChallengeInviteRightSection from "@/components/challenges/ChallengeInviteRightSection";
@@ -19,6 +22,7 @@ const ChallengeItemMemo = React.memo(ChallengeItem);
 export default function ChallengesList() {
     const { challenges, isChallengesLoading, isChallengesError, refetchChallenges, challengeInvites, isChallengeInvitesLoading, isChallengeInvitesError, refetchChallengeInvites } = useChallenges();
     const [refreshing, setRefreshing] = useState(false);
+    const { friends } = useFriends();
 
     const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
         if (section.data.length === 0 || section.title === null) return null;
@@ -105,6 +109,32 @@ export default function ChallengesList() {
         return <NetworkErrorContainer onRetry={refetch} />;
     }
 
+    if (friends?.length === 0) {
+        return (
+            <View className="flex-1 items-center justify-center">
+                <Text className="text-center text-xl font-bold mb-4">{i18n.t("challenges.noFriends.title")}</Text>
+                <Text type="secondary" className="text-center text-lg mb-16">{i18n.t("challenges.noFriends.description")}</Text>
+                <Button
+                    title={i18n.t("challenges.noFriends.button")}
+                    onPress={() => router.push("/add_friends")}
+                />
+            </View>
+        );
+    }
+
+    if (sections.length === 0) {
+        return (
+            <View className="flex-1 items-center justify-center">
+                <Text className="text-center text-xl font-bold mb-4">{i18n.t("challenges.noChallenges.title")}</Text>
+                <Text type="secondary" className="text-center text-lg mb-16">{i18n.t("challenges.noChallenges.description")}</Text>
+                <Button
+                    title={i18n.t("challenges.noChallenges.button")}
+                    onPress={() => router.push("/create_challenge")}
+                />
+            </View>
+        );
+    }
+
     return (
         <SectionList
             sections={sections}
@@ -120,7 +150,7 @@ export default function ChallengesList() {
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
-                    onRefresh={refetch}
+                    onRefresh={onRefresh}
                 />
             }
         />
