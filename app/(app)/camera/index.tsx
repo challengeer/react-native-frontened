@@ -183,13 +183,13 @@ export default function CameraPage() {
         return (
             <View className="flex-1 bg-black items-center justify-center">
                 <Text className="text-center text-white mb-4">We need your permission to use the camera</Text>
-                {permission.status === 'denied' ? (
-                    <Button 
-                        onPress={() => Linking.openSettings()} 
-                        title="Open Settings" 
-                    />
-                ) : (
+                {permission.canAskAgain ? (
                     <Button onPress={requestPermission} title="Grant permission" />
+                ) : (
+                    <Button
+                        onPress={() => Linking.openSettings()}
+                        title="Open Settings"
+                    />
                 )}
             </View>
         );
