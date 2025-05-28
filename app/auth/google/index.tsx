@@ -13,7 +13,7 @@ import Text from "@/components/common/Text";
 import PhoneInput from "@/components/register/PhoneInput";
 
 export default function PhoneVerificationPage() {
-  const { signInWithGoogle } = useAuth();
+  const { submitPhoneNumber } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,13 +42,10 @@ export default function PhoneVerificationPage() {
     try {
       setIsLoading(true);
       setError(null);
-      // const verificationId = await submitPhoneNumber(phoneNumber);
+      const verificationId = await submitPhoneNumber(phoneNumber);
 
       // Store the verification ID in the route params
-      // router.push(`/auth/google/code?verificationId=${verificationId}&phoneNumber=${phoneNumber}`);
-    
-      await signInWithGoogle(phoneNumber);
-      router.replace("/auth/contacts");
+      router.push(`/auth/google/code?verificationId=${verificationId}&phoneNumber=${phoneNumber}`);
     } catch (err: any) {
       setError(err.message);
     } finally {

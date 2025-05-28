@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const signInWithGoogle = async (phoneNumber?: string) => {
+    const signInWithGoogle = async () => {
         try {
             // Get the users ID token
             await GoogleSignin.hasPlayServices();
@@ -144,7 +144,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const result = await api.post('/auth/google', { 
                 id_token: firebaseToken,
                 fcm_token: fcmToken,
-                phone_number: phoneNumber,
                 ...deviceInfo
             });
 
