@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useSearch } from "@/hooks/useSearch";
 import { useFriends } from "@/hooks/useFriends";
 import { useContacts } from "@/hooks/useContacts";
@@ -45,13 +45,13 @@ export function useFriendsList(search: string) {
         sections,
         isLoading: isSearchLoading || isFriendsLoading || isFriendRequestsReceivedLoading || isFriendRequestsSentLoading || isContactsLoading || isRecommendationsLoading,
         isError: isSearchError || isFriendsError || isFriendRequestsReceivedError || isFriendRequestsSentError || isContactsError || isRecommendationsError,
-        refetch: () => {
+        refetch: useCallback(() => {
             refetchSearch();
             refetchFriends();
             refetchFriendRequestsReceived();
             refetchFriendRequestsSent();
             refetchContacts();
             refetchRecommendations();
-        }
+        }, [refetchSearch, refetchFriends, refetchFriendRequestsReceived, refetchFriendRequestsSent, refetchContacts, refetchRecommendations])
     };
 } 
