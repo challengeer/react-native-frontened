@@ -12,7 +12,6 @@ export function useFriends() {
             const response = await api.get("/friends/list");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     const { data: friendRequestsReceived, isPending: isFriendRequestsReceivedLoading, isError: isFriendRequestsReceivedError, refetch: refetchFriendRequestsReceived } = useQuery<FriendRequest[]>({
@@ -21,7 +20,6 @@ export function useFriends() {
             const response = await api.get("/friends/requests/received");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     const { data: friendRequestsSent, isPending: isFriendRequestsSentLoading, isError: isFriendRequestsSentError, refetch: refetchFriendRequestsSent } = useQuery<FriendRequest[]>({
@@ -30,17 +28,20 @@ export function useFriends() {
             const response = await api.get("/friends/requests/sent");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     const { mutate: addFriend, isPending: isAddingFriend } = useMutation({
         mutationFn: async (userId: string) => {
             await api.post("/friends/add", { receiver_id: userId });
+            return userId;
         },
-        onSettled: () => {
+        onSettled: (userId) => {
+            if (!userId) return;
+
             queryClient.refetchQueries({ queryKey: ["friends"] });
             queryClient.refetchQueries({ queryKey: ["friend-requests-sent"] });
             queryClient.refetchQueries({ queryKey: ["contact-recommendations"] });
+            queryClient.refetchQueries({ queryKey: ["user", userId] });
         },
     });
 

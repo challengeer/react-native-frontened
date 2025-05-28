@@ -72,7 +72,6 @@ export const useContacts = () => {
       const response = await api.get("/contacts/sorted-by-interest");
       return response.data;
     },
-    staleTime: 1000 * 60 * 60 * 24,
     enabled: isContactsSynced,
   });
 
@@ -82,7 +81,6 @@ export const useContacts = () => {
       const response = await api.get("/contacts/recommendations");
       return response.data;
     },
-    staleTime: 1000 * 60 * 60 * 24,
     enabled: isContactsSynced,
   });
 

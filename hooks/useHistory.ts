@@ -10,7 +10,6 @@ export function useHistory() {
             const response = await api.get("/challenges/history");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     return {

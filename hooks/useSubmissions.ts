@@ -18,8 +18,8 @@ export const useSubmissions = (challenge_id: string) => {
                 )
             );
 
-            queryClient.invalidateQueries({ queryKey: ["challenges"] });
-            queryClient.invalidateQueries({ queryKey: ["challenge", challenge_id] });
+            queryClient.refetchQueries({ queryKey: ["challenges"] });
+            queryClient.refetchQueries({ queryKey: ["challenge", challenge_id] });
 
             return response.data;
         },

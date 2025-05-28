@@ -12,7 +12,6 @@ export function useChallenges() {
             const response = await api.get("/challenges/list");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     const { data: challengeInvites, isLoading: isChallengeInvitesLoading, isError: isChallengeInvitesError, refetch: refetchChallengeInvites } = useQuery<ChallengeInvite[]>({
@@ -21,7 +20,6 @@ export function useChallenges() {
             const response = await api.get("/challenges/invites");
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     const { mutate: acceptChallengeInvite, isPending: isAcceptingChallengeInvite } = useMutation({
@@ -67,7 +65,6 @@ export function useChallenge(challengeId: string) {
             const response = await api.get(`/challenges/${challengeId}`);
             return response.data;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
         enabled: !!challengeId, // Only run the query if challengeId is provided
     });
 
