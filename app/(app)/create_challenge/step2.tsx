@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import React, { View } from "react-native";
 import { InputBar, TextAreaInputBar } from "@/components/common/InputBar";
 import Text from "@/components/common/Text";
@@ -14,7 +15,7 @@ interface Step2Props {
 export default function Step2({ title, setTitle, description, setDescription, onNext }: Step2Props) {
     return (
         <>
-            <Text className="text-2xl font-bold px-4 mb-4 mt-6">Add more information</Text>
+            <Text className="text-2xl font-bold px-4 mb-4 mt-6">{i18n.t("create_challenge.step2.title")}</Text>
 
             <View className="px-4">
                 {/* Title */}
@@ -22,7 +23,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                     value={title}
                     onChangeText={setTitle}
                     className="mb-4"
-                    placeholder="Title"
+                    placeholder={i18n.t("create_challenge.step2.title_placeholder")}
                 />
 
                 {/* Description (TextArea) */}
@@ -30,14 +31,14 @@ export default function Step2({ title, setTitle, description, setDescription, on
                     value={description}
                     onChangeText={setDescription}
                     className="mb-6"
-                    placeholder="Description (optional)"
+                    placeholder={i18n.t("create_challenge.step2.description_placeholder")}
                 />
             </View>
 
             <View className="p-4">
                 <Button
                     size="lg"
-                    title="Continue"
+                    title={i18n.t("create_challenge.step2.continue")}
                     onPress={onNext}
                     disabled={!title.trim()}
                 />

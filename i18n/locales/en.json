@@ -273,5 +273,18 @@
             "hiking": "Hiking",
             "rock_climbing": "Rock Climbing"
         }
+    },
+    "create_challenge": {
+        "step2": {
+            "title": "Add more information",
+            "title_placeholder": "Title",
+            "description_placeholder": "Description (optional)",
+            "continue": "Continue"
+        },
+        "step3": {
+            "title": "Invite friends",
+            "loading": "Loading...",
+            "create_challenge": "Create Challenge"
+        }
     }
 }

@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import api from "@/lib/api";
 import { useState } from "react";
 import { View, ScrollView } from "react-native";
@@ -68,7 +69,7 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
 
     return (
         <View className="flex-1">
-            <Text className="text-2xl font-bold px-4 mb-4 mt-6">Invite friends</Text>
+            <Text className="text-2xl font-bold px-4 mb-4 mt-6">{i18n.t("create_challenge.step3.title")}</Text>
 
             {(error || localError) && (
                 <Text className="text-red-500 mb-4">{error || localError}</Text>
@@ -76,7 +77,7 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
 
             <ScrollView className="flex-1 -mx-4 px-4">
                 {isPending ? (
-                    <Text>Loading friends...</Text>
+                    <Text>{i18n.t("create_challenge.step3.loading")}</Text>
                 ) : (
                     friends?.map((friend: any, index: number) => (
                         <UserItem
@@ -101,7 +102,7 @@ export default function Step3({ onCreateChallenge, isLoading, error }: Step3Prop
             <View className="p-4">
                 <Button
                     size="lg"
-                    title={isLoading || inviting ? "Creating..." : "Create Challenge"}
+                    title={isLoading || inviting ? i18n.t("create_challenge.step3.loading") : i18n.t("create_challenge.step3.create_challenge")}
                     onPress={handleSubmit}
                     disabled={isLoading || inviting || selectedFriends.length === 0}
                 />

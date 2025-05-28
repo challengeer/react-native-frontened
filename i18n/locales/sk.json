@@ -273,5 +273,18 @@
             "hiking": "Turistika",
             "rock_climbing": "Lezenie"
         }
+    },
+    "create_challenge": {
+        "step2": {
+            "title": "Pridať viac informácií",
+            "title_placeholder": "Názov",
+            "description_placeholder": "Popis (voliteľné)",
+            "continue": "Pokračovať"
+        },
+        "step3": {
+            "title": "Pozvať priateľov",
+            "loading": "Načítavam...",
+            "create_challenge": "Vytvoriť výzvu"
+        }
     }
 }
