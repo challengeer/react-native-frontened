@@ -23,6 +23,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                     value={title}
                     onChangeText={setTitle}
                     className="mb-4"
+                    maxLength={100}
                     placeholder={i18n.t("create_challenge.step2.title_placeholder")}
                 />
 
@@ -31,6 +32,7 @@ export default function Step2({ title, setTitle, description, setDescription, on
                     value={description}
                     onChangeText={setDescription}
                     className="mb-6"
+                    maxLength={500}
                     placeholder={i18n.t("create_challenge.step2.description_placeholder")}
                 />
             </View>
