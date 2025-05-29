@@ -69,6 +69,7 @@ export default function Layout() {
                 renderTabBar={renderTabBar}
                 swipeEnabled={true}
                 tabBarPosition="bottom"
+                overScrollMode="never"
                 lazy={true}
             />
         </View>
