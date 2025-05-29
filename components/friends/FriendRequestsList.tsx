@@ -147,6 +147,7 @@ export default function FriendRequestsList({ search }: { search: string }) {
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
             contentContainerClassName="pb-48"
+            keyboardShouldPersistTaps="handled"
         />
     );
 }

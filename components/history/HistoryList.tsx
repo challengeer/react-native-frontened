@@ -102,6 +102,7 @@ export default function HistoryList({ search }: { search: string }) {
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
             contentContainerClassName="pb-48"
+            keyboardShouldPersistTaps="handled"
         />
     );
 } 

@@ -155,6 +155,7 @@ export default function FriendsList() {
             removeClippedSubviews={true}
             stickySectionHeadersEnabled={true}
             contentContainerClassName="pb-48"
+            keyboardShouldPersistTaps="handled"
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
