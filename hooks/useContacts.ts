@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 import * as Contacts from 'expo-contacts';
 import * as Localization from 'expo-localization';
@@ -7,9 +7,9 @@ import * as Localization from 'expo-localization';
 import { Contact, ContactRecommendation } from '@/types/contact';
 import { User } from '@/types/user';
 
-let hasSyncedContacts = false;
-
 export const useContacts = () => {
+  const queryClient = useQueryClient();
+
   const formatContacts = (contacts: Contacts.Contact[]): Contact[] => {
     const countryCode = (Localization.getLocales()[0].regionCode || 'US') as CountryCode;
 
@@ -44,7 +44,6 @@ export const useContacts = () => {
       const { needs_upload } = response.data;
 
       if (!needs_upload) {
-        hasSyncedContacts = true;
         return;
       }
 
@@ -60,9 +59,10 @@ export const useContacts = () => {
         await api.post("/contacts/upload", {
           contacts: formattedContacts,
         });
+
+        queryClient.refetchQueries({ queryKey: ["contacts-by-interest"] });
+        queryClient.refetchQueries({ queryKey: ["contact-recommendations"] });
       }
-      
-      hasSyncedContacts = true;
     } catch (err) {
       console.error('Failed to fetch contacts:', err);
     }
@@ -74,7 +74,6 @@ export const useContacts = () => {
       const response = await api.get("/contacts/sorted-by-interest");
       return response.data;
     },
-    enabled: hasSyncedContacts,
   });
 
   const { data: recommendations, isPending: isRecommendationsLoading, isError: isRecommendationsError, refetch: refetchRecommendations } = useQuery<User[]>({
@@ -83,7 +82,6 @@ export const useContacts = () => {
       const response = await api.get("/contacts/recommendations");
       return response.data;
     },
-    enabled: hasSyncedContacts,
   });
 
   return {
@@ -96,6 +94,5 @@ export const useContacts = () => {
     isRecommendationsError,
     refetchContacts,
     refetchRecommendations,
-    hasSyncedContacts,
   };
 }; 
