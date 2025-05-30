@@ -5,7 +5,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 
 import { useEffect, useContext } from "react";
 import { useColorScheme } from "nativewind";
-import { StatusBar, Platform } from "react-native";
+import { StatusBar, Platform, View } from "react-native";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -43,7 +43,9 @@ export default function Root() {
                                     backgroundColor="transparent"
                                 />
 
-                                <Slot key={language} />
+                                <View key={language} className="flex-1">
+                                    <Slot />
+                                </View>
                             </SafeAreaProvider>
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
