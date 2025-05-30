@@ -134,13 +134,13 @@
             "addSubmissionDescription": "To complete challenge upload at least 1 submission"
         },
         "noFriends": {
-            "title": "No Friends Yet",
-            "description": "Add friends to participate in challenges together!",
+            "title": "👋 Add Friends First",
+            "description": "You need to have at least 1 friend to create and join challenges!",
             "button": "Add Friends"
         },
         "noChallenges": {
-            "title": "✨ Ready for a New Challenge?",
-            "description": "Life's more exciting with goals! Set up a new challenge and start making progress today.",
+            "title": "🎯 No Active Challenges",
+            "description": "Start your journey by creating a new challenge!",
             "button": "Create Challenge"
         },
         "owned": {

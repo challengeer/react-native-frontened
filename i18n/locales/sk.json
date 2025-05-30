@@ -130,13 +130,13 @@
             "addSubmissionDescription": "Na dokončenie výzvy pridaj aspoň 1 fotku"
         },
         "noFriends": {
-            "title": "Zatiaľ žiadni priatelia",
-            "description": "Pridaj priateľov, aby si mohol spolupracovať na výzvach!",
+            "title": "👋 Pridaj najprv priateľov",
+            "description": "Potrebuješ aspoň 1 priateľa na vytvorenie a pridávanie výziev!",
             "button": "Pridaj priateľov"
         },
         "noChallenges": {
-            "title": "✨ Pripravený na novú výzvu?",
-            "description": "Život je zábavnejší s cieľmi! Nastav novú výzvu a začni robiť pokrok dnes.",
+            "title": "🎯 Žiadne aktívne výzvy",
+            "description": "Začni svoju cestu vytvorením novej výzvy!",
             "button": "Vytvoriť výzvu"
         },
         "owned": {

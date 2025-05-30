@@ -6,11 +6,11 @@ import { Challenge, ChallengeInvite } from "@/types/challenge";
 import { useChallenges } from "@/hooks/useChallenges";
 import { useFriends } from "@/hooks/useFriends";
 import Text from "@/components/common/Text";
-import Button from "@/components/common/Button";
 import NetworkErrorContainer from "@/components/common/NetworkErrorContainer";
 import ChallengeItem from "@/components/challenges/ChallengeItem";
 import ChallengeInviteRightSection from "@/components/challenges/ChallengeInviteRightSection";
 import ChallengeRightSection from "@/components/challenges/ChallengeRightSection";
+import EmptyStateMessage from "@/components/common/EmptyStateMessage";
 
 interface Section {
     title: string | null;
@@ -87,7 +87,7 @@ export default function ChallengesList() {
             { title: i18n.t("challenges.invitations.title"), data: challengeInvites || [] },
         ];
     }, [challenges, challengeInvites]);
-    
+
     const isLoading = isChallengesLoading || isChallengeInvitesLoading;
     const isError = isChallengesError || isChallengeInvitesError;
 
@@ -111,27 +111,23 @@ export default function ChallengesList() {
 
     if (friends?.length === 0) {
         return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-center text-xl font-bold mb-4">{i18n.t("challenges.noFriends.title")}</Text>
-                <Text type="secondary" className="text-center text-lg mb-16">{i18n.t("challenges.noFriends.description")}</Text>
-                <Button
-                    title={i18n.t("challenges.noFriends.button")}
-                    onPress={() => router.push("/add_friends")}
-                />
-            </View>
+            <EmptyStateMessage
+                title={i18n.t("challenges.noFriends.title")}
+                description={i18n.t("challenges.noFriends.description")}
+                buttonTitle={i18n.t("challenges.noFriends.button")}
+                onPress={() => router.push("/add_friends")}
+            />
         );
     }
 
-    if (sections.length === 0) {
+    if (sections[0].data.length === 0 && sections[1].data.length === 0) {
         return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-center text-xl font-bold mb-4">{i18n.t("challenges.noChallenges.title")}</Text>
-                <Text type="secondary" className="text-center text-lg mb-16">{i18n.t("challenges.noChallenges.description")}</Text>
-                <Button
-                    title={i18n.t("challenges.noChallenges.button")}
-                    onPress={() => router.push("/create_challenge")}
-                />
-            </View>
+            <EmptyStateMessage
+                title={i18n.t("challenges.noChallenges.title")}
+                description={i18n.t("challenges.noChallenges.description")}
+                buttonTitle={i18n.t("challenges.noChallenges.button")}
+                onPress={() => router.push("/create_challenge")}
+            />
         );
     }
 
