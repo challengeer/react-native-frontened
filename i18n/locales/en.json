@@ -262,7 +262,9 @@
         "title": "Select sports category",
         "continue": "Continue",
         "categories": {
+            "workout": "Workout",
             "running": "Running",
+            "walking": "Walking",
             "swimming": "Swimming",
             "cycling": "Cycling",
             "yoga": "Yoga",

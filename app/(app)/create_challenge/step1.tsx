@@ -12,7 +12,9 @@ interface Step1Props {
 
 export default function Step1({ selectedCategory, setSelectedCategory, onNext }: Step1Props) {
     const categories = [
+        { key: "workout", emoji: "💪" },
         { key: "running", emoji: "🏃‍♂️" },
+        { key: "walking", emoji: "🚶‍♂️" },
         { key: "swimming", emoji: "🏊‍♂️" },
         { key: "cycling", emoji: "🚴‍♂️" },
         { key: "yoga", emoji: "🧘‍♂️" },

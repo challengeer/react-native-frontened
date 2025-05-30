@@ -262,7 +262,9 @@
         "title": "Vyberte športovú kategóriu",
         "continue": "Pokračovať",
         "categories": {
+            "workout": "Posilňovanie",
             "running": "Beh",
+            "walking": "Chôdza",
             "swimming": "Plávanie",
             "cycling": "Cyklistika",
             "yoga": "Jóga",
