@@ -150,6 +150,10 @@
             "description": "{{display_name}} vás pozval do tejto výzvy"
         }
     },
+    "history": {
+        "noHistory": "Tu sa zobrazia tvoje dokončené výzvy",
+        "noResults": "Žiadne výsledky pre \"{{search}}\""
+    },
     "challenge_settings": {
         "header": "Nastavenia výzvy",
         "name": {

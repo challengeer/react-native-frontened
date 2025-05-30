@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import React, { useCallback, useMemo } from "react";
 import { SectionList, ActivityIndicator } from "react-native";
 import { getSectionTitle } from "@/utils/timeUtils";
@@ -88,6 +89,14 @@ export default function HistoryList({ search }: { search: string }) {
 
     if (isHistoryError) {
         return <NetworkErrorContainer onRetry={refetchHistory} />;
+    }
+
+    if (history?.length === 0) {
+        return <Text type="secondary" className="text-center text-lg pt-16">{i18n.t("history.noHistory")}</Text>;
+    }
+
+    if (sections.length === 0) {
+        return <Text type="secondary" className="text-center text-lg pt-16">{i18n.t("history.noResults", { search })}</Text>;
     }
 
     return (

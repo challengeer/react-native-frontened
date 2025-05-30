@@ -154,6 +154,10 @@
             "description": "{{display_name}} invited you to join this challenge"
         }
     },
+    "history": {
+        "noHistory": "Your completed challenges will appear here",
+        "noResults": "No results for \"{{search}}\""
+    },
     "challenge_settings": {
         "header": "Challenge Settings",
         "name": {
