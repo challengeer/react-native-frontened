@@ -14,9 +14,7 @@
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
-      },
-      "enableProguardInReleaseBuilds": true,
-      "enableShrinkResources": true
+      }
     },
     "android": {
       "package": "com.challengeer.app",
@@ -27,14 +25,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon-beta.png",
         "backgroundColor": "#ffffff"
-      },
-      "notification": {
-        "icon": "./assets/images/notification-icon.png",
-        "color": "#ffffff"
-      },
-      "enableProguardInReleaseBuilds": true,
-      "enableShrinkResources": true,
-      "enableR8": true
+      }
     },
     "web": {
       "bundler": "metro",
@@ -59,7 +50,13 @@
         }
       ],
       "@react-native-google-signin/google-signin",
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#ffffff"
+        }
+      ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "@react-native-firebase/messaging",
