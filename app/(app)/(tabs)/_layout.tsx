@@ -36,7 +36,7 @@ export default function Layout() {
     }, [router, routes]);
 
     const renderTabBar = useCallback(() => (
-        <View className="absolute bottom-0 left-0 right-0 border-t border-neutral-100 dark:border-neutral-800 h-20 flex-row bg-white dark:bg-neutral-900">
+        <View className="border-t border-neutral-100 dark:border-neutral-800 h-20 flex-row bg-white dark:bg-neutral-900">
             {routes.map((route, i) => (
                 <View
                     key={route.key}
