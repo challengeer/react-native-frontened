@@ -107,7 +107,7 @@ export default function ChallengePage() {
                             <View className="gap-2">
                                 <Button
                                     title={i18n.t("challenges.buttons.addSubmission")}
-                                    leftSection={<Icon icon={CameraIcon} />}
+                                    leftSection={<Icon icon={CameraIcon} lightColor="white" darkColor="white" />}
                                     onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
                                 />
                                 <Text type="secondary" className="text-sm">{i18n.t("challenges.buttons.addSubmissionDescription")}</Text>
@@ -135,7 +135,7 @@ export default function ChallengePage() {
                             <View className="gap-2">
                                 <Button
                                     title={i18n.t("challenges.buttons.addSubmission")}
-                                    leftSection={<Icon icon={CameraIcon} />}
+                                    leftSection={<Icon icon={CameraIcon} lightColor="white" darkColor="white" />}
                                     onPress={() => router.push(`/(app)/camera?challenge_id=${challenge?.challenge_id}`)}
                                 />
                                 <Text type="secondary" className="text-sm">{i18n.t("challenges.buttons.addSubmissionDescription")}</Text>

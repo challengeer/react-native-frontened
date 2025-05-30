@@ -1,5 +1,4 @@
-import { View, ActivityIndicator } from "react-native";
-import { Pressable } from "react-native-gesture-handler";
+import { View, ActivityIndicator, Pressable } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Image as ExpoImage } from "expo-image";
 import { useCallback, useState } from "react";
@@ -127,7 +126,7 @@ export default function SubmissionPage() {
 
                     <View className="flex-row items-center justify-between">
                         <Pressable
-                            className="flex-row items-center gap-3"
+                            className="flex-1 flex-row items-center gap-3"
                             onPress={() => router.push(`/(app)/user/${currentSubmission?.user?.user_id}`)}
                         >
                             <Avatar
@@ -136,11 +135,11 @@ export default function SubmissionPage() {
                                 name={currentSubmission?.user?.display_name || "User"}
                             />
 
-                            <View className="flex-row items-center gap-2">
-                                <Text className="leading-tight font-medium">
+                            <View className="flex-1 flex-row items-center gap-2">
+                                <Text className="leading-tight font-medium text-white">
                                     {currentSubmission?.user?.display_name || "User"}
                                 </Text>
-                                <Text className="leading-tight opacity-80">
+                                <Text className="leading-tight opacity-80 text-white">
                                     {getTimeAgo(currentSubmission?.submitted_at || "")}
                                 </Text>
                             </View>
