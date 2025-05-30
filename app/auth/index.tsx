@@ -10,24 +10,24 @@ import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const onboardingData = [
-    {
-        image: require("@/assets/images/onboarding/images-stack.png"),
-        title: i18n.t('auth.onboarding.slides.0.title'),
-    },
-    {
-        image: require("@/assets/images/onboarding/images-stack.png"),
-        title: i18n.t('auth.onboarding.slides.1.title'),
-    },
-    {
-        image: require("@/assets/images/onboarding/images-stack.png"),
-        title: i18n.t('auth.onboarding.slides.2.title'),
-    },
-];
-
 export default function AuthPage() {
     const [currentPosition, setCurrentPosition] = useState(1);
     const insets = useSafeAreaInsets();
+
+    const onboardingData = [
+        {
+            image: require("@/assets/images/onboarding/images-stack.png"),
+            title: i18n.t('auth.onboarding.slides.0.title'),
+        },
+        {
+            image: require("@/assets/images/onboarding/images-stack.png"),
+            title: i18n.t('auth.onboarding.slides.1.title'),
+        },
+        {
+            image: require("@/assets/images/onboarding/images-stack.png"),
+            title: i18n.t('auth.onboarding.slides.2.title'),
+        },
+    ];
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const contentOffset = event.nativeEvent.contentOffset.x;
