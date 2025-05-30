@@ -28,6 +28,7 @@ export default function Root() {
             NavigationBar.setPositionAsync("absolute");
             NavigationBar.setBackgroundColorAsync("transparent");
             NavigationBar.setButtonStyleAsync(buttonStyle);
+            NavigationBar.setVisibilityAsync("visible");
         }
     }, []);
 
@@ -41,6 +42,7 @@ export default function Root() {
                                 <StatusBar
                                     barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
                                     backgroundColor="transparent"
+                                    translucent={true}
                                 />
 
                                 <View key={language} className="flex-1">
