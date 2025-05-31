@@ -221,10 +221,23 @@
                 "header": "Jazyk",
                 "en": "Angličtina",
                 "sk": "Slovenčina"
+            },
+            "deleteAccount": {
+                "header": "Vymazať účet",
+                "description": "Táto akcia je nevratná a odstráni váš účet a všetky vaše údaje z Challengeer"
             }
         },
         "privacy": {
             "title": "Súkromie",
+            "blockedUsers": {
+                "header": "Blokovaní užívatelia"
+            },
+            "contactSyncing": {
+                "header": "Synchronizácia kontaktov"
+            }
+        },
+        "legal": {
+            "title": "Právne predpisy a zásady",
             "privacyPolicy": {
                 "header": "Zásady ochrany osobných údajov"
             },

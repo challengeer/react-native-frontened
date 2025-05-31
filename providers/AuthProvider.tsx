@@ -25,6 +25,7 @@ interface AuthContextType {
     confirmPhoneVerification: (verificationId: string, code: string) => Promise<void>;
     logout: () => Promise<void>;
     refreshUser: () => Promise<void>;
+    deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -185,6 +186,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const deleteAccount = async () => {
+        try {
+            if (!auth.currentUser) {
+                throw new Error('No user is currently signed in');
+            }
+
+            // Delete user from Firebase
+            await auth.currentUser.delete();
+
+            // Delete user from backend
+            await api.delete('/user/me');
+
+            // Clear local storage and state
+            await SecureStore.deleteItemAsync('access_token');
+            await SecureStore.deleteItemAsync('refresh_token');
+            setUser(null);
+            setIsAuthenticated(false);
+            queryClient.clear();
+            
+            // Navigate to auth screen
+            router.replace('/auth');
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
         const initAuth = async () => {
             try {
@@ -212,7 +240,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             submitPhoneNumber,
             confirmPhoneVerification,
             logout,
-            refreshUser
+            refreshUser,
+            deleteAccount
         }}>
             {children}
         </AuthContext.Provider>

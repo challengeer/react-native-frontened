@@ -221,10 +221,23 @@
                 "header": "Language",
                 "en": "English",
                 "sk": "Slovak"
+            },
+            "deleteAccount": {
+                "header": "Delete account",
+                "description": "This action is irreversible and will delete your account and all your data from Challengeer"
             }
         },
         "privacy": {
             "title": "Privacy",
+            "blockedUsers": {
+                "header": "Blocked users"
+            },
+            "contactSyncing": {
+                "header": "Contact syncing"
+            }
+        },
+        "legal": {
+            "title": "Legal & Policies",
             "privacyPolicy": {
                 "header": "Privacy policy"
             },

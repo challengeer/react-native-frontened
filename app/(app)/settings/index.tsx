@@ -46,7 +46,7 @@ export default function SettingsPage() {
             rightSection: (
                 <Avatar
                     name={user?.display_name || ""}
-                    size="sm"
+                    size="xxs"
                     source={user?.profile_picture}
                 />
             ),
@@ -84,9 +84,26 @@ export default function SettingsPage() {
             key: "language",
             onPress: () => router.push("/settings/language"),
         },
+        {
+            key: "deleteAccount",
+            onPress: () => {
+                console.log("delete account");
+            },
+        }
     ];
 
     const privacySettings = [
+        {
+            key: "blockedUsers",
+            onPress: () => router.push("/settings/blocked_users"),
+        },
+        {
+            key: "contactSyncing",
+            onPress: () => router.push("/settings/contact_syncing"),
+        }
+    ];
+
+    const legalSettings = [
         {
             key: "privacyPolicy",
             onPress: () => Linking.openURL("https://challengeer.app/privacy-policy"),
@@ -94,8 +111,8 @@ export default function SettingsPage() {
         {
             key: "termsOfService",
             onPress: () => Linking.openURL("https://challengeer.app/terms-of-service"),
-        },
-    ];
+        }
+    ]
 
     return (
         <>
@@ -143,6 +160,23 @@ export default function SettingsPage() {
                             itemIndex={index}
                             totalItems={privacySettings.length}
                             title={i18n.t(`settings.privacy.${item.key}.header`)}
+                            onPress={item.onPress}
+                            showArrow
+                        />
+                    ))}
+                </View>
+
+                <Text className="mb-2 text-lg font-bold">
+                    {i18n.t("settings.legal.title")}
+                </Text>
+
+                <View className="mb-8">
+                    {legalSettings.map((item, index) => (
+                        <OptionButton
+                            key={item.key}
+                            itemIndex={index}
+                            totalItems={legalSettings.length}
+                            title={i18n.t(`settings.legal.${item.key}.header`)}
                             onPress={item.onPress}
                             showArrow
                         />
