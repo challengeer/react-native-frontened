@@ -211,6 +211,9 @@ export default function ContactsPage() {
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={true}
+            stickySectionHeadersEnabled={true}
+            contentContainerClassName="pb-48"
+            keyboardShouldPersistTaps="handled"
           />
         )}
       </View>
